@@ -3,16 +3,16 @@
 import React, { useState } from "react";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
-import { ApartmentFilter } from "@/components/ApartmentFilter";
-import { Amenities } from "@/components/Amenities";
-import { InvestmentCalculator } from "@/components/InvestmentCalculator";
-import { BrochureViewer } from "@/components/BrochureViewer";
-import { InquiryForm } from "@/components/InquiryForm";
+import { Services } from "@/components/Services";
+import { WhyChooseUs } from "@/components/WhyChooseUs";
+import { AboutUs } from "@/components/AboutUs";
+import { Gallery } from "@/components/Gallery";
+import { Testimonials } from "@/components/Testimonials";
+import { ContactSection } from "@/components/ContactSection";
 import { Footer } from "@/components/Footer";
 
 const Index = () => {
-  const [language, setLanguage] = useState<"es" | "en">("es");
-  const [prefilledModel, setPrefilledModel] = useState<string>("");
+  const [selectedService, setSelectedService] = useState<string>("");
 
   const handleScrollTo = (elementId: string) => {
     const el = document.getElementById(elementId);
@@ -21,59 +21,45 @@ const Index = () => {
     }
   };
 
-  const handleSelectApartment = (modelName: string) => {
-    setPrefilledModel(modelName);
+  const handleSelectService = (serviceName: string) => {
+    setSelectedService(serviceName);
     handleScrollTo("contact");
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 font-sans selection:bg-amber-500 selection:text-slate-950 text-slate-100">
+    <div className="min-h-screen bg-slate-950 font-sans selection:bg-teal-400 selection:text-slate-950 text-slate-100">
       
-      {/* Premium Navigation Header */}
-      <Header
-        language={language}
-        setLanguage={setLanguage}
-        onScrollTo={handleScrollTo}
+      {/* Navigation Header */}
+      <Header onScrollTo={handleScrollTo} />
+
+      {/* Hero Banner Area */}
+      <Hero 
+        onEstimateClick={() => handleScrollTo("contact")} 
+        onCallClick={() => {
+          window.location.href = "tel:1234567890";
+        }} 
       />
 
-      {/* Cinematic Cover Banner Hero */}
-      <Hero
-        language={language}
-        onExplore={() => handleScrollTo("models")}
-      />
+      {/* Structured Services Grid */}
+      <Services onSelectService={handleSelectService} />
 
-      {/* Interactive Apartment Model Filter & Viewers */}
-      <ApartmentFilter
-        language={language}
-        onSelectApartment={handleSelectApartment}
-      />
+      {/* Trust checklist points */}
+      <WhyChooseUs />
 
-      {/* Ultra-Premium Shared Amenities showcase */}
-      <Amenities
-        language={language}
-      />
+      {/* Interactive Before & After sliders/gallery */}
+      <Gallery />
 
-      {/* Interactive ROI / Mortgage calculator */}
-      <InvestmentCalculator
-        language={language}
-      />
+      {/* Corporate Story Details */}
+      <AboutUs />
 
-      {/* Presentation slide-deck & brochure */}
-      <BrochureViewer
-        language={language}
-      />
+      {/* Customer testimonials and reviews submission */}
+      <Testimonials />
 
-      {/* High-Fidelity Booking Slot Scheduling Form */}
-      <InquiryForm
-        language={language}
-        prefilledModel={prefilledModel}
-      />
+      {/* High-Fidelity contact options and Quote forms */}
+      <ContactSection prefilledService={selectedService} />
 
-      {/* Structured elegant Footer layout */}
-      <Footer
-        language={language}
-        onScrollTo={handleScrollTo}
-      />
+      {/* Footer layout */}
+      <Footer onScrollTo={handleScrollTo} />
 
     </div>
   );
