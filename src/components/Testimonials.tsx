@@ -1,8 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { Star, MessageSquare, Quote, Heart, Send } from "lucide-react";
+import { Star, MessageSquare, Quote, Send } from "lucide-react";
 import { toast } from "sonner";
+
+interface TestimonialsProps {
+  language: "en" | "es";
+}
 
 interface Review {
   name: string;
@@ -11,7 +15,7 @@ interface Review {
   rating: number;
 }
 
-export const Testimonials: React.FC = () => {
+export const Testimonials: React.FC<TestimonialsProps> = ({ language }) => {
   const [reviews, setReviews] = useState<Review[]>([
     {
       name: "Sarah Jenkins",
@@ -35,22 +39,55 @@ export const Testimonials: React.FC = () => {
 
   const [newReview, setNewReview] = useState({ name: "", text: "", rating: 5, location: "" });
 
+  const content = {
+    en: {
+      tag: "Client Success Stories",
+      title: "Client Reviews & Testimonials",
+      subtitle: "See what home and commercial building owners across Florida say about our premier cleaning services.",
+      leaveReview: "Leave Us a Testimonial",
+      nameLabel: "Your Name",
+      areaLabel: "Your Area",
+      starLabel: "Star Rating",
+      messageLabel: "Your Message",
+      submitBtn: "Submit Testimonial",
+      placeholderMessage: "Share your outstanding cleanup experience with G and Bros...",
+      toastError: "Please fill in both name and message details.",
+      toastSuccess: "Thank you! Your feedback has been posted successfully."
+    },
+    es: {
+      tag: "Historias de Éxito de Clientes",
+      title: "Reseñas y Testimonios de Clientes",
+      subtitle: "Vea lo que los propietarios de viviendas y locales comerciales en Florida opinan sobre nuestros servicios premium.",
+      leaveReview: "Déjenos un Testimonio",
+      nameLabel: "Su Nombre",
+      areaLabel: "Su Área/Ciudad",
+      starLabel: "Calificación de Estrellas",
+      messageLabel: "Su Mensaje",
+      submitBtn: "Enviar Testimonio",
+      placeholderMessage: "Comparta su excelente experiencia de limpieza con G and Bros...",
+      toastError: "Por favor complete los campos de nombre y mensaje.",
+      toastSuccess: "¡Gracias! Su testimonio se ha publicado correctamente."
+    }
+  };
+
+  const t = content[language];
+
   const handleAddReview = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newReview.name || !newReview.text) {
-      toast.error("Please fill in both name and message details.");
+      toast.error(t.toastError);
       return;
     }
     setReviews([
       ...reviews,
       {
         name: newReview.name,
-        location: newReview.location || "Customer",
+        location: newReview.location || (language === "en" ? "Customer" : "Cliente"),
         text: newReview.text,
         rating: newReview.rating
       }
     ]);
-    toast.success("Thank you! Your feedback has been posted successfully.");
+    toast.success(t.toastSuccess);
     setNewReview({ name: "", text: "", rating: 5, location: "" });
   };
 
@@ -61,13 +98,13 @@ export const Testimonials: React.FC = () => {
         {/* Section Header */}
         <div className="text-center mb-16">
           <span className="text-xs font-bold tracking-[0.25em] text-teal-400 uppercase block mb-3">
-            Client Success Stories
+            {t.tag}
           </span>
           <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight font-serif text-white">
-            Client Reviews & Testimonials
+            {t.title}
           </h2>
           <p className="text-slate-400 max-w-2xl mx-auto mt-4 text-base">
-            See what home and commercial building owners across Florida say about our premier cleaning services.
+            {t.subtitle}
           </p>
           <div className="w-24 h-1 bg-gradient-to-r from-teal-500 to-emerald-500 mx-auto mt-6 rounded-full" />
         </div>
@@ -110,24 +147,24 @@ export const Testimonials: React.FC = () => {
         <div className="max-w-xl mx-auto bg-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 text-left">
           <div className="flex items-center gap-3 mb-2">
             <MessageSquare className="w-5 h-5 text-teal-400" />
-            <h4 className="text-lg font-bold text-white">Leave Us a Testimonial</h4>
+            <h4 className="text-lg font-bold text-white">{t.leaveReview}</h4>
           </div>
 
           <form onSubmit={handleAddReview} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Your Name</label>
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{t.nameLabel}</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. John Doe"
                   value={newReview.name}
                   onChange={(e) => setNewReview({ ...newReview, name: e.target.value })}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-teal-500"
+                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-teal-500 animate-none"
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Your Area</label>
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{t.areaLabel}</label>
                 <input
                   type="text"
                   placeholder="e.g. Pinellas County"
@@ -139,7 +176,7 @@ export const Testimonials: React.FC = () => {
             </div>
 
             <div className="space-y-1">
-              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Star Rating</label>
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">{t.starLabel}</label>
               <div className="flex gap-2">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
@@ -155,11 +192,11 @@ export const Testimonials: React.FC = () => {
             </div>
 
             <div className="space-y-1">
-              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Your Message</label>
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{t.messageLabel}</label>
               <textarea
                 rows={3}
                 required
-                placeholder="Share your outstanding cleanup experience with G and Bros..."
+                placeholder={t.placeholderMessage}
                 value={newReview.text}
                 onChange={(e) => setNewReview({ ...newReview, text: e.target.value })}
                 className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-teal-500 resize-none"
@@ -171,7 +208,7 @@ export const Testimonials: React.FC = () => {
               className="w-full bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 font-extrabold py-3 rounded-xl shadow-lg flex items-center justify-center gap-2 text-sm"
             >
               <Send className="w-4 h-4" />
-              Submit Testimonial
+              {t.submitBtn}
             </button>
           </form>
         </div>

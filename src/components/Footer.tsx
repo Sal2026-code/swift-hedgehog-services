@@ -4,10 +4,26 @@ import React from "react";
 import { Sparkles, ArrowUp } from "lucide-react";
 
 interface FooterProps {
+  language: "en" | "es";
   onScrollTo: (elementId: string) => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onScrollTo }) => {
+export const Footer: React.FC<FooterProps> = ({ language, onScrollTo }) => {
+  const content = {
+    en: {
+      insurance: "Fully Insured • 20+ Years of Experience",
+      scrollUp: "Scroll Up",
+      disclaimer: "Language Support Disclaimer: We currently offer support and cleaning services in English and Spanish only."
+    },
+    es: {
+      insurance: "Totalmente Asegurado • Más de 20 Años de Experiencia",
+      scrollUp: "Volver Arriba",
+      disclaimer: "Aviso de Soporte de Idiomas: Actualmente ofrecemos soporte y servicios de limpieza únicamente en inglés y español."
+    }
+  };
+
+  const t = content[language];
+
   return (
     <footer className="bg-slate-950 text-slate-400 border-t border-slate-900 pt-16 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -32,7 +48,7 @@ export const Footer: React.FC<FooterProps> = ({ onScrollTo }) => {
 
           {/* Insured Note */}
           <div className="text-sm font-semibold text-slate-300">
-            Fully Insured • 20+ Years of Experience
+            {t.insurance}
           </div>
 
           {/* Back to top button */}
@@ -41,8 +57,15 @@ export const Footer: React.FC<FooterProps> = ({ onScrollTo }) => {
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900 border border-slate-850 hover:border-teal-500/40 text-teal-400 hover:text-teal-300 transition-all text-xs"
           >
             <ArrowUp className="w-3.5 h-3.5" />
-            <span>Scroll Up</span>
+            <span>{t.scrollUp}</span>
           </button>
+        </div>
+
+        {/* Dynamic Language Support Disclaimer at the bottom of the page */}
+        <div className="mb-6 bg-slate-900/40 border border-slate-800 rounded-xl p-3 max-w-2xl mx-auto text-center">
+          <p className="text-[10px] tracking-wide font-light text-slate-500">
+            {t.disclaimer}
+          </p>
         </div>
 
         {/* Rights Row */}

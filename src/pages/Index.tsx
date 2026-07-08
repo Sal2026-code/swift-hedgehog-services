@@ -12,6 +12,7 @@ import { ContactSection } from "@/components/ContactSection";
 import { Footer } from "@/components/Footer";
 
 const Index = () => {
+  const [language, setLanguage] = useState<"en" | "es">("en");
   const [selectedService, setSelectedService] = useState<string>("");
 
   const handleScrollTo = (elementId: string) => {
@@ -30,10 +31,15 @@ const Index = () => {
     <div className="min-h-screen bg-slate-950 font-sans selection:bg-teal-400 selection:text-slate-950 text-slate-100">
       
       {/* Navigation Header */}
-      <Header onScrollTo={handleScrollTo} />
+      <Header 
+        language={language} 
+        setLanguage={setLanguage} 
+        onScrollTo={handleScrollTo} 
+      />
 
       {/* Hero Banner Area */}
       <Hero 
+        language={language}
         onEstimateClick={() => handleScrollTo("contact")} 
         onCallClick={() => {
           window.location.href = "tel:1234567890";
@@ -41,25 +47,34 @@ const Index = () => {
       />
 
       {/* Structured Services Grid */}
-      <Services onSelectService={handleSelectService} />
+      <Services 
+        language={language}
+        onSelectService={handleSelectService} 
+      />
 
       {/* Trust checklist points */}
-      <WhyChooseUs />
+      <WhyChooseUs language={language} />
 
       {/* Interactive Before & After sliders/gallery */}
-      <Gallery />
+      <Gallery language={language} />
 
       {/* Corporate Story Details */}
-      <AboutUs />
+      <AboutUs language={language} />
 
       {/* Customer testimonials and reviews submission */}
-      <Testimonials />
+      <Testimonials language={language} />
 
       {/* High-Fidelity contact options and Quote forms */}
-      <ContactSection prefilledService={selectedService} />
+      <ContactSection 
+        language={language}
+        prefilledService={selectedService} 
+      />
 
       {/* Footer layout */}
-      <Footer onScrollTo={handleScrollTo} />
+      <Footer 
+        language={language}
+        onScrollTo={handleScrollTo} 
+      />
 
     </div>
   );

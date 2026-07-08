@@ -1,14 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import { Mail, Phone, MapPin, Clock, Send, ShieldCheck, CheckCircle2 } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, ShieldCheck, CheckCircle2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 interface ContactSectionProps {
+  language: "en" | "es";
   prefilledService?: string;
 }
 
-export const ContactSection: React.FC<ContactSectionProps> = ({ prefilledService = "" }) => {
+export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefilledService = "" }) => {
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -25,17 +27,88 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ prefilledService
     }
   }, [prefilledService]);
 
+  const content = {
+    en: {
+      tag: "Ready for a Cleaner Space?",
+      title: "Request a Free Quote & Get in Touch",
+      subtitle: "Contact G and Bros Services LLC today to request your free estimate.",
+      infoTitle: "Corporate Office & Info",
+      callUs: "Call Us Directly",
+      emailUs: "Email Address",
+      serviceArea: "Service Area",
+      serviceAreaVal: "Serving Tampa Bay, Pinellas County, St. Petersburg, Clearwater, and surrounding areas.",
+      hours: "Business Hours",
+      weekdays: "Monday – Friday: 8:00 AM – 6:00 PM",
+      saturday: "Saturday: 9:00 AM – 4:00 PM",
+      sunday: "Closed on Sundays",
+      formTitle: "Request a Free Quote",
+      nameLabel: "Full Name",
+      phoneLabel: "Phone Number",
+      emailLabel: "Email Address",
+      serviceLabel: "Type of Cleaning Needed",
+      msgLabel: "Message or Special Requirements",
+      submitBtn: "Request a Free Quote",
+      submittingBtn: "Processing Quote...",
+      confidentiality: "Your data is protected and secured under confidentiality policies",
+      successTitle: "Quote Requested!",
+      successDesc: "Thank you! Your free quote request has been sent to G and Bros Services LLC. One of our estimation experts will contact you soon.",
+      services: {
+        "Residential Cleaning": "Residential Cleaning",
+        "Commercial Cleaning": "Commercial Cleaning",
+        "Office Cleaning": "Office Cleaning",
+        "Deep Cleaning": "Deep Cleaning",
+        "Move-In / Move-Out Cleaning": "Move-In / Move-Out Cleaning",
+        "Post-Construction Cleaning": "Post-Construction Cleaning",
+      }
+    },
+    es: {
+      tag: "¿Listo para un Espacio más Limpio?",
+      title: "Solicite una Cotización Gratis y Contáctenos",
+      subtitle: "Póngase en contacto con G and Bros Services LLC hoy mismo para solicitar su cotización gratuita.",
+      infoTitle: "Oficina Corporativa e Información",
+      callUs: "Llámenos Directamente",
+      emailUs: "Dirección de Correo",
+      serviceArea: "Área de Servicio",
+      serviceAreaVal: "Sirviendo a Tampa Bay, Pinellas County, St. Petersburg, Clearwater y áreas circundantes.",
+      hours: "Horario Comercial",
+      weekdays: "Lunes – Viernes: 8:00 AM – 6:00 PM",
+      saturday: "Sábado: 9:00 AM – 4:00 PM",
+      sunday: "Cerrado los Domingos",
+      formTitle: "Solicitar una Cotización Gratis",
+      nameLabel: "Nombre Completo",
+      phoneLabel: "Número de Teléfono",
+      emailLabel: "Dirección de Correo",
+      serviceLabel: "Tipo de Limpieza Requerida",
+      msgLabel: "Mensaje o Requerimientos Especiales",
+      submitBtn: "Solicitar Cotización Gratis",
+      submittingBtn: "Procesando Cotización...",
+      confidentiality: "Sus datos están protegidos y asegurados bajo políticas de confidencialidad",
+      successTitle: "¡Cotización Solicitada!",
+      successDesc: "¡Gracias! Su solicitud de cotización gratuita ha sido enviada a G and Bros Services LLC. Uno de nuestros expertos en estimaciones se pondrá en contacto con usted pronto.",
+      services: {
+        "Residential Cleaning": "Limpieza Residencial",
+        "Commercial Cleaning": "Limpieza Comercial",
+        "Office Cleaning": "Limpieza de Oficinas",
+        "Deep Cleaning": "Limpieza Profunda",
+        "Move-In / Move-Out Cleaning": "Limpieza de Mudanza",
+        "Post-Construction Cleaning": "Limpieza Post-Construcción",
+      }
+    }
+  };
+
+  const t = content[language];
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.phone || !formData.email) {
-      toast.error("Please fill in all required fields.");
+      toast.error(language === "en" ? "Please fill in all required fields." : "Por favor complete todos los campos obligatorios.");
       return;
     }
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
       setSubmitted(true);
-      toast.success("Quote request submitted successfully!");
+      toast.success(t.successTitle);
     }, 1200);
   };
 
@@ -48,13 +121,13 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ prefilledService
         {/* Section Header */}
         <div className="text-center mb-16">
           <span className="text-xs font-bold tracking-[0.25em] text-teal-400 uppercase block mb-3">
-            Ready for a Cleaner Space?
+            {t.tag}
           </span>
           <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight font-serif text-white">
-            Request a Free Quote & Get in Touch
+            {t.title}
           </h2>
           <p className="text-slate-400 max-w-2xl mx-auto mt-4 text-base">
-            Contact G and Bros Services LLC today to request your free estimate.
+            {t.subtitle}
           </p>
           <div className="w-24 h-1 bg-gradient-to-r from-teal-500 to-emerald-500 mx-auto mt-6 rounded-full" />
         </div>
@@ -65,7 +138,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ prefilledService
           {/* Info Block (Left Column) */}
           <div className="lg:col-span-5 space-y-8 text-left bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-10">
             <h3 className="text-2xl font-serif font-bold text-white mb-4">
-              Corporate Office & Info
+              {t.infoTitle}
             </h3>
 
             {/* Phone Block */}
@@ -74,7 +147,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ prefilledService
                 <Phone className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">Call Us Directly</p>
+                <p className="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">{t.callUs}</p>
                 <a href="tel:1234567890" className="text-lg font-bold text-white hover:text-teal-300 transition-colors block">
                   (813) 456-7890
                 </a>
@@ -87,7 +160,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ prefilledService
                 <Mail className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">Email Address</p>
+                <p className="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">{t.emailUs}</p>
                 <a href="mailto:info@gandbrosservices.com" className="text-lg font-bold text-white hover:text-teal-300 transition-colors block break-all">
                   info@gandbrosservices.com
                 </a>
@@ -100,9 +173,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ prefilledService
                 <MapPin className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">Service Area</p>
+                <p className="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">{t.serviceArea}</p>
                 <p className="text-slate-300 text-sm leading-relaxed">
-                  Serving Tampa Bay, Pinellas County, St. Petersburg, Clearwater, and surrounding areas.
+                  {t.serviceAreaVal}
                 </p>
               </div>
             </div>
@@ -113,14 +186,14 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ prefilledService
                 <Clock className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">Business Hours</p>
+                <p className="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">{t.hours}</p>
                 <p className="text-slate-300 text-sm leading-relaxed font-bold">
-                  Monday – Friday: 8:00 AM – 6:00 PM
+                  {t.weekdays}
                 </p>
                 <p className="text-slate-300 text-sm leading-relaxed font-bold">
-                  Saturday: 9:00 AM – 4:00 PM
+                  {t.saturday}
                 </p>
-                <p className="text-slate-400 text-xs mt-1">Closed on Sundays</p>
+                <p className="text-slate-400 text-xs mt-1">{t.sunday}</p>
               </div>
             </div>
           </div>
@@ -134,23 +207,23 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ prefilledService
                   <CheckCircle2 className="w-10 h-10" />
                 </div>
                 <h3 className="text-3xl font-serif font-extrabold text-white">
-                  Quote Requested!
+                  {t.successTitle}
                 </h3>
                 <p className="text-slate-300 max-w-lg mx-auto text-sm sm:text-base leading-relaxed">
-                  Thank you! Your free quote request has been sent to G and Bros Services LLC. One of our estimation experts will contact you soon.
+                  {t.successDesc}
                 </p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-10 space-y-6 shadow-2xl relative text-left">
                 <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-teal-500 to-emerald-500" />
                 
-                <h4 className="text-xl font-serif font-bold text-white mb-4">Request a Free Quote</h4>
+                <h4 className="text-xl font-serif font-bold text-white mb-4">{t.formTitle}</h4>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {/* Name field */}
                   <div className="space-y-2">
                     <label className="text-xs font-bold tracking-wider text-slate-300 uppercase">
-                      Full Name <span className="text-red-500">*</span>
+                      {t.nameLabel} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -165,7 +238,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ prefilledService
                   {/* Phone field */}
                   <div className="space-y-2">
                     <label className="text-xs font-bold tracking-wider text-slate-300 uppercase">
-                      Phone Number <span className="text-red-500">*</span>
+                      {t.phoneLabel} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="tel"
@@ -182,7 +255,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ prefilledService
                   {/* Email field */}
                   <div className="space-y-2">
                     <label className="text-xs font-bold tracking-wider text-slate-300 uppercase">
-                      Email Address <span className="text-red-500">*</span>
+                      {t.emailLabel} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="email"
@@ -197,7 +270,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ prefilledService
                   {/* Cleaning Needed Type */}
                   <div className="space-y-2">
                     <label className="text-xs font-bold tracking-wider text-slate-300 uppercase">
-                      Type of Cleaning Needed
+                      {t.serviceLabel}
                     </label>
                     <select
                       value={formData.service}
@@ -205,12 +278,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ prefilledService
                       className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-teal-500 transition-colors appearance-none"
                       style={{ backgroundImage: "url(\"data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>\")", backgroundPosition: "right 12px center", backgroundRepeat: "no-repeat" }}
                     >
-                      <option value="Residential Cleaning">Residential Cleaning</option>
-                      <option value="Commercial Cleaning">Commercial Cleaning</option>
-                      <option value="Office Cleaning">Office Cleaning</option>
-                      <option value="Deep Cleaning">Deep Cleaning</option>
-                      <option value="Move-In / Move-Out Cleaning">Move-In / Move-Out Cleaning</option>
-                      <option value="Post-Construction Cleaning">Post-Construction Cleaning</option>
+                      <option value="Residential Cleaning">{t.services["Residential Cleaning"]}</option>
+                      <option value="Commercial Cleaning">{t.services["Commercial Cleaning"]}</option>
+                      <option value="Office Cleaning">{t.services["Office Cleaning"]}</option>
+                      <option value="Deep Cleaning">{t.services["Deep Cleaning"]}</option>
+                      <option value="Move-In / Move-Out Cleaning">{t.services["Move-In / Move-Out Cleaning"]}</option>
+                      <option value="Post-Construction Cleaning">{t.services["Post-Construction Cleaning"]}</option>
                     </select>
                   </div>
                 </div>
@@ -218,7 +291,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ prefilledService
                 {/* Message Field */}
                 <div className="space-y-2">
                   <label className="text-xs font-bold tracking-wider text-slate-300 uppercase">
-                    Message or Special Requirements
+                    {t.msgLabel}
                   </label>
                   <textarea
                     value={formData.message}
@@ -236,12 +309,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ prefilledService
                     disabled={loading}
                     className="w-full bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 font-black py-4 rounded-xl shadow-xl hover:shadow-teal-500/15 transform hover:-translate-y-0.5 transition-all duration-300 text-base"
                   >
-                    {loading ? "Processing Quote..." : "Request a Free Quote"}
+                    {loading ? t.submittingBtn : t.submitBtn}
                   </Button>
 
                   <div className="flex items-center justify-center gap-1.5 text-[10px] text-slate-400 font-semibold uppercase">
                     <ShieldCheck className="w-4 h-4 text-teal-400" />
-                    <span>Your data is protected and secured under confidentiality policies</span>
+                    <span>{t.confidentiality}</span>
                   </div>
                 </div>
 
