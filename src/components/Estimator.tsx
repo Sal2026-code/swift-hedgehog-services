@@ -1,330 +1,341 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Calculator, Sparkles, Home, CheckCircle2, ArrowRight } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Calculator, Sparkles, Home, ChevronRight, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface EstimatorProps {
   language: "english" | "spanish";
-  onApplyEstimate: (estimateDetails: string) => void;
+  cleaningTier: "standard" | "deep" | "move";
+  setCleaningTier: (tier: "standard" | "deep" | "move") => void;
+  rooms: number;
+  setRooms: (rooms: number) => void;
+  baths: number;
+  setBaths: (baths: number) => void;
+  selectedAddons: string[];
+  toggleAddon: (addonId: string) => void;
+  onApplyEstimate: (formattedQuoteText: string) => void;
 }
 
-export const Estimator: React.FC<EstimatorProps> = ({ language, onApplyEstimate }) => {
-  const [serviceType, setServiceType] = useState<string>("residential");
-  const [sqft, setSqft] = useState<number>(1500);
-  const [bedrooms, setBedrooms] = useState<number>(3);
-  const [bathrooms, setBathrooms] = useState<number>(2);
-  const [frequency, setFrequency] = useState<string>("one-time");
-  const [totalPrice, setTotalPrice] = useState<number>(0);
+export const Estimator: React.FC<EstimatorProps> = ({
+  language,
+  cleaningTier,
+  setCleaningTier,
+  rooms,
+  setRooms,
+  baths,
+  setBaths,
+  selectedAddons,
+  toggleAddon,
+  onApplyEstimate
+}) => {
+  const [livePrice, setLivePrice] = useState<number>(45);
 
-  // Calculate live estimate whenever parameters change
+  // Synchronized prices dictionary
+  const addonsPrices: Record<string, number> = {
+    oven: 25,
+    fridge: 25,
+    windows: 35,
+    balcony: 30,
+    ironing: 20,
+    mattress: 25
+  };
+
+  // Live Pricing Engine
   useEffect(() => {
-    let basePrice = 80; // Base starting price
+    let baseline = 45; // €45 Baseline for 1 bed/1 bath standard clean
+    
+    // Increment calculations: rooms are €15 additional above 1, baths are €20 additional above 1
+    const extraRoomsCost = (rooms - 1) * 15;
+    const extraBathsCost = (baths - 1) * 20;
 
-    // Service multiplier
-    let serviceMultiplier = 1.0;
-    if (serviceType === "deep") serviceMultiplier = 1.4;
-    if (serviceType === "move") serviceMultiplier = 1.5;
-    if (serviceType === "office") serviceMultiplier = 1.1;
+    // Cleaning type multipliers
+    let tierMultiplier = 1.0;
+    if (cleaningTier === "deep") tierMultiplier = 1.35;
+    if (cleaningTier === "move") tierMultiplier = 1.5;
 
-    // Sqft additions ($0.05 per square foot above 1000)
-    const sqftFactor = sqft > 1000 ? (sqft - 1000) * 0.06 : 0;
+    // Extras cost sum
+    const extrasCost = selectedAddons.reduce((sum, addonId) => sum + (addonsPrices[addonId] || 0), 0);
 
-    // Bed & bath additions
-    const bedFactor = bedrooms * 20;
-    const bathFactor = bathrooms * 30;
-
-    let subtotal = (basePrice + sqftFactor + bedFactor + bathFactor) * serviceMultiplier;
-
-    // Frequency discounts
-    let discount = 0;
-    if (frequency === "weekly") discount = 0.20; // 20% discount
-    if (frequency === "bi-weekly") discount = 0.15; // 15% discount
-    if (frequency === "monthly") discount = 0.10; // 10% discount
-
-    subtotal = subtotal * (1 - discount);
-    setTotalPrice(Math.round(subtotal));
-  }, [serviceType, sqft, bedrooms, bathrooms, frequency]);
+    const calculatedPrice = (baseline + extraRoomsCost + extraBathsCost) * tierMultiplier + extrasCost;
+    setLivePrice(Math.round(calculatedPrice));
+  }, [cleaningTier, rooms, baths, selectedAddons]);
 
   const content = {
     english: {
       tag: "Interactive Quote Tool",
-      title: "Instant Cleaning Price Estimator",
-      subtitle: "Customize your preferences to receive an immediate estimated calculation for G and Bros Services LLC.",
-      serviceLabel: "1. Select Service Type",
-      residential: "Standard Residential",
-      deep: "Deep Cleaning",
-      move: "Move In/Out",
-      office: "Office Space",
-      sizeLabel: "2. Property Details",
-      sqftText: "Property Size:",
-      bedsText: "Bedrooms:",
-      bathsText: "Bathrooms:",
-      frequencyLabel: "3. Choose Frequency & Save",
-      oneTime: "One-Time Service",
-      weekly: "Weekly (Save 20%)",
-      biWeekly: "Bi-Weekly (Save 15%)",
-      monthly: "Monthly (Save 10%)",
-      summaryLabel: "Estimated Cost Summary",
-      disclaimer: "Note: This is a placeholder estimate. Custom situations might alter the final price quotes.",
-      bookBtn: "Apply This Estimate to Quote Form",
-      appliedToast: "Estimate copied! Scroll down to submit your details."
+      title: "G & Bros Price Estimator",
+      subtitle: "Configure your preferences below to receive an instant dynamic ballpark reference estimate.",
+      tierLabel: "1. Select Cleaning Tier",
+      standard: "Standard",
+      deep: "Deep Clean",
+      move: "Move-In / Move-Out",
+      bedsLabel: "Bedrooms & Living Rooms",
+      bathsLabel: "Bathrooms",
+      extrasLabel: "Check Extra Add-on Services",
+      receiptHeader: "Sparkle Summary",
+      estimateText: "Ballpark Reference Price",
+      btnLabel: "Request Firm Estimate",
+      addonsLabels: {
+        oven: "Oven Interior (+€25)",
+        fridge: "Fridge Interior (+€25)",
+        windows: "Exterior Windows (+€35)",
+        balcony: "Terrace/Balcony wash (+€30)",
+        ironing: "Express Bedding (+€20)",
+        mattress: "Mattress sanitization (+€25)"
+      }
     },
     spanish: {
       tag: "Herramienta de Cotización",
-      title: "Estimador de Costos Instantáneo",
-      subtitle: "Personalice sus preferencias para recibir un cálculo estimado inmediato para G and Bros Services LLC.",
-      serviceLabel: "1. Seleccione el Tipo de Servicio",
-      residential: "Residencial Estándar",
+      title: "Estimador de Precios G & Bros",
+      subtitle: "Configure sus preferencias para recibir una estimación dinámica y aproximada al instante.",
+      tierLabel: "1. Seleccione el Tipo de Limpieza",
+      standard: "Estándar",
       deep: "Limpieza Profunda",
-      move: "Mudanza (Entrada/Salida)",
-      office: "Espacio de Oficina",
-      sizeLabel: "2. Detalles de la Propiedad",
-      sqftText: "Tamaño:",
-      bedsText: "Habitaciones:",
-      bathsText: "Baños:",
-      frequencyLabel: "3. Frecuencia y Descuento",
-      oneTime: "Servicio Único",
-      weekly: "Semanal (Ahorre 20%)",
-      biWeekly: "Quincenal (Ahorre 15%)",
-      monthly: "Mensual (Ahorre 10%)",
-      summaryLabel: "Resumen del Costo Estimado",
-      disclaimer: "Nota: Esta es una cotización estimada. Circunstancias especiales podrían cambiar la tarifa final.",
-      bookBtn: "Aplicar Cotización al Formulario",
-      appliedToast: "¡Estimación copiada! Deslice hacia abajo para enviar sus datos."
+      move: "Entrada / Salida",
+      bedsLabel: "Habitaciones y Salones",
+      bathsLabel: "Baños",
+      extrasLabel: "Seleccione Servicios Adicionales",
+      receiptHeader: "Resumen de Brillo",
+      estimateText: "Precio de Referencia Estimado",
+      btnLabel: "Solicitar Presupuesto Firme",
+      addonsLabels: {
+        oven: "Interior del Horno (+25€)",
+        fridge: "Interior de Nevera (+25€)",
+        windows: "Ventanas Exteriores (+35€)",
+        balcony: "Lavado de Terraza/Balcón (+30€)",
+        ironing: "Ropa de Cama Express (+20€)",
+        mattress: "Tratamiento de Colchón (+25€)"
+      }
     }
   };
 
   const t = content[language];
 
   const handleApply = () => {
-    const serviceLabels: Record<string, string> = {
-      residential: "Standard Residential Cleaning",
-      deep: "Deep Cleaning Service",
-      move: "Move-In / Move-Out Cleaning",
-      office: "Office Space Cleaning"
+    const tierLabels = {
+      standard: language === "english" ? "Standard Maintenance" : "Mantenimiento Estándar",
+      deep: language === "english" ? "Deep & Detailed" : "Profunda y Detallada",
+      move: language === "english" ? "Move-In / Move-Out" : "Entrada / Salida"
     };
 
-    const freqLabels: Record<string, string> = {
-      "one-time": "One-Time",
-      weekly: "Weekly Recurring",
-      "bi-weekly": "Bi-Weekly Recurring",
-      monthly: "Monthly Recurring"
-    };
+    const formattedExtras = selectedAddons.length > 0 
+      ? selectedAddons.join(", ") 
+      : (language === "english" ? "None" : "Ninguno");
 
-    const details = language === "english"
-      ? `Estimated Package: ${serviceLabels[serviceType]} (${freqLabels[frequency]}). Details: ${sqft} SqFt, ${bedrooms} beds, ${bathrooms} baths. Live Price Calculated: $${totalPrice}`
-      : `Paquete Estimado: ${serviceLabels[serviceType]} (${freqLabels[frequency]}). Detalles: ${sqft} Pies Cuadrados, ${bedrooms} habs, ${bathrooms} baños. Precio Calculado: $${totalPrice}`;
-    
-    onApplyEstimate(details);
+    const formattedQuoteText = language === "english"
+      ? `G & Bros Estimator Summary:\nCleaning Tier: ${tierLabels[cleaningTier]}\nSize: ${rooms} Room(s), ${baths} Bathroom(s)\nSelected Extras: ${formattedExtras}\nBallpark Price: €${livePrice}\nPlease finalize my firm booking.`
+      : `Resumen del Estimador de G & Bros:\nTipo de Limpieza: ${tierLabels[cleaningTier]}\nTamaño: ${rooms} Habitación(es), ${baths} Baño(s)\nExtras Seleccionados: ${formattedExtras}\nPrecio de Referencia: €${livePrice}\nPor favor, finalice mi reserva firme.`;
+
+    onApplyEstimate(formattedQuoteText);
   };
 
   return (
-    <section id="estimator" className="py-24 bg-slate-900 text-white relative">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(20,184,166,0.02),transparent_60%)] pointer-events-none" />
-
+    <section id="estimator" className="py-24 bg-white relative border-b border-gray-150">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="text-center mb-16">
-          <span className="text-xs font-bold tracking-[0.25em] text-teal-400 uppercase block mb-3">
+          <span className="text-xs font-bold tracking-[0.25em] text-[#00c853] uppercase block mb-3">
             {t.tag}
           </span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight font-serif text-white">
+          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight font-serif text-[#005f43]">
             {t.title}
           </h2>
-          <p className="text-slate-400 max-w-2xl mx-auto mt-4 text-base">
+          <p className="text-slate-500 max-w-2xl mx-auto mt-4 text-base">
             {t.subtitle}
           </p>
-          <div className="w-24 h-1 bg-gradient-to-r from-teal-500 to-emerald-500 mx-auto mt-6 rounded-full" />
+          <div className="w-24 h-1.5 bg-[#005f43] mx-auto mt-6 rounded-full" />
         </div>
 
-        {/* Live Calculator Grid */}
+        {/* Pricing Layout Calculator Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
           
-          {/* Settings Column */}
-          <div className="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-10 space-y-8 text-left">
+          {/* Controls Column (Left) */}
+          <div className="lg:col-span-7 bg-[#FBF9F6] rounded-3xl p-6 sm:p-10 border border-[#005f43]/10 text-left space-y-8">
             
-            {/* Step 1: Service Type */}
+            {/* Step 1: Cleaning Tiers Buttons */}
             <div className="space-y-4">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-teal-400 flex items-center gap-2">
-                <Sparkles className="w-4 h-4" />
-                {t.serviceLabel}
+              <h3 className="text-sm font-black uppercase tracking-wider text-[#005f43] flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-[#00c853]" />
+                {t.tierLabel}
               </h3>
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() => setServiceType("residential")}
-                  className={`p-4 rounded-2xl border text-left text-sm transition-all duration-300 ${serviceType === "residential" ? "bg-teal-500/10 border-teal-400 text-white" : "bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700"}`}
-                >
-                  <span className="block font-bold mb-1">{t.residential}</span>
-                  <span className="text-xs text-slate-500">Standard cleanups</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setServiceType("deep")}
-                  className={`p-4 rounded-2xl border text-left text-sm transition-all duration-300 ${serviceType === "deep" ? "bg-teal-500/10 border-teal-400 text-white" : "bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700"}`}
-                >
-                  <span className="block font-bold mb-1">{t.deep}</span>
-                  <span className="text-xs text-slate-500">Extensive restoration</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setServiceType("move")}
-                  className={`p-4 rounded-2xl border text-left text-sm transition-all duration-300 ${serviceType === "move" ? "bg-teal-500/10 border-teal-400 text-white" : "bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700"}`}
-                >
-                  <span className="block font-bold mb-1">{t.move}</span>
-                  <span className="text-xs text-slate-500">Perfect handover</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setServiceType("office")}
-                  className={`p-4 rounded-2xl border text-left text-sm transition-all duration-300 ${serviceType === "office" ? "bg-teal-500/10 border-teal-400 text-white" : "bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700"}`}
-                >
-                  <span className="block font-bold mb-1">{t.office}</span>
-                  <span className="text-xs text-slate-500">Business sanitation</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Step 2: Size & Specs */}
-            <div className="space-y-6">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-teal-400 flex items-center gap-2">
-                <Home className="w-4 h-4" />
-                {t.sizeLabel}
-              </h3>
-              
-              {/* Sqft Slider */}
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm font-bold">
-                  <span className="text-slate-300">{t.sqftText}</span>
-                  <span className="text-teal-400">{sqft.toLocaleString()} Sq Ft</span>
-                </div>
-                <input
-                  type="range"
-                  min="500"
-                  max="5000"
-                  step="100"
-                  value={sqft}
-                  onChange={(e) => setSqft(Number(e.target.value))}
-                  className="w-full accent-teal-400 h-1.5 bg-slate-900 rounded-lg cursor-pointer"
-                />
-              </div>
-
-              {/* Beds & Baths Grid Selector */}
-              <div className="grid grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <span className="text-sm font-bold text-slate-300 block">{t.bedsText} {bedrooms}</span>
-                  <div className="flex gap-2">
-                    {[1, 2, 3, 4, 5, 6].map((num) => (
-                      <button
-                        key={num}
-                        type="button"
-                        onClick={() => setBedrooms(num)}
-                        className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all ${bedrooms === num ? "bg-teal-500 text-slate-950" : "bg-slate-900 hover:bg-slate-800 text-slate-300"}`}
-                      >
-                        {num}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <span className="text-sm font-bold text-slate-300 block">{t.bathsText} {bathrooms}</span>
-                  <div className="flex gap-2">
-                    {[1, 2, 3, 4, 5].map((num) => (
-                      <button
-                        key={num}
-                        type="button"
-                        onClick={() => setBathrooms(num)}
-                        className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all ${bathrooms === num ? "bg-teal-500 text-slate-950" : "bg-slate-900 hover:bg-slate-800 text-slate-300"}`}
-                      >
-                        {num}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Step 3: Frequency */}
-            <div className="space-y-4">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-teal-400 flex items-center gap-2">
-                <Calculator className="w-4 h-4" />
-                {t.frequencyLabel}
-              </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {[
-                  { id: "one-time", label: t.oneTime },
-                  { id: "weekly", label: t.weekly },
-                  { id: "bi-weekly", label: t.biWeekly },
-                  { id: "monthly", label: t.monthly }
-                ].map((freq) => (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {(["standard", "deep", "move"] as const).map((tier) => (
                   <button
-                    key={freq.id}
+                    key={tier}
                     type="button"
-                    onClick={() => setFrequency(freq.id)}
-                    className={`p-3 text-xs font-bold rounded-xl border transition-all text-center flex items-center justify-center h-14 ${frequency === freq.id ? "bg-teal-500/10 border-teal-400 text-white" : "bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700"}`}
+                    onClick={() => setCleaningTier(tier)}
+                    className={`py-3.5 px-4 rounded-xl border text-center font-bold text-sm transition-all duration-300 ${cleaningTier === tier ? "bg-[#005f43] text-white border-[#005f43]" : "bg-white border-gray-200 text-slate-700 hover:border-[#005f43]/40"}`}
                   >
-                    {freq.label}
+                    {t[tier]}
                   </button>
                 ))}
               </div>
             </div>
 
+            {/* Step 2: Bed and Baths count adjusters */}
+            <div className="space-y-6">
+              <h3 className="text-sm font-black uppercase tracking-wider text-[#005f43] flex items-center gap-2">
+                <Home className="w-4 h-4 text-[#00c853]" />
+                {language === "english" ? "2. Configure Size parameters" : "2. Configure los parámetros de tamaño"}
+              </h3>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                {/* Rooms controller plus/minus */}
+                <div className="space-y-3">
+                  <label className="text-xs font-black uppercase text-slate-500 tracking-wider">
+                    {t.bedsLabel}
+                  </label>
+                  <div className="flex items-center gap-4 bg-white p-2 rounded-2xl border border-gray-150 justify-between">
+                    <button
+                      type="button"
+                      disabled={rooms <= 1}
+                      onClick={() => setRooms(rooms - 1)}
+                      className="w-10 h-10 rounded-xl bg-[#FBF9F6] border text-slate-600 flex items-center justify-center font-black text-lg hover:bg-slate-100 disabled:opacity-40"
+                    >
+                      -
+                    </button>
+                    <span className="font-extrabold text-slate-800 text-lg">{rooms}</span>
+                    <button
+                      type="button"
+                      disabled={rooms >= 10}
+                      onClick={() => setRooms(rooms + 1)}
+                      className="w-10 h-10 rounded-xl bg-[#FBF9F6] border text-slate-600 flex items-center justify-center font-black text-lg hover:bg-slate-100"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                {/* Bathrooms controller plus/minus */}
+                <div className="space-y-3">
+                  <label className="text-xs font-black uppercase text-slate-500 tracking-wider">
+                    {t.bathsLabel}
+                  </label>
+                  <div className="flex items-center gap-4 bg-white p-2 rounded-2xl border border-gray-150 justify-between">
+                    <button
+                      type="button"
+                      disabled={baths <= 1}
+                      onClick={() => setBaths(baths - 1)}
+                      className="w-10 h-10 rounded-xl bg-[#FBF9F6] border text-slate-600 flex items-center justify-center font-black text-lg hover:bg-slate-100 disabled:opacity-40"
+                    >
+                      -
+                    </button>
+                    <span className="font-extrabold text-slate-800 text-lg">{baths}</span>
+                    <button
+                      type="button"
+                      disabled={baths >= 6}
+                      onClick={() => setBaths(baths + 1)}
+                      className="w-10 h-10 rounded-xl bg-[#FBF9F6] border text-slate-600 flex items-center justify-center font-black text-lg hover:bg-slate-100"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Step 3: Check Extra services checkboxes */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-black uppercase tracking-wider text-[#005f43] block">
+                {t.extrasLabel}
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {(["oven", "fridge", "windows", "balcony", "ironing", "mattress"] as const).map((addonId) => {
+                  const isChecked = selectedAddons.includes(addonId);
+                  return (
+                    <label
+                      key={addonId}
+                      className={`flex items-center gap-3 p-3.5 bg-white rounded-xl border-2 transition-all cursor-pointer ${isChecked ? "border-[#005f43] bg-[#005f43]/5" : "border-gray-150 hover:border-[#005f43]/20"}`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={() => toggleAddon(addonId)}
+                        className="rounded accent-[#00c853] w-4 h-4 cursor-pointer"
+                      />
+                      <span className="text-xs font-bold text-slate-700">{t.addonsLabels[addonId]}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+
           </div>
 
-          {/* Results Summary Column */}
-          <div className="lg:col-span-5 bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-10 flex flex-col justify-between relative overflow-hidden">
-            <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-teal-500 to-emerald-500" />
+          {/* Sparkle Summary Receipt Column (Right) */}
+          <div className="lg:col-span-5 bg-[#005f43] text-white rounded-3xl p-6 sm:p-10 flex flex-col justify-between relative shadow-xl overflow-hidden">
+            <div className="absolute top-0 inset-x-0 h-2 bg-[#00c853]" />
             
-            <div className="space-y-6 text-left">
-              <h3 className="text-xl font-serif font-bold text-white flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5 text-teal-400" />
-                {t.summaryLabel}
-              </h3>
+            <div className="space-y-8 text-left">
+              <div className="flex items-center gap-2.5">
+                <Calculator className="w-5 h-5 text-[#00c853]" />
+                <h3 className="text-2xl font-serif font-black tracking-wide">
+                  {t.receiptHeader}
+                </h3>
+              </div>
 
-              {/* Dynamic Big Cost Display */}
-              <div className="py-8 border-y border-slate-800/80 my-4 flex flex-col items-center justify-center text-center">
-                <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-slate-400 mb-1">
-                  Est. Cleaning Charge
+              {/* Dynamic itemized breakdown */}
+              <div className="space-y-3.5 border-t border-b border-white/10 py-6 text-sm font-medium text-slate-200">
+                <div className="flex justify-between">
+                  <span>
+                    {cleaningTier === "standard" && t.standard}
+                    {cleaningTier === "deep" && t.deep}
+                    {cleaningTier === "move" && t.move}
+                    {" "}{language === "english" ? "Tier base price" : "Precio base de nivel"}
+                  </span>
+                  <span>€{cleaningTier === "standard" ? 45 : cleaningTier === "deep" ? 60 : 70}</span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span>{language === "english" ? "Extra Room(s) cost" : "Costo por hab(s) adicionales"} ({rooms - 1})</span>
+                  <span>+€{(rooms - 1) * 15}</span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span>{language === "english" ? "Extra Bathroom(s) cost" : "Costo por baño(s) adicionales"} ({baths - 1})</span>
+                  <span>+€{(baths - 1) * 20}</span>
+                </div>
+
+                {selectedAddons.length > 0 && (
+                  <div className="pt-2.5 border-t border-white/5 space-y-2">
+                    <span className="text-[10px] uppercase font-bold tracking-wider text-[#00c853] block">
+                      {language === "english" ? "Premium Add-ons breakdown" : "Desglose de Extras Premium"}
+                    </span>
+                    {selectedAddons.map((addonId) => (
+                      <div key={addonId} className="flex justify-between text-xs text-slate-300">
+                        <span>• {t.addonsLabels[addonId].split(" (")[0]}</span>
+                        <span>+€{addonsPrices[addonId]}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Estimate highlight total price */}
+              <div className="text-center py-4 bg-white/5 rounded-2xl border border-white/10">
+                <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#00c853] block mb-1">
+                  {t.estimateText}
                 </span>
-                <span className="text-6xl sm:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-300 via-teal-400 to-emerald-300 font-serif">
-                  ${totalPrice}
+                <span className="text-5xl font-serif font-black text-[#00c853]">
+                  €{livePrice}
                 </span>
-                <span className="text-xs text-slate-500 mt-2">
-                  * Based on average duration requirements
+                <span className="text-[10px] text-slate-300 block mt-2">
+                  {language === "english" ? "* Custom spaces are subject to firm quotes" : "* Sujeto a cotizaciones firmes para espacios especiales"}
                 </span>
               </div>
 
-              {/* Specifications checklist review */}
-              <ul className="space-y-2 text-sm text-slate-300">
-                <li className="flex items-center justify-between">
-                  <span>Sq Footage:</span>
-                  <span className="font-bold text-teal-400">{sqft}</span>
-                </li>
-                <li className="flex items-center justify-between">
-                  <span>Layout Rooms:</span>
-                  <span className="font-bold text-teal-400">{bedrooms} Bed / {bathrooms} Bath</span>
-                </li>
-                <li className="flex items-center justify-between">
-                  <span>Target Plan:</span>
-                  <span className="font-bold text-teal-400 capitalize">{serviceType} cleanup</span>
-                </li>
-              </ul>
             </div>
 
-            <div className="space-y-4 pt-6">
+            <div className="pt-8">
               <Button
                 onClick={handleApply}
-                className="w-full bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 font-black py-4 rounded-xl shadow-xl hover:shadow-teal-500/15 transform hover:-translate-y-0.5 transition-all duration-300 text-sm flex items-center justify-center gap-2"
+                className="w-full bg-[#00c853] hover:bg-[#00ad48] text-[#005f43] font-black py-4 rounded-xl shadow-lg transition-transform hover:-translate-y-0.5 text-base flex items-center justify-center gap-2"
               >
-                {t.bookBtn}
-                <ArrowRight className="w-4 h-4" />
+                <span>{t.btnLabel}</span>
+                <ChevronRight className="w-5 h-5" />
               </Button>
-              <p className="text-[10px] text-slate-500 text-center leading-relaxed">
-                {t.disclaimer}
-              </p>
             </div>
 
           </div>
