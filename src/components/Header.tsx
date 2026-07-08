@@ -99,10 +99,10 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
             {/* Language Selector */}
             <button
               onClick={() => setLanguage(language === "en" ? "es" : "en")}
-              className="flex items-center gap-1 px-3 py-1.5 rounded-full border border-teal-500/30 text-teal-400 hover:bg-teal-500/10 text-xs font-semibold uppercase tracking-wider transition-all duration-300"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-full border border-teal-500/30 text-teal-400 hover:bg-teal-500/10 text-xs font-bold uppercase tracking-wider transition-all duration-300"
             >
               <Globe className="w-3.5 h-3.5" />
-              <span>{language === "en" ? "ES" : "EN"}</span>
+              <span>{language === "en" ? "Spanish" : "English"}</span>
             </button>
 
             <a
