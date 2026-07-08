@@ -34,7 +34,7 @@ export const Footer: React.FC<FooterProps> = ({ language, onScrollTo }) => {
           <button
             onClick={() => onScrollTo("hero")}
             onKeyDown={handleKeyPress}
-            className="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 hover:border-[#00c853] text-[#00c853] transition-all focus:outline-none focus:ring-2 focus:ring-[#005f43]"
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 hover:border-[#00c853] text-[#00c853] transition-all focus:outline-none focus:ring-2 focus:ring-[#00c853]"
             aria-label="Scroll back up to the top"
           >
             <ArrowUp className="w-5 h-5 stroke-[2.5]" />

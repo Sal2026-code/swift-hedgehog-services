@@ -34,6 +34,7 @@ export const Estimator: React.FC<EstimatorProps> = ({
   const [baseCost, setBaseCost] = useState<number>(45);
   const [extraRoomsCost, setExtraRoomsCost] = useState<number>(0);
   const [extraBathsCost, setExtraBathsCost] = useState<number>(0);
+  const [tierMultiplierLabel, setTierMultiplierLabel] = useState<string>("");
 
   const t = LOCALIZATION[language].estimator;
 

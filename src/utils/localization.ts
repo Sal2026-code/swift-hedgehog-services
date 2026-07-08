@@ -429,7 +429,7 @@ export const LOCALIZATION: Record<"english" | "spanish", TranslationSchema> = {
       pricing: "Precios y Planes",
       general: "Preguntas Generales",
       responseBadge: "Respuesta Oficial de G & Bros",
-      helpfulText: "Helpful",
+      helpfulText: "Útil",
       askTitle: "Hacer una nueva pregunta",
       nameLabel: "Su Nombre",
       catLabel: "Selección de Categoría",

@@ -45,13 +45,6 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
     );
   };
 
-  const handleAccordionKeyPress = (e: React.KeyboardEvent, id: number) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      setExpandedId(expandedId === id ? null : id);
-    }
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!query.trim() || query.length < 5) {
@@ -61,6 +54,13 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
     onAddQuestion(name, category, query);
     setName("");
     setQuery("");
+  };
+
+  const handleAccordionKeyPress = (e: React.KeyboardEvent, id: number) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setExpandedId(expandedId === id ? null : id);
+    }
   };
 
   const filteredQuestions = activeTab === "all"
