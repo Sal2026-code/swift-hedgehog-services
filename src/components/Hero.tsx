@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ShieldCheck, Leaf, Award, Languages, Check, ArrowRight, HelpCircle, Star } from "lucide-react";
+import { ShieldCheck, Leaf, Award, Languages, Check, ArrowRight, HelpCircle, Star, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LOCALIZATION } from "@/utils/localization";
 
@@ -24,34 +24,38 @@ const TESTIMONIALS = [
 ];
 
 export const Hero: React.FC<HeroProps> = ({ language, onScrollTo }) => {
-  const [activeTestimonialIdx, setActiveTestimonialIdx] = useState(0);
+  const [activeIdx, setActiveIdx] = useState(0);
   const t = LOCALIZATION[language].hero;
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setActiveTestimonialIdx((prev) => (prev + 1) % TESTIMONIALS.length);
+      setActiveIdx((prev) => (prev + 1) % TESTIMONIALS.length);
     }, 4500);
     return () => clearInterval(timer);
   }, []);
 
   const iconsMap = [
-    <ShieldCheck key="shield" className="w-5 h-5 text-[#00c853]" aria-hidden="true" />,
-    <Leaf key="leaf" className="w-5 h-5 text-[#00c853]" aria-hidden="true" />,
-    <Award key="award" className="w-5 h-5 text-[#00c853]" aria-hidden="true" />,
-    <Languages key="languages" className="w-5 h-5 text-[#00c853]" aria-hidden="true" />
+    <ShieldCheck key="shield" className="w-5 h-5 text-[#00c853]" />,
+    <Leaf key="leaf" className="w-5 h-5 text-[#00c853]" />,
+    <Award key="award" className="w-5 h-5 text-[#00c853]" />,
+    <Languages key="languages" className="w-5 h-5 text-[#00c853]" />
   ];
 
   return (
     <section 
       id="hero" 
       className="relative pt-12 pb-20 bg-gradient-to-br from-[#FBF9F6] via-white to-[#FBF9F6] border-b border-gray-150 overflow-hidden"
-      aria-label="Hero Introduction"
     >
-      {/* Radial backgrounds */}
-      <div className="absolute top-1/4 right-1/4 w-[400px] h-[400px] bg-[#00c853]/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 left-1/4 w-[300px] h-[300px] bg-[#005f43]/5 rounded-full blur-3xl pointer-events-none" />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        {/* Header Badge: Small badge with check icon */}
+        <div className="flex justify-start mb-6">
+          <div className="inline-flex items-center gap-2 bg-[#00c853]/10 border border-[#00c853]/20 px-3 py-1 rounded-full text-xs font-black text-[#005f43]">
+            <CheckCircle className="w-4 h-4 text-[#00c853]" />
+            <span>{t.badgeText}</span>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
           {/* Left Column: Heading, Value Props & CTAs */}
@@ -72,11 +76,10 @@ export const Hero: React.FC<HeroProps> = ({ language, onScrollTo }) => {
             </h1>
 
             {/* 2x2 Value Proposition Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4" role="list" aria-label="Core benefits">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
               {t.values.map((v, idx) => (
                 <div 
                   key={idx} 
-                  role="listitem"
                   className="flex gap-3 bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300"
                 >
                   <div className="p-2.5 bg-[#00c853]/10 text-[#00c853] rounded-xl h-fit">
@@ -90,83 +93,81 @@ export const Hero: React.FC<HeroProps> = ({ language, onScrollTo }) => {
               ))}
             </div>
 
-            {/* Core Action Buttons */}
+            {/* Action Buttons Below Grid */}
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <Button
                 onClick={() => onScrollTo("services")}
-                className="bg-[#005f43] hover:bg-[#004732] text-white font-extrabold px-8 py-6 rounded-xl text-md shadow-lg shadow-[#005f43]/20 flex items-center justify-center gap-2 group transition-all"
-                aria-label="View G & Bros core services and packages"
+                className="bg-[#005f43] hover:bg-[#004732] text-white font-extrabold px-8 py-6 rounded-xl text-md shadow-lg shadow-[#005f43]/20 flex items-center justify-center gap-2 transition-all"
               >
                 <span>{t.viewServices}</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+                <ArrowRight className="w-5 h-5" />
               </Button>
 
               <Button
                 onClick={() => onScrollTo("qa")}
                 variant="outline"
                 className="border-2 border-[#005f43] text-[#005f43] hover:bg-[#005f43]/5 font-extrabold px-8 py-6 rounded-xl text-md flex items-center justify-center gap-2"
-                aria-label="Ask G & Bros cleaning staff a custom question in the community forum"
               >
-                <HelpCircle className="w-5 h-5" aria-hidden="true" />
+                <HelpCircle className="w-5 h-5" />
                 <span>{t.askQuestion}</span>
               </Button>
             </div>
 
           </div>
 
-          {/* Right Column: Premium Plan checklist card */}
+          {/* Right Column Feature Card: Dark themed container card with exact layout specified */}
           <div className="lg:col-span-5">
-            <div className="bg-white border-2 border-[#005f43]/10 rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
-              <div className="absolute top-0 inset-x-0 h-1.5 bg-[#005f43]" />
+            <div className="bg-[#005f43] text-white rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden text-left border-2 border-[#00c853]/20">
+              <div className="absolute top-0 inset-x-0 h-1.5 bg-[#00c853]" />
               
               <div className="flex justify-between items-start gap-2 mb-6">
                 <div>
-                  <h3 className="text-xl font-serif font-extrabold text-[#005f43]">
+                  <h3 className="text-xl font-serif font-extrabold text-white">
                     {t.premiumPlanTitle}
                   </h3>
-                  <p className="text-xs text-slate-500 mt-1">
+                  <p className="text-xs text-slate-300 mt-1">
                     {language === "english" ? "Deep standard package" : "Paquete estándar profundo"}
                   </p>
                 </div>
-                <span className="bg-[#00c853]/15 text-[#005f43] border border-[#00c853]/20 text-[10px] uppercase font-black px-3 py-1 rounded-full tracking-wide">
+                <span className="bg-[#00c853] text-[#005f43] text-[10px] uppercase font-black px-3 py-1 rounded-full tracking-wide">
                   {t.premiumBadge}
                 </span>
               </div>
 
-              {/* Task Checklist list with ARIA landmarks */}
-              <ul className="space-y-3 mb-8 text-left animate-fade-in" aria-label="Premium Package tasks checklist">
+              {/* Task Checklist list */}
+              <ul className="space-y-3.5 mb-8 text-left" aria-label="Premium package task list">
                 {t.premiumTasks.map((task, idx) => (
-                  <li key={idx} className="flex items-start gap-2.5 text-sm">
-                    <div className="p-1 bg-[#00c853]/10 text-[#00c853] rounded-full mt-0.5" aria-hidden="true">
+                  <li key={idx} className="flex items-start gap-2.5 text-sm text-slate-200">
+                    <div className="p-1 bg-[#00c853]/20 text-[#00c853] rounded-full mt-0.5">
                       <Check className="w-3.5 h-3.5 stroke-[3]" />
                     </div>
-                    <span className="text-slate-700 font-medium leading-relaxed">{task}</span>
+                    <span className="leading-relaxed font-semibold">{task}</span>
                   </li>
                 ))}
               </ul>
 
-              {/* Dynamic Customer Testimonial Slider */}
-              <div className="bg-[#FBF9F6] border border-gray-150 rounded-2xl p-5 relative text-left" role="region" aria-label="Customer Reviews Carousel">
+              {/* Embedded rolling Testimonial block */}
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-5 relative text-left">
                 <div className="flex gap-1 mb-2">
                   {[1, 2, 3, 4, 5].map((star) => (
-                    <Star key={star} className="w-3.5 h-3.5 fill-[#00c853] text-[#00c853]" aria-hidden="true" />
+                    <Star key={star} className="w-3.5 h-3.5 fill-[#00c853] text-[#00c853]" />
                   ))}
                 </div>
-                <p className="text-xs italic text-slate-600 leading-relaxed font-serif min-h-[48px]">
-                  {language === "english" ? TESTIMONIALS[activeTestimonialIdx].en : TESTIMONIALS[activeTestimonialIdx].es}
+                <p className="text-xs italic text-slate-200 leading-relaxed font-serif min-h-[48px]">
+                  {language === "english" ? TESTIMONIALS[activeIdx].en : TESTIMONIALS[activeIdx].es}
                 </p>
-                <p className="text-[10px] font-black uppercase text-[#005f43] tracking-widest mt-2">
-                  {TESTIMONIALS[activeTestimonialIdx].author}
+                <p className="text-[10px] font-black uppercase text-[#00c853] tracking-widest mt-2">
+                  {TESTIMONIALS[activeIdx].author}
                 </p>
 
-                {/* Slider indicators */}
+                {/* Slider Indicators */}
                 <div className="flex gap-1.5 justify-end absolute bottom-3 right-4">
                   {TESTIMONIALS.map((_, idx) => (
                     <button
                       key={idx}
-                      onClick={() => setActiveTestimonialIdx(idx)}
-                      className={`w-1.5 h-1.5 rounded-full transition-all focus:ring-1 focus:ring-[#005f43] ${activeTestimonialIdx === idx ? "bg-[#005f43] w-3" : "bg-slate-300"}`}
-                      aria-label={`Show testimonial page ${idx + 1}`}
+                      onClick={() => setActiveIdx(idx)}
+                      className={`w-1.5 h-1.5 rounded-full transition-all ${activeIdx === idx ? "bg-[#00c853] w-3" : "bg-white/30"}`}
+                      aria-label={`Show review page ${idx + 1}`}
                     />
                   ))}
                 </div>
@@ -177,7 +178,7 @@ export const Hero: React.FC<HeroProps> = ({ language, onScrollTo }) => {
 
         </div>
 
-        {/* Section Footer: horizontal 3-column trust metrics ribbon */}
+        {/* Bottom Stats Ribbon */}
         <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 bg-[#005f43] text-white rounded-3xl p-6 sm:p-8 shadow-lg">
           <div className="text-center space-y-1 py-2 md:py-0 md:border-r border-white/10 last:border-0">
             <span className="block text-3xl font-serif font-black text-[#00c853]">100%</span>
