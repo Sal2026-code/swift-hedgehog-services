@@ -21,27 +21,27 @@ interface BrochureSlide {
 const BROCHURE_SLIDES: BrochureSlide[] = [
   {
     id: 1,
-    titleEs: "Diseño Arquitectónico de Vanguardia",
-    titleEn: "Cutting-Edge Architectural Design",
-    detailEs: "Una torre icónica que redefinirá el skyline con su fachada moderna, ventanales de alto aislamiento térmico y jardines verticales integrados.",
-    detailEn: "An iconic tower set to redefine the skyline with a modern facade, high thermal insulation windows, and integrated vertical gardens.",
+    titleEs: "Diseño Sostenible con Certificación EDGE®",
+    titleEn: "EDGE® Certified Sustainable Living",
+    detailEs: "Construido bajo estrictos lineamientos de ahorro de agua y energía. Cuenta con paneles fotovoltaicos para reducir el costo eléctrico de áreas comunes y grifería inteligente de ultra bajo flujo.",
+    detailEn: "Built under strict water and energy-saving standards. Features photovoltaic solar panels to minimize electric billing for social spaces and smart low-flow high-end faucets.",
     image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80"
   },
   {
     id: 2,
-    titleEs: "Ubicación Privilegiada en Escazú",
-    titleEn: "Privileged Location in Escazu",
-    detailEs: "Rodeado de los mejores restaurantes, centros médicos de primer nivel, prestigiosos colegios privados y boutiques de diseñador.",
-    detailEn: "Surrounded by first-class dining, top-tier medical centers, prestigious private schools, and luxury designer boutiques.",
-    image: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1200&q=80"
+    titleEs: "Acabados Exclusivos de Nivel Mundial",
+    titleEn: "World-Class Exclusive Finishes",
+    detailEs: "Cocinas de origen italiano Euromobil®, grifería alemana Hansgrohe®, sobres de cuarzo de alta resistencia y ventanales térmicos que garantizan absoluto aislamiento acústico contra ruidos exteriores.",
+    detailEn: "Euromobil® Italian kitchen cabinets, Hansgrohe® German bathroom fixtures, high-durability quartz countertops, and thermal dual-pane windows offering complete acoustic insulation.",
+    image: "https://images.unsplash.com/photo-1600121848594-d8644e57abab?auto=format&fit=crop&w=1200&q=80"
   },
   {
     id: 3,
-    titleEs: "Sostenibilidad & Eficiencia Energética",
-    titleEn: "Sustainability & Energy Efficiency",
-    detailEs: "Construcción con certificación ambiental, paneles solares para áreas comunes, grifería inteligente para ahorro de agua y reciclaje integral.",
-    detailEn: "Eco-friendly certified construction, solar panels for social zones, smart low-flow fixtures, and organic recycling systems.",
-    image: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80"
+    titleEs: "Ubicación Premium de Alta Plusvalía",
+    titleEn: "High Capital Gain Premium Location",
+    detailEs: "Estratégicamente ubicado en San Rafael de Escazú. Facilidad de acceso directo a centros gastronómicos, Avenida Escazú, Multiplaza, Hospital CIMA y los colegios privados de mayor nivel en Costa Rica.",
+    detailEn: "Strategically located in San Rafael, Escazu. Offers direct premium access to culinary hotspots, Avenida Escazu, Multiplaza mall, CIMA Hospital, and the most prestigious private schools in Costa Rica.",
+    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80"
   }
 ];
 
@@ -51,19 +51,19 @@ export const BrochureViewer: React.FC<BrochureViewerProps> = ({ language }) => {
   const content = {
     es: {
       tag: "DOSSIER EXCLUSIVO",
-      title: "Explora la Presentación del Proyecto",
-      subtitle: "Descubre los pilares de diseño, la ubicación y el folleto técnico completo de Aura.",
+      title: "Especificaciones Técnicas del Proyecto",
+      subtitle: "Descubre los pilares ecológicos de construcción, la selección de acabados importados y el folleto técnico completo de Aura.",
       downloadBtn: "Descargar Folleto PDF Completo",
       slideLabel: "Capítulo",
-      downloadToast: "¡Folleto de preventa descargado con éxito!"
+      downloadToast: "¡Folleto técnico del proyecto descargado con éxito!"
     },
     en: {
       tag: "EXCLUSIVE BROCHURE",
-      title: "Explore the Project Presentation",
-      subtitle: "Discover the architectural pillars, site location, and detailed technical specifications.",
+      title: "Technical Project Specifications",
+      subtitle: "Discover eco-friendly construction pillars, premium imported finishes selection, and our fully detailed brochure.",
       downloadBtn: "Download PDF Presentation Brochure",
       slideLabel: "Chapter",
-      downloadToast: "Presale brochure downloaded successfully!"
+      downloadToast: "Technical project brochure downloaded successfully!"
     }
   };
 

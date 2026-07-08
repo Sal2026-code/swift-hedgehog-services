@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Calculator, DollarSign, Percent, TrendingUp, Sparkles, Building } from "lucide-react";
+import { Calculator, DollarSign, Percent, TrendingUp, Sparkles, Building, BarChart2, Coins } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 
 interface InvestmentCalculatorProps {
@@ -14,6 +14,7 @@ export const InvestmentCalculator: React.FC<InvestmentCalculatorProps> = ({ lang
   const [downPaymentPercent, setDownPaymentPercent] = useState<number>(20);
   const [interestRate, setInterestRate] = useState<number>(6.5);
   const [loanTerm, setLoanTerm] = useState<number>(30);
+  const [rentalStrategy, setRentalStrategy] = useState<"long" | "short">("short");
 
   // Computed results
   const downPayment = (propertyPrice * downPaymentPercent) / 100;
@@ -32,15 +33,26 @@ export const InvestmentCalculator: React.FC<InvestmentCalculatorProps> = ({ lang
     monthlyPayment = loanAmount / numberOfPayments;
   }
 
-  // Estimated average high-end monthly rental yield in Escazu
-  const estimatedMonthlyRent = Math.round(propertyPrice * 0.007);
-  const annualROI = (((estimatedMonthlyRent * 12) - (monthlyPayment * 0.2)) / propertyPrice * 100).toFixed(1);
+  // HOA estimation based on square footage / average category
+  const estimatedHOA = Math.round(140 + (propertyPrice - 195000) * 0.0006);
+
+  // Rental yield estimates
+  const estimatedLongTermRent = Math.round(propertyPrice * 0.0068);
+  const estimatedShortTermRent = Math.round(propertyPrice * 0.11 / 12); // Airbnb mode higher gross revenue but more expenses
+
+  const activeRent = rentalStrategy === "long" ? estimatedLongTermRent : estimatedShortTermRent;
+  const operatingExpenses = rentalStrategy === "long" ? estimatedHOA + 50 : Math.round(estimatedShortTermRent * 0.35 + estimatedHOA); // Management + cleaning + utilities
+
+  // ROI calculation
+  const netAnnualCashFlow = (activeRent * 12) - (operatingExpenses * 12);
+  const capRate = ((netAnnualCashFlow / propertyPrice) * 100).toFixed(2);
+  const cashOnCashROI = (((netAnnualCashFlow - (monthlyPayment * 12)) / downPayment) * 100).toFixed(2);
 
   const content = {
     es: {
-      tag: "PLANIFICACIÓN FINANCIERA",
-      title: "Simulador de Inversión y Retorno",
-      subtitle: "Calcula tus primas mensuales, montos de financiamiento y rentabilidades estimadas fácilmente.",
+      tag: "ESTUDIO DE FACTIBILIDAD",
+      title: "Simulador Financiero de Retorno",
+      subtitle: "Calcula tus primas mensuales, montos de financiamiento y rentabilidades estimadas basadas en el mercado real de Escazú.",
       propPrice: "Precio de la Propiedad",
       downPay: "Porcentaje de Prima (Enganche)",
       downPayAmount: "Monto de Prima",
@@ -48,17 +60,24 @@ export const InvestmentCalculator: React.FC<InvestmentCalculatorProps> = ({ lang
       years: "Años",
       rate: "Tasa de Interés Anual",
       resultsTitle: "Resumen Financiero",
-      monthlyInst: "Cuota Mensual Estimada",
+      monthlyInst: "Cuota Mensual del Crédito",
       financedVal: "Monto Total Financiado",
       roiTitle: "Rentabilidad Estimada de Alquiler",
-      roiVal: "Retorno de Inversión (ROI)",
-      roiDesc: "Basado en rentas de lujo promedio en el sector de Escazú.",
-      ctaNote: "Simulación de carácter ilustrativo. Contáctanos para consultar opciones de financiamiento directo con la desarrolladora."
+      roiDesc: "Elige la estrategia de alquiler que se adapte mejor a tus objetivos financieros.",
+      longTermBtn: "Alquiler Tradicional (Anual)",
+      shortTermBtn: "Plataformas (Airbnb / Short-term)",
+      estimatedIncome: "Ingreso Mensual Estimado",
+      expenses: "Gastos de Operación + HOA",
+      netIncome: "Ingreso Neto Anual",
+      roiLabel: "Tasa de Capitalización (Cap Rate)",
+      cashOnCash: "Retorno Efectivo (Cash-on-Cash)",
+      hoaNote: "*Incluye una estimación de cuota condominal de",
+      ctaNote: "Simulación de carácter ilustrativo para inversión inmobiliaria premium. No incluye seguros locales ni comisiones bancarias."
     },
     en: {
-      tag: "FINANCIAL PLANNING",
-      title: "Investment & Return Simulator",
-      subtitle: "Calculate your monthly premiums, mortgage totals, and estimated yield easily.",
+      tag: "FEASIBILITY STUDY",
+      title: "Financial Yield Simulator",
+      subtitle: "Calculate your monthly premiums, mortgage totals, and estimated yields based on the real Escazu market.",
       propPrice: "Property Value",
       downPay: "Down Payment Percentage",
       downPayAmount: "Down Payment Amount",
@@ -66,12 +85,17 @@ export const InvestmentCalculator: React.FC<InvestmentCalculatorProps> = ({ lang
       years: "Years",
       rate: "Annual Interest Rate",
       resultsTitle: "Financial Breakdown Summary",
-      monthlyInst: "Estimated Monthly Mortgage",
-      financedVal: "Total Financed Amount",
       roiTitle: "Estimated Rental Yield",
-      roiVal: "Return on Investment (ROI)",
-      roiDesc: "Based on standard high-end luxury rentals in San Rafael, Escazu.",
-      ctaNote: "Simulation for illustrative purposes. Contact us to consult exclusive developer direct financing options."
+      roiDesc: "Select the rental strategy that best fits your passive income targets.",
+      longTermBtn: "Traditional Long-Term Lease",
+      shortTermBtn: "Vacation / Corporate (Airbnb)",
+      estimatedIncome: "Estimated Monthly Revenue",
+      expenses: "Operating Expenses + HOA",
+      netIncome: "Net Annual Cash Flow",
+      roiLabel: "Capitalization Rate (Cap Rate)",
+      cashOnCash: "Cash-on-Cash Return",
+      hoaNote: "*Includes estimated monthly HOA fee of",
+      ctaNote: "Simulation for illustrative premium real estate investment planning. Does not include local insurance or banking fees."
     }
   };
 
@@ -120,8 +144,8 @@ export const InvestmentCalculator: React.FC<InvestmentCalculatorProps> = ({ lang
                 className="py-2"
               />
               <div className="flex justify-between text-[11px] text-slate-500 font-bold">
-                <span>$195,000 (Loft)</span>
-                <span>$600,000 (Max Penthouse)</span>
+                <span>$195,000 (Loft Aura)</span>
+                <span>$600,000 (Custom Sky Penthouse)</span>
               </div>
             </div>
 
@@ -144,7 +168,7 @@ export const InvestmentCalculator: React.FC<InvestmentCalculatorProps> = ({ lang
                 className="py-2"
               />
               <div className="flex justify-between text-[11px] text-slate-500 font-bold">
-                <span>10% (Minimum)</span>
+                <span>10% (Minimum down payment)</span>
                 <span>50%</span>
               </div>
             </div>
@@ -155,7 +179,7 @@ export const InvestmentCalculator: React.FC<InvestmentCalculatorProps> = ({ lang
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <label className="text-xs font-bold tracking-wide text-slate-400 uppercase">
-                    {t.term}
+                    {language === "es" ? "Plazo del Financiamiento" : "Loan Term"}
                   </label>
                   <span className="text-sm font-bold text-white">
                     {loanTerm} {t.years}
@@ -206,6 +230,38 @@ export const InvestmentCalculator: React.FC<InvestmentCalculatorProps> = ({ lang
 
             </div>
 
+            {/* Strategy selector segment */}
+            <div className="pt-4 border-t border-slate-800/60 space-y-4">
+              <div className="flex justify-between items-baseline">
+                <label className="text-sm font-bold text-slate-300">{t.roiTitle}</label>
+                <span className="text-[10px] text-slate-500">{t.roiDesc}</span>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <button
+                  onClick={() => setRentalStrategy("long")}
+                  className={`flex-1 py-3 px-4 rounded-xl text-xs font-bold border transition-all flex items-center justify-center gap-2 ${
+                    rentalStrategy === "long"
+                      ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/40"
+                      : "bg-slate-950/50 border-slate-800 text-slate-400 hover:bg-slate-900"
+                  }`}
+                >
+                  <Building className="w-4 h-4" />
+                  {t.longTermBtn}
+                </button>
+                <button
+                  onClick={() => setRentalStrategy("short")}
+                  className={`flex-1 py-3 px-4 rounded-xl text-xs font-bold border transition-all flex items-center justify-center gap-2 ${
+                    rentalStrategy === "short"
+                      ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/40"
+                      : "bg-slate-950/50 border-slate-800 text-slate-400 hover:bg-slate-900"
+                  }`}
+                >
+                  <BarChart2 className="w-4 h-4" />
+                  {t.shortTermBtn}
+                </button>
+              </div>
+            </div>
+
           </div>
 
           {/* Right Column: Output Summary Results Card */}
@@ -218,11 +274,11 @@ export const InvestmentCalculator: React.FC<InvestmentCalculatorProps> = ({ lang
             </h3>
 
             {/* Calculated Monthly Mortgage */}
-            <div className="bg-slate-950/80 rounded-2xl p-6 border border-slate-800/80 text-center">
-              <p className="text-xs text-slate-400 uppercase tracking-widest font-semibold mb-2">
+            <div className="bg-slate-950/80 rounded-2xl p-5 border border-slate-800/80 text-center">
+              <p className="text-[10px] text-slate-400 uppercase tracking-widest font-semibold mb-2">
                 {t.monthlyInst}
               </p>
-              <p className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-100 font-serif">
+              <p className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-100 font-serif">
                 ${Math.round(monthlyPayment).toLocaleString()}
                 <span className="text-sm text-slate-400 font-sans font-light"> /mo</span>
               </p>
@@ -231,29 +287,53 @@ export const InvestmentCalculator: React.FC<InvestmentCalculatorProps> = ({ lang
             {/* Financed Amount */}
             <div className="flex justify-between items-center text-sm px-2">
               <span className="text-slate-400">{t.financedVal}</span>
-              <span className="font-extrabold text-white">${loanAmount.toLocaleString()}</span>
+              <span className="font-bold text-white">${loanAmount.toLocaleString()}</span>
             </div>
 
             {/* Down Payment Summary */}
-            <div className="flex justify-between items-center text-sm px-2 border-b border-slate-800 pb-6">
+            <div className="flex justify-between items-center text-sm px-2 border-b border-slate-800 pb-4">
               <span className="text-slate-400">{t.downPayAmount} ({downPaymentPercent}%)</span>
-              <span className="font-extrabold text-amber-400">${downPayment.toLocaleString()}</span>
+              <span className="font-bold text-amber-400">${downPayment.toLocaleString()}</span>
             </div>
 
-            {/* Estimated Rental yield segment */}
-            <div className="bg-slate-950/80 rounded-2xl p-5 border border-amber-500/10 space-y-3">
+            {/* Estimated Rental Strategy yield breakdown */}
+            <div className="bg-slate-950/80 rounded-2xl p-5 border border-emerald-500/10 space-y-4">
               <div className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-emerald-400" />
-                <h4 className="text-sm font-bold text-white uppercase tracking-wider">{t.roiTitle}</h4>
+                <Coins className="w-5 h-5 text-emerald-400" />
+                <h4 className="text-xs font-bold text-white uppercase tracking-wider">{t.roiTitle}</h4>
               </div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-extrabold text-emerald-400 font-serif">
-                  {annualROI}%
-                </span>
-                <span className="text-xs text-slate-400">Est. ROI {language === "es" ? "anual" : "annual"}</span>
+              
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-slate-400">{t.estimatedIncome}</span>
+                  <span className="font-bold text-emerald-400">+${activeRent.toLocaleString()}/mo</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-400">{t.expenses}</span>
+                  <span className="font-bold text-rose-400">-${operatingExpenses.toLocaleString()}/mo</span>
+                </div>
+                <div className="flex justify-between border-t border-slate-800/80 pt-2">
+                  <span className="text-slate-400">{t.netIncome}</span>
+                  <span className="font-extrabold text-emerald-400">${(netAnnualCashFlow).toLocaleString()}/yr</span>
+                </div>
               </div>
-              <p className="text-[11px] text-slate-400 leading-relaxed font-light">
-                {t.roiDesc}
+
+              {/* Final Indicators */}
+              <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-800/80">
+                <div className="bg-slate-900/50 p-3 rounded-xl border border-slate-800 text-center">
+                  <p className="text-[9px] text-slate-400 uppercase font-semibold">{t.roiLabel}</p>
+                  <p className="text-lg font-extrabold text-emerald-400">{capRate}%</p>
+                </div>
+                <div className="bg-slate-900/50 p-3 rounded-xl border border-slate-800 text-center">
+                  <p className="text-[9px] text-slate-400 uppercase font-semibold">{t.cashOnCash}</p>
+                  <p className="text-lg font-extrabold text-emerald-400">
+                    {parseFloat(cashOnCashROI) > 0 ? `${cashOnCashROI}%` : "No Debt Yield"}
+                  </p>
+                </div>
+              </div>
+
+              <p className="text-[9px] text-slate-500 text-center leading-relaxed">
+                {t.hoaNote} ${estimatedHOA}/mo
               </p>
             </div>
 
