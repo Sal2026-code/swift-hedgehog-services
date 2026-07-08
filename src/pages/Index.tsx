@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { TrustBadges } from "@/components/TrustBadges";
@@ -77,6 +77,27 @@ const Index = () => {
   // Message field prefilled for ContactSection
   const [contactMessage, setContactMessage] = useState<string>("");
 
+  // Inject Madrid optimized SEO description
+  useEffect(() => {
+    document.title = language === "english" 
+      ? "G & Bros Services Inc. | Premium Apartment Cleaning in Madrid" 
+      : "G & Bros Services Inc. | Limpieza de Apartamentos Premium en Madrid";
+
+    const metaDesc = document.querySelector('meta[name="description"]');
+    const descText = language === "english"
+      ? "Experience premium, certified, and fully-insured apartment deep cleaning services in Madrid with G & Bros Services Inc. Eco-friendly products."
+      : "Disfrute de servicios de limpieza profunda de apartamentos premium y asegurados en Madrid con G & Bros Services Inc. Productos ecológicos.";
+    
+    if (metaDesc) {
+      metaDesc.setAttribute("content", descText);
+    } else {
+      const meta = document.createElement("meta");
+      meta.name = "description";
+      meta.content = descText;
+      document.head.appendChild(meta);
+    }
+  }, [language]);
+
   const handleScrollTo = (elementId: string) => {
     const el = document.getElementById(elementId);
     if (el) {
@@ -84,7 +105,7 @@ const Index = () => {
     }
   };
 
-  // Toggle dynamic add-ons from either the general selection cards or within the calculator
+  // Toggle dynamic add-ons
   const toggleAddon = (addonId: string) => {
     setSelectedAddons((prev) =>
       prev.includes(addonId) ? prev.filter((id) => id !== addonId) : [...prev, addonId]
@@ -132,56 +153,59 @@ const Index = () => {
         onScrollTo={handleScrollTo} 
       />
 
-      {/* High-Fidelity Hero Section */}
-      <Hero 
-        language={language}
-        onScrollTo={handleScrollTo}
-      />
+      {/* Main Content Area */}
+      <main>
+        {/* High-Fidelity Hero Section */}
+        <Hero 
+          language={language}
+          onScrollTo={handleScrollTo}
+        />
 
-      {/* Continuous Trust Badges Slider */}
-      <TrustBadges language={language} />
+        {/* Continuous Trust Badges Slider */}
+        <TrustBadges language={language} />
 
-      {/* Services Breakdown Grid */}
-      <Services 
-        language={language}
-        onScrollTo={handleScrollTo}
-        setCleaningTier={setCleaningTier}
-      />
+        {/* Services Breakdown Grid */}
+        <Services 
+          language={language}
+          onScrollTo={handleScrollTo}
+          setCleaningTier={setCleaningTier}
+        />
 
-      {/* Custom Add-ons selection segment */}
-      <AddonsGrid 
-        language={language}
-        selectedAddons={selectedAddons}
-        toggleAddon={toggleAddon}
-      />
+        {/* Custom Add-ons selection segment */}
+        <AddonsGrid 
+          language={language}
+          selectedAddons={selectedAddons}
+          toggleAddon={toggleAddon}
+        />
 
-      {/* Dynamic Price Estimator Widget */}
-      <Estimator 
-        language={language}
-        cleaningTier={cleaningTier}
-        setCleaningTier={setCleaningTier}
-        rooms={rooms}
-        setRooms={setRooms}
-        baths={baths}
-        setBaths={setBaths}
-        selectedAddons={selectedAddons}
-        toggleAddon={toggleAddon}
-        onApplyEstimate={handleRequestEstimate}
-      />
+        {/* Dynamic Price Estimator Widget */}
+        <Estimator 
+          language={language}
+          cleaningTier={cleaningTier}
+          setCleaningTier={setCleaningTier}
+          rooms={rooms}
+          setRooms={setRooms}
+          baths={baths}
+          setBaths={setBaths}
+          selectedAddons={selectedAddons}
+          toggleAddon={toggleAddon}
+          onApplyEstimate={handleRequestEstimate}
+        />
 
-      {/* Community Q&A forum & Questions entry */}
-      <ForumSection 
-        language={language}
-        questions={forumQuestions}
-        setQuestions={setForumQuestions}
-        onAddQuestion={handleAddNewQuestion}
-      />
+        {/* Community Q&A forum & Questions entry */}
+        <ForumSection 
+          language={language}
+          questions={forumQuestions}
+          setQuestions={setForumQuestions}
+          onAddQuestion={handleAddNewQuestion}
+        />
 
-      {/* Contact Form with synced estimator description state */}
-      <ContactSection 
-        language={language}
-        prefilledMessage={contactMessage}
-      />
+        {/* Contact Form with synced estimator description state */}
+        <ContactSection 
+          language={language}
+          prefilledMessage={contactMessage}
+        />
+      </main>
 
       {/* Corporate footer block with scroll up option */}
       <Footer 

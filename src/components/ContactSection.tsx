@@ -3,7 +3,8 @@
 import React, { useState } from "react";
 import { Mail, Phone, MapPin, Clock, Send, ShieldCheck, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { LOCALIZATION } from "@/utils/localization";
+import { showError, showSuccess } from "@/utils/toast";
 
 interface ContactSectionProps {
   language: "english" | "spanish";
@@ -18,82 +19,51 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  // Prefill the calculated dynamic estimator text automatically if provided
+  const t = LOCALIZATION[language].contact;
+
   React.useEffect(() => {
     if (prefilledMessage) {
       setMessage(prefilledMessage);
     }
   }, [prefilledMessage]);
 
-  const content = {
-    english: {
-      tag: "Get in Touch",
-      title: "Contact G & Bros Services Inc.",
-      subtitle: "Connect with our expert supervisors to schedule premium apartment deep cleans.",
-      emailLabel: "Email Address",
-      phoneLabel: "Phone Number",
-      addrLabel: "Corporate Headquarters",
-      address: "Gran Via de las Comunidades, 45, Floor 2, Madrid.",
-      hoursLabel: "Working Hours",
-      weekdays: "Monday to Saturday: 8:00 AM – 8:00 PM",
-      sunday: "Sundays: Closed",
-      formTitle: "Send Inquiry Form",
-      nameField: "Full Name",
-      phoneField: "Phone Number",
-      emailField: "Email Address",
-      msgField: "Describe your Apartment or Needs",
-      phName: "Alexis Martinez",
-      phMsg: "Detail bedrooms, bathrooms, layout, preferred schedule...",
-      submitBtn: "Send Inquiry Form",
-      submittingBtn: "Sending Message...",
-      confidentiality: "All details remain protected and secured",
-      successTitle: "Inquiry Submitted!",
-      successDesc: "Thank you! G & Bros Services Inc. has received your query. Our apartment estimation supervisors will email or call you shortly."
-    },
-    spanish: {
-      tag: "Ponte en Contacto",
-      title: "Contacto con G & Bros Services Inc.",
-      subtitle: "Conéctese con nuestros supervisores expertos para programar limpiezas profundas premium.",
-      emailLabel: "Dirección de Correo",
-      phoneLabel: "Número de Teléfono",
-      addrLabel: "Sede Corporativa",
-      address: "Gran Via de las Comunidades, 45, Planta 2, Madrid.",
-      hoursLabel: "Horario Comercial",
-      weekdays: "Lunes a Sábado: 8:00 AM – 8:00 PM",
-      sunday: "Domingos: Cerrado",
-      formTitle: "Formulario de Consulta",
-      nameField: "Nombre Completo",
-      phoneField: "Número de Teléfono",
-      emailField: "Dirección de Correo",
-      msgField: "Describa su Apartamento o Necesidad",
-      phName: "Alexis Martinez",
-      phMsg: "Detalle habitaciones, baños, distribución, horario preferido...",
-      submitBtn: "Enviar Formulario de Consulta",
-      submittingBtn: "Enviando Mensaje...",
-      confidentiality: "Todos los detalles están protegidos y asegurados",
-      successTitle: "¡Consulta Enviada!",
-      successDesc: "¡Gracias! G & Bros Services Inc. ha recibido su consulta. Nuestros supervisores de estimaciones se comunicarán con usted en breve."
-    }
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Only allow numerical inputs, spaces, plus and dashes
+    const val = e.target.value.replace(/[^0-9+\s-]/g, "");
+    setPhone(val);
   };
-
-  const t = content[language];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !email || !phone) {
-      toast.error(language === "english" ? "Please fill in all required fields." : "Por favor complete todos los campos obligatorios.");
+
+    // Verification logic
+    if (!name.trim() || name.length < 3) {
+      showError(language === "english" ? "Please enter a valid full name." : "Por favor introduzca un nombre válido.");
       return;
     }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      showError(language === "english" ? "Please enter a valid email address." : "Por favor introduzca un correo válido.");
+      return;
+    }
+
+    const digitsOnly = phone.replace(/\D/g, "");
+    if (digitsOnly.length < 9) {
+      showError(language === "english" ? "Please enter a valid phone number (min 9 digits)." : "Por favor introduzca un teléfono válido (mínimo 9 dígitos).");
+      return;
+    }
+
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
       setSubmitted(true);
-      toast.success(t.successTitle);
+      showSuccess(t.successTitle);
     }, 1200);
   };
 
   return (
-    <section id="contact" className="py-24 bg-white relative">
+    <section id="contact" className="py-24 bg-white relative" aria-label="Contact G & Bros Services">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
@@ -116,12 +86,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
           {/* Office Info column (Left) */}
           <div className="lg:col-span-5 bg-[#FBF9F6] border border-gray-150 rounded-3xl p-6 sm:p-10 space-y-8">
             <h3 className="text-2xl font-serif font-black text-[#005f43]">
-              {language === "english" ? "Office details" : "Detalles de Oficina"}
+              {t.officeTitle}
             </h3>
 
             {/* Email Block */}
             <div className="flex gap-4 items-start">
-              <div className="p-3 bg-[#005f43]/10 text-[#005f43] rounded-2xl h-fit">
+              <div className="p-3 bg-[#005f43]/10 text-[#005f43] rounded-2xl h-fit" aria-hidden="true">
                 <Mail className="w-5 h-5 text-[#00c853]" />
               </div>
               <div>
@@ -136,7 +106,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
 
             {/* Phone Block */}
             <div className="flex gap-4 items-start">
-              <div className="p-3 bg-[#005f43]/10 text-[#005f43] rounded-2xl h-fit">
+              <div className="p-3 bg-[#005f43]/10 text-[#005f43] rounded-2xl h-fit" aria-hidden="true">
                 <Phone className="w-5 h-5 text-[#00c853]" />
               </div>
               <div>
@@ -151,7 +121,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
 
             {/* Address Block */}
             <div className="flex gap-4 items-start">
-              <div className="p-3 bg-[#005f43]/10 text-[#005f43] rounded-2xl h-fit">
+              <div className="p-3 bg-[#005f43]/10 text-[#005f43] rounded-2xl h-fit" aria-hidden="true">
                 <MapPin className="w-5 h-5 text-[#00c853]" />
               </div>
               <div>
@@ -166,7 +136,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
 
             {/* Business Hours Block */}
             <div className="flex gap-4 items-start">
-              <div className="p-3 bg-[#005f43]/10 text-[#005f43] rounded-2xl h-fit">
+              <div className="p-3 bg-[#005f43]/10 text-[#005f43] rounded-2xl h-fit" aria-hidden="true">
                 <Clock className="w-5 h-5 text-[#00c853]" />
               </div>
               <div>
@@ -187,7 +157,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
           {/* Form input field column (Right) */}
           <div className="lg:col-span-7">
             {submitted ? (
-              <div className="bg-[#FBF9F6] border-2 border-[#00c853]/20 rounded-3xl p-8 sm:p-12 text-center space-y-6 relative overflow-hidden">
+              <div className="bg-[#FBF9F6] border-2 border-[#00c853]/20 rounded-3xl p-8 sm:p-12 text-center space-y-6 relative overflow-hidden" role="status" aria-live="polite">
                 <div className="absolute top-0 inset-x-0 h-1.5 bg-[#00c853]" />
                 <div className="w-16 h-16 bg-[#00c853]/15 text-[#005f43] rounded-full flex items-center justify-center mx-auto border border-[#00c853]/30">
                   <CheckCircle className="w-8 h-8 text-[#00c853]" />
@@ -200,7 +170,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="bg-white border border-gray-150 rounded-3xl p-6 sm:p-10 space-y-6 shadow-md relative">
+              <form onSubmit={handleSubmit} className="bg-white border border-gray-150 rounded-3xl p-6 sm:p-10 space-y-6 shadow-md relative" aria-label="Quote request form">
                 <div className="absolute top-0 inset-x-0 h-1.5 bg-[#005f43]" />
                 
                 <h3 className="text-xl font-serif font-black text-[#005f43] mb-4">
@@ -210,61 +180,65 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {/* Name field */}
                   <div className="space-y-2">
-                    <label className="text-xs font-black uppercase text-[#1e293b] tracking-wider block">
+                    <label htmlFor="contact-name" className="text-xs font-black uppercase text-[#1e293b] tracking-wider block">
                       {t.nameField} <span className="text-red-500">*</span>
                     </label>
                     <input
+                      id="contact-name"
                       type="text"
                       required
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder={t.phName}
-                      className="w-full bg-[#FBF9F6] border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#1e293b] focus:outline-none focus:border-[#005f43] transition-all"
+                      className="w-full bg-[#FBF9F6] border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#1e293b] focus:outline-none focus:border-[#005f43] focus:ring-2 focus:ring-[#005f43]/10 transition-all"
                     />
                   </div>
 
                   {/* Phone field */}
                   <div className="space-y-2">
-                    <label className="text-xs font-black uppercase text-[#1e293b] tracking-wider block">
+                    <label htmlFor="contact-phone" className="text-xs font-black uppercase text-[#1e293b] tracking-wider block">
                       {t.phoneField} <span className="text-red-500">*</span>
                     </label>
                     <input
+                      id="contact-phone"
                       type="tel"
                       required
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
+                      onChange={handlePhoneChange}
                       placeholder="+34 600..."
-                      className="w-full bg-[#FBF9F6] border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#1e293b] focus:outline-none focus:border-[#005f43] transition-all"
+                      className="w-full bg-[#FBF9F6] border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#1e293b] focus:outline-none focus:border-[#005f43] focus:ring-2 focus:ring-[#005f43]/10 transition-all"
                     />
                   </div>
                 </div>
 
                 {/* Email field */}
                 <div className="space-y-2">
-                  <label className="text-xs font-black uppercase text-[#1e293b] tracking-wider block">
+                  <label htmlFor="contact-email" className="text-xs font-black uppercase text-[#1e293b] tracking-wider block">
                     {t.emailField} <span className="text-red-500">*</span>
                   </label>
                   <input
+                    id="contact-email"
                     type="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="contacto@..."
-                    className="w-full bg-[#FBF9F6] border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#1e293b] focus:outline-none focus:border-[#005f43] transition-all"
+                    className="w-full bg-[#FBF9F6] border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#1e293b] focus:outline-none focus:border-[#005f43] focus:ring-2 focus:ring-[#005f43]/10 transition-all"
                   />
                 </div>
 
                 {/* Message field */}
                 <div className="space-y-2">
-                  <label className="text-xs font-black uppercase text-[#1e293b] tracking-wider block">
+                  <label htmlFor="contact-message" className="text-xs font-black uppercase text-[#1e293b] tracking-wider block">
                     {t.msgField}
                   </label>
                   <textarea
+                    id="contact-message"
                     rows={4}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder={t.phMsg}
-                    className="w-full bg-[#FBF9F6] border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#1e293b] focus:outline-none focus:border-[#005f43] transition-all resize-none"
+                    className="w-full bg-[#FBF9F6] border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#1e293b] focus:outline-none focus:border-[#005f43] focus:ring-2 focus:ring-[#005f43]/10 transition-all resize-none"
                   />
                 </div>
 
@@ -273,14 +247,14 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-[#005f43] hover:bg-[#004732] text-white font-extrabold py-4 rounded-xl text-base tracking-wide flex items-center justify-center gap-2 shadow-md transition-transform hover:-translate-y-0.5"
+                    className="w-full bg-[#005f43] hover:bg-[#004732] text-white font-extrabold py-4 rounded-xl text-base tracking-wide flex items-center justify-center gap-2 shadow-md transition-transform hover:-translate-y-0.5 focus:ring-2 focus:ring-[#005f43]"
                   >
-                    <Send className="w-5 h-5 text-[#00c853]" />
+                    <Send className="w-5 h-5 text-[#00c853]" aria-hidden="true" />
                     <span>{loading ? t.submittingBtn : t.submitBtn}</span>
                   </Button>
 
                   <div className="flex items-center justify-center gap-1.5 text-[10px] text-slate-400 font-bold uppercase tracking-wider">
-                    <ShieldCheck className="w-4 h-4 text-[#00c853]" />
+                    <ShieldCheck className="w-4 h-4 text-[#00c853]" aria-hidden="true" />
                     <span>{t.confidentiality}</span>
                   </div>
                 </div>
