@@ -86,6 +86,7 @@ const Index = () => {
       <ContactSection 
         language={language}
         prefilledService={selectedService} 
+        estimateDetails={estimateDetails}
       />
 
       {/* Footer layout */}
