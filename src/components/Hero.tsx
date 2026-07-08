@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ArrowRight, ShieldCheck, Phone, CheckCircle2 } from "lucide-react";
+import { ArrowRight, ShieldCheck, Phone, CheckCircle2, Languages } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface HeroProps {
@@ -14,6 +14,7 @@ export const Hero: React.FC<HeroProps> = ({ language, onEstimateClick, onCallCli
   const content = {
     en: {
       insurance: "Fully Insured • Over 20 Years of Experience",
+      speakLanguage: "We Speak Your Language! • English & Español",
       subBrand: "G and Bros Services LLC",
       slogan: "Professional Cleaning You Can Trust",
       desc: "We bring over two decades of expertise straight to your doorstep. Experience spotless kitchens, immaculate bathrooms, pristine offices, and premium customer care.",
@@ -26,6 +27,7 @@ export const Hero: React.FC<HeroProps> = ({ language, onEstimateClick, onCallCli
     },
     es: {
       insurance: "Totalmente Asegurado • Más de 20 Años de Experiencia",
+      speakLanguage: "¡Hablamos su Idioma! • English & Español",
       subBrand: "G and Bros Services LLC",
       slogan: "Limpieza Profesional en la que Puede Confiar",
       desc: "Llevamos más de dos décadas de experiencia directo a su puerta. Experimente cocinas impecables, baños relucientes, oficinas prístinas y atención al cliente premium.",
@@ -58,10 +60,17 @@ export const Hero: React.FC<HeroProps> = ({ language, onEstimateClick, onCallCli
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
         
-        {/* Verification Tag */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-500/10 border border-teal-400/30 text-teal-300 text-xs sm:text-sm font-bold mb-6 tracking-wide uppercase">
-          <ShieldCheck className="w-4 h-4 text-teal-400" />
-          {t.insurance}
+        {/* Verification and Bilingual Tags */}
+        <div className="flex flex-col sm:flex-row items-center gap-3 mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-500/10 border border-teal-400/30 text-teal-300 text-xs sm:text-sm font-bold tracking-wide uppercase">
+            <ShieldCheck className="w-4 h-4 text-teal-400" />
+            {t.insurance}
+          </div>
+
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-400/30 text-amber-300 text-xs sm:text-sm font-bold tracking-wide uppercase animate-pulse">
+            <Languages className="w-4 h-4 text-amber-400" />
+            {t.speakLanguage}
+          </div>
         </div>
 
         {/* Big Trust Title */}
