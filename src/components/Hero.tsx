@@ -5,14 +5,14 @@ import { ArrowRight, ShieldCheck, Phone, CheckCircle2, Languages } from "lucide-
 import { Button } from "@/components/ui/button";
 
 interface HeroProps {
-  language: "en" | "es";
+  language: "english" | "spanish";
   onEstimateClick: () => void;
   onCallClick: () => void;
 }
 
 export const Hero: React.FC<HeroProps> = ({ language, onEstimateClick, onCallClick }) => {
   const content = {
-    en: {
+    english: {
       insurance: "Fully Insured • Over 20 Years of Experience",
       speakLanguage: "We Speak Your Language! • English & Español",
       subBrand: "G and Bros Services LLC",
@@ -25,7 +25,7 @@ export const Hero: React.FC<HeroProps> = ({ language, onEstimateClick, onCallCli
       badge3: "Eco-Friendly Supplies",
       badge4: "Flexible Scheduling"
     },
-    es: {
+    spanish: {
       insurance: "Totalmente Asegurado • Más de 20 Años de Experiencia",
       speakLanguage: "¡Hablamos su Idioma! • English & Español",
       subBrand: "G and Bros Services LLC",

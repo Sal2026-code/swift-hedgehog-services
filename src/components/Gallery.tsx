@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 
 interface GalleryProps {
-  language: "en" | "es";
+  language: "english" | "spanish";
 }
 
 interface GalleryItem {
@@ -50,7 +50,7 @@ export const Gallery: React.FC<GalleryProps> = ({ language }) => {
   const [hoveredId, setHoveredId] = useState<number | null>(null);
 
   const content = {
-    en: {
+    english: {
       tag: "Real Results",
       title: "Our Before & After Gallery",
       subtitle: "Hover over any image below to witness the incredible transformational work delivered by G and Bros Services LLC.",
@@ -59,7 +59,7 @@ export const Gallery: React.FC<GalleryProps> = ({ language }) => {
       tipHover: "Hover to see After",
       tipAway: "Mouse away to see Before"
     },
-    es: {
+    spanish: {
       tag: "Resultados Reales",
       title: "Galería de Antes y Después",
       subtitle: "Pase el cursor sobre cualquier imagen de abajo para ver la increíble transformación de G and Bros Services LLC.",
@@ -131,10 +131,10 @@ export const Gallery: React.FC<GalleryProps> = ({ language }) => {
               {/* Text label details */}
               <div className="p-5 text-left bg-slate-900">
                 <span className="text-[10px] font-bold text-teal-400 uppercase tracking-widest block mb-1">
-                  {language === "en" ? item.categoryEn : item.categoryEs}
+                  {language === "english" ? item.categoryEn : item.categoryEs}
                 </span>
                 <p className="text-sm font-semibold text-white">
-                  {language === "en" ? item.labelEn : item.labelEs}
+                  {language === "english" ? item.labelEn : item.labelEs}
                 </p>
               </div>
             </div>

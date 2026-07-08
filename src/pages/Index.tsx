@@ -12,7 +12,7 @@ import { ContactSection } from "@/components/ContactSection";
 import { Footer } from "@/components/Footer";
 
 const Index = () => {
-  const [language, setLanguage] = useState<"en" | "es">("en");
+  const [language, setLanguage] = useState<"english" | "spanish">("english");
   const [selectedService, setSelectedService] = useState<string>("");
 
   const handleScrollTo = (elementId: string) => {
@@ -42,7 +42,7 @@ const Index = () => {
         language={language}
         onEstimateClick={() => handleScrollTo("contact")} 
         onCallClick={() => {
-          window.location.href = "tel:1234567890";
+          window.location.href = "tel:8134567890";
         }} 
       />
 

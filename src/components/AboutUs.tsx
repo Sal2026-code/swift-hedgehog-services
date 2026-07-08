@@ -4,12 +4,12 @@ import React from "react";
 import { Sparkles, ShieldCheck } from "lucide-react";
 
 interface AboutUsProps {
-  language: "en" | "es";
+  language: "english" | "spanish";
 }
 
 export const AboutUs: React.FC<AboutUsProps> = ({ language }) => {
   const content = {
-    en: {
+    english: {
       tag: "Who We Are",
       title: "About G and Bros Services LLC",
       desc1: "G and Bros Services LLC is a trusted cleaning company dedicated to providing dependable, high-quality cleaning services for homes and businesses. With more than 20 years of experience, we take pride in delivering detailed, professional cleaning and excellent customer service.",
@@ -22,7 +22,7 @@ export const AboutUs: React.FC<AboutUsProps> = ({ language }) => {
       bullet2Title: "Premium Quality Supplies",
       bullet2Sub: "Strictly eco-friendly cleaning"
     },
-    es: {
+    spanish: {
       tag: "Quiénes Somos",
       title: "Sobre G and Bros Services LLC",
       desc1: "G and Bros Services LLC es una empresa de limpieza de confianza dedicada a brindar servicios de limpieza confiables y de alta calidad para hogares y empresas. Con más de 20 años de experiencia, nos enorgullecemos de ofrecer una limpieza detallada, profesional y un excelente servicio al cliente.",

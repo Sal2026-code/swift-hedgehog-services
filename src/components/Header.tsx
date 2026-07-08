@@ -5,14 +5,14 @@ import { Sparkles, Phone, Calendar, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface HeaderProps {
-  language: "en" | "es";
-  setLanguage: (lang: "en" | "es") => void;
+  language: "english" | "spanish";
+  setLanguage: (lang: "english" | "spanish") => void;
   onScrollTo: (elementId: string) => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollTo }) => {
   const content = {
-    en: {
+    english: {
       services: "Services",
       whyChooseUs: "Why Choose Us",
       gallery: "Our Gallery",
@@ -21,7 +21,7 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
       callNow: "Call Now",
       getEstimate: "Get Free Estimate",
     },
-    es: {
+    spanish: {
       services: "Servicios",
       whyChooseUs: "Por qué elegirnos",
       gallery: "Nuestra Galería",
@@ -98,15 +98,15 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
             
             {/* Language Selector */}
             <button
-              onClick={() => setLanguage(language === "en" ? "es" : "en")}
+              onClick={() => setLanguage(language === "english" ? "spanish" : "english")}
               className="flex items-center gap-1.5 px-3.5 py-2 rounded-full border border-teal-500/30 text-teal-400 hover:bg-teal-500/10 text-xs font-bold uppercase tracking-wider transition-all duration-300"
             >
               <Globe className="w-3.5 h-3.5" />
-              <span>{language === "en" ? "Spanish" : "English"}</span>
+              <span>{language === "english" ? "Spanish" : "English"}</span>
             </button>
 
             <a
-              href="tel:1234567890"
+              href="tel:8134567890"
               className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full border border-teal-500/30 text-teal-400 hover:bg-teal-500/10 text-xs font-semibold tracking-wider transition-all duration-300"
             >
               <Phone className="w-3.5 h-3.5" />

@@ -4,18 +4,18 @@ import React from "react";
 import { Sparkles, ArrowUp } from "lucide-react";
 
 interface FooterProps {
-  language: "en" | "es";
+  language: "english" | "spanish";
   onScrollTo: (elementId: string) => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ language, onScrollTo }) => {
   const content = {
-    en: {
+    english: {
       insurance: "Fully Insured • 20+ Years of Experience",
       scrollUp: "Scroll Up",
       disclaimer: "Language Support Disclaimer: We currently offer support and cleaning services in English and Spanish only."
     },
-    es: {
+    spanish: {
       insurance: "Totalmente Asegurado • Más de 20 Años de Experiencia",
       scrollUp: "Volver Arriba",
       disclaimer: "Aviso de Soporte de Idiomas: Actualmente ofrecemos soporte y servicios de limpieza únicamente en inglés y español."

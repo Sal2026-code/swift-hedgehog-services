@@ -4,12 +4,12 @@ import React from "react";
 import { Shield, Sparkles, Check, Heart, Award, Clock } from "lucide-react";
 
 interface WhyChooseUsProps {
-  language: "en" | "es";
+  language: "english" | "spanish";
 }
 
 export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({ language }) => {
   const content = {
-    en: {
+    english: {
       tag: "Elite Trust Factors",
       title: "Why Choose G and Bros Services LLC?",
       subtitle: "Discover why our clients stay with us for years. Dedicated cleanups, certified reliability, and a clean fresh environment.",
@@ -51,7 +51,7 @@ export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({ language }) => {
         }
       ]
     },
-    es: {
+    spanish: {
       tag: "Factores de Confianza de Élite",
       title: "¿Por Qué Elegir G and Bros Services LLC?",
       subtitle: "Descubra por qué nuestros clientes se quedan con nosotros por años. Limpiezas dedicadas, confiabilidad certificada y un ambiente fresco y limpio.",

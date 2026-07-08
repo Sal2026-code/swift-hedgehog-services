@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 interface ContactSectionProps {
-  language: "en" | "es";
+  language: "english" | "spanish";
   prefilledService?: string;
 }
 
@@ -28,7 +28,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
   }, [prefilledService]);
 
   const content = {
-    en: {
+    english: {
       tag: "Ready for a Cleaner Space?",
       title: "Request a Free Quote & Get in Touch",
       subtitle: "Contact G and Bros Services LLC today to request your free estimate.",
@@ -61,7 +61,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
         "Post-Construction Cleaning": "Post-Construction Cleaning",
       }
     },
-    es: {
+    spanish: {
       tag: "¿Listo para un Espacio más Limpio?",
       title: "Solicite una Cotización Gratis y Contáctenos",
       subtitle: "Póngase en contacto con G and Bros Services LLC hoy mismo para solicitar su cotización gratuita.",
@@ -101,7 +101,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.phone || !formData.email) {
-      toast.error(language === "en" ? "Please fill in all required fields." : "Por favor complete todos los campos obligatorios.");
+      toast.error(language === "english" ? "Please fill in all required fields." : "Por favor complete todos los campos obligatorios.");
       return;
     }
     setLoading(true);
@@ -148,7 +148,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
               </div>
               <div>
                 <p className="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">{t.callUs}</p>
-                <a href="tel:1234567890" className="text-lg font-bold text-white hover:text-teal-300 transition-colors block">
+                <a href="tel:8134567890" className="text-lg font-bold text-white hover:text-teal-300 transition-colors block">
                   (813) 456-7890
                 </a>
               </div>

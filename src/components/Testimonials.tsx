@@ -5,7 +5,7 @@ import { Star, MessageSquare, Quote, Send } from "lucide-react";
 import { toast } from "sonner";
 
 interface TestimonialsProps {
-  language: "en" | "es";
+  language: "english" | "spanish";
 }
 
 interface Review {
@@ -16,7 +16,7 @@ interface Review {
 }
 
 const STATIC_REVIEWS_TRANSLATIONS = {
-  en: [
+  english: [
     {
       name: "Sarah Jenkins",
       location: "Tampa Bay",
@@ -36,7 +36,7 @@ const STATIC_REVIEWS_TRANSLATIONS = {
       rating: 5
     }
   ],
-  es: [
+  spanish: [
     {
       name: "Sarah Jenkins",
       location: "Tampa Bay",
@@ -63,7 +63,7 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ language }) => {
   const [newReview, setNewReview] = useState({ name: "", text: "", rating: 5, location: "" });
 
   const content = {
-    en: {
+    english: {
       tag: "Client Success Stories",
       title: "Client Reviews & Testimonials",
       subtitle: "See what home and commercial building owners across Florida say about our premier cleaning services.",
@@ -77,7 +77,7 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ language }) => {
       toastError: "Please fill in both name and message details.",
       toastSuccess: "Thank you! Your feedback has been posted successfully."
     },
-    es: {
+    spanish: {
       tag: "Historias de Éxito de Clientes",
       title: "Reseñas y Testimonios de Clientes",
       subtitle: "Vea lo que los propietarios de viviendas y locales comerciales en Florida opinan sobre nuestros servicios premium.",
@@ -105,7 +105,7 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ language }) => {
       ...customReviews,
       {
         name: newReview.name,
-        location: newReview.location || (language === "en" ? "Customer" : "Cliente"),
+        location: newReview.location || (language === "english" ? "Customer" : "Cliente"),
         text: newReview.text,
         rating: newReview.rating
       }

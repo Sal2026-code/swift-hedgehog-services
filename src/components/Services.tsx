@@ -4,7 +4,7 @@ import React from "react";
 import { Home, Building2, Briefcase, Sparkles, DoorOpen, HardHat, ArrowRight } from "lucide-react";
 
 interface ServicesProps {
-  language: "en" | "es";
+  language: "english" | "spanish";
   onSelectService: (serviceName: string) => void;
 }
 
@@ -77,13 +77,13 @@ const CLEANING_SERVICES: CleaningService[] = [
 
 export const Services: React.FC<ServicesProps> = ({ language, onSelectService }) => {
   const content = {
-    en: {
+    english: {
       tag: "What We Do Best",
       title: "Our Cleaning Services",
       subtitle: "No matter the task, G and Bros Services LLC delivers elite results designed around your scheduling preferences.",
       btn: "Request Quote"
     },
-    es: {
+    spanish: {
       tag: "Lo Que Mejor Hacemos",
       title: "Nuestros Servicios de Limpieza",
       subtitle: "Sin importar la tarea, G and Bros Services LLC ofrece resultados de élite adaptados a sus preferencias de horario.",
@@ -116,8 +116,8 @@ export const Services: React.FC<ServicesProps> = ({ language, onSelectService })
         {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {CLEANING_SERVICES.map((srv) => {
-            const title = language === "en" ? srv.titleEn : srv.titleEs;
-            const desc = language === "en" ? srv.descEn : srv.descEs;
+            const title = language === "english" ? srv.titleEn : srv.titleEs;
+            const desc = language === "english" ? srv.descEn : srv.descEs;
             
             return (
               <div
