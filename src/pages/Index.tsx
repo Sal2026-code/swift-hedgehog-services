@@ -5,15 +5,18 @@ import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { Services } from "@/components/Services";
 import { WhyChooseUs } from "@/components/WhyChooseUs";
+import { Estimator } from "@/components/Estimator";
 import { AboutUs } from "@/components/AboutUs";
 import { Gallery } from "@/components/Gallery";
 import { Testimonials } from "@/components/Testimonials";
 import { ContactSection } from "@/components/ContactSection";
 import { Footer } from "@/components/Footer";
+import { showSuccess } from "@/utils/toast";
 
 const Index = () => {
   const [language, setLanguage] = useState<"english" | "spanish">("english");
   const [selectedService, setSelectedService] = useState<string>("");
+  const [estimateDetails, setEstimateDetails] = useState<string>("");
 
   const handleScrollTo = (elementId: string) => {
     const el = document.getElementById(elementId);
@@ -24,6 +27,15 @@ const Index = () => {
 
   const handleSelectService = (serviceName: string) => {
     setSelectedService(serviceName);
+    handleScrollTo("contact");
+  };
+
+  const handleApplyEstimate = (details: string) => {
+    setEstimateDetails(details);
+    const msg = language === "english"
+      ? "Estimate parameters applied! Please fill in your name and submit the quote form below."
+      : "¡Parámetros de estimación aplicados! Complete su nombre y envíe el formulario de cotización abajo.";
+    showSuccess(msg);
     handleScrollTo("contact");
   };
 
@@ -40,7 +52,7 @@ const Index = () => {
       {/* Hero Banner Area */}
       <Hero 
         language={language}
-        onEstimateClick={() => handleScrollTo("contact")} 
+        onEstimateClick={() => handleScrollTo("estimator")} 
         onCallClick={() => {
           window.location.href = "tel:8134567890";
         }} 
@@ -54,6 +66,12 @@ const Index = () => {
 
       {/* Trust checklist points */}
       <WhyChooseUs language={language} />
+
+      {/* Interactive live pricing estimator */}
+      <Estimator 
+        language={language} 
+        onApplyEstimate={handleApplyEstimate}
+      />
 
       {/* Interactive Before & After sliders/gallery */}
       <Gallery language={language} />

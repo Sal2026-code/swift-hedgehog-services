@@ -8,9 +8,14 @@ import { toast } from "sonner";
 interface ContactSectionProps {
   language: "english" | "spanish";
   prefilledService?: string;
+  estimateDetails?: string;
 }
 
-export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefilledService = "" }) => {
+export const ContactSection: React.FC<ContactSectionProps> = ({ 
+  language, 
+  prefilledService = "",
+  estimateDetails = ""
+}) => {
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -26,6 +31,13 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
       setFormData((prev) => ({ ...prev, service: prefilledService }));
     }
   }, [prefilledService]);
+
+  // Update message field if instant estimate details were calculated
+  React.useEffect(() => {
+    if (estimateDetails) {
+      setFormData((prev) => ({ ...prev, message: estimateDetails }));
+    }
+  }, [estimateDetails]);
 
   const content = {
     english: {
