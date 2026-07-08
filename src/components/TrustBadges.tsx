@@ -11,7 +11,7 @@ interface TrustBadgesProps {
 export const TrustBadges: React.FC<TrustBadgesProps> = ({ language }) => {
   const t = LOCALIZATION[language].badges;
 
-  const BADGE_ICONS = [
+  const BADGE_IC_MAP = [
     <CheckCircle key="check" className="w-5 h-5" />,
     <ShieldCheck key="shield" className="w-5 h-5" />,
     <Award key="award" className="w-5 h-5" />,
@@ -21,7 +21,7 @@ export const TrustBadges: React.FC<TrustBadgesProps> = ({ language }) => {
   ];
 
   return (
-    <section className="bg-white py-20 border-b border-gray-150 relative">
+    <section className="bg-white py-20 border-b border-gray-150 relative animate-fade-in">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
@@ -43,7 +43,7 @@ export const TrustBadges: React.FC<TrustBadgesProps> = ({ language }) => {
               className="flex flex-col items-center text-center p-5 bg-[#FBF9F6] border border-gray-100 rounded-2xl hover:border-[#00c853]/40 transition-all duration-300 shadow-sm hover:shadow"
             >
               <div className="w-12 h-12 rounded-full bg-[#005f43] text-[#00c853] flex items-center justify-center mb-3">
-                {BADGE_ICONS[idx]}
+                {BADGE_IC_MAP[idx]}
               </div>
               <p className="text-xs font-black text-[#1e293b] uppercase tracking-wide leading-tight">
                 {badgeName}
