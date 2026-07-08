@@ -25,29 +25,29 @@ export const Services: React.FC<ServicesProps> = ({ language, onScrollTo, setCle
         
         {/* Section Header */}
         <div className="text-center mb-16">
-          <span className="text-xs font-bold tracking-[0.25em] text-[#00c853] uppercase block mb-3">
+          <span className="text-xs font-extrabold tracking-[0.25em] text-[#00c853] uppercase block mb-3">
             {t.subHeader}
           </span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight font-serif text-[#005f43]">
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tight font-serif text-[#005f43]">
             {t.title}
           </h2>
-          <div className="w-16 h-1 bg-[#00c853] mx-auto mt-6 rounded-full" />
+          <div className="w-20 h-1 bg-[#00c853] mx-auto mt-6 rounded-full" />
         </div>
 
-        {/* 3 Tier Cards Grid: Flat style with ultra-subtle borders and crisp white background */}
+        {/* 3 Tier Cards Grid with High contrast colors */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {t.cards.map((card, idx) => {
             const isPopular = card.id === "deep";
             return (
               <div
                 key={idx}
-                className={`flex flex-col justify-between bg-white rounded-3xl border border-slate-100 p-6 sm:p-8 shadow-sm hover:shadow-md transition-all relative ${isPopular ? "ring-2 ring-[#00c853]" : ""}`}
+                className={`flex flex-col justify-between bg-white rounded-3xl border-2 p-6 sm:p-8 shadow-sm hover:shadow-xl transition-all duration-300 relative ${isPopular ? "border-[#00c853] ring-4 ring-[#00c853]/5" : "border-slate-100"}`}
               >
                 
                 {/* Popular Floating Badge Accent */}
                 {isPopular && (
-                  <span className="absolute -top-3 left-6 bg-[#00c853] text-[#005f43] text-[10px] uppercase font-black px-3 py-1 rounded-full tracking-wider shadow-sm">
-                    {language === "english" ? "Popular" : "Popular"}
+                  <span className="absolute -top-3.5 left-6 bg-[#00c853] text-[#004732] text-[10px] uppercase font-black px-4 py-1 rounded-full tracking-wider shadow-md">
+                    {language === "english" ? "Popular Choice" : "Opción Popular"}
                   </span>
                 )}
 
@@ -58,16 +58,16 @@ export const Services: React.FC<ServicesProps> = ({ language, onScrollTo, setCle
                     {card.title}
                   </h3>
 
-                  <div className="w-12 h-0.5 bg-[#00c853] rounded-full" />
+                  <div className="w-12 h-1 bg-[#00c853] rounded-full" />
 
                   {/* Checklist Items */}
-                  <ul className="space-y-3.5 pt-2" aria-label={`${card.title} tasks checklist`}>
+                  <ul className="space-y-4 pt-2" aria-label={`${card.title} tasks checklist`}>
                     {card.bullets.map((bullet, bIdx) => (
-                      <li key={bIdx} className="flex items-start gap-2.5 text-sm">
-                        <div className="p-1 bg-[#005f43]/5 text-[#00c853] rounded-full mt-0.5" aria-hidden="true">
-                          <Check className="w-3.5 h-3.5 stroke-[3]" />
+                      <li key={bIdx} className="flex items-start gap-3 text-sm">
+                        <div className="p-1 bg-[#005f43]/10 text-[#005f43] rounded-full mt-0.5 border border-[#005f43]/20" aria-hidden="true">
+                          <Check className="w-3.5 h-3.5 stroke-[3.5]" />
                         </div>
-                        <span className="text-slate-700 font-medium leading-relaxed">{bullet}</span>
+                        <span className="text-slate-700 font-semibold leading-relaxed">{bullet}</span>
                       </li>
                     ))}
                   </ul>
@@ -75,15 +75,15 @@ export const Services: React.FC<ServicesProps> = ({ language, onScrollTo, setCle
                 </div>
 
                 <div className="pt-8 text-left space-y-4">
-                  {/* Bottom Gray Accent Label Tag */}
-                  <div className="bg-[#FBF9F6] border border-gray-150 text-[11px] font-bold text-slate-500 py-2 px-3.5 rounded-xl text-center">
+                  {/* Bottom high-contrast label tag */}
+                  <div className="bg-[#FBF9F6] border border-slate-200 text-xs font-bold text-slate-700 py-3 px-4 rounded-xl text-center">
                     {card.bottomAccent}
                   </div>
 
                   {/* Pricing estimating selector button trigger */}
                   <Button
                     onClick={() => handleSelectService(card.id)}
-                    className={`w-full font-bold py-3 rounded-xl shadow-sm transition-all focus:ring-2 focus:ring-[#005f43] ${isPopular ? "bg-[#005f43] hover:bg-[#004732] text-white" : "bg-white hover:bg-[#005f43]/5 text-[#005f43] border border-gray-200"}`}
+                    className={`w-full font-black py-4 rounded-xl shadow-sm transition-all duration-200 focus:ring-2 focus:ring-[#005f43] ${isPopular ? "bg-[#005f43] hover:bg-[#004732] text-white" : "bg-white hover:bg-[#005f43]/5 text-[#005f43] border-2 border-[#005f43]"}`}
                   >
                     {t.btn}
                   </Button>

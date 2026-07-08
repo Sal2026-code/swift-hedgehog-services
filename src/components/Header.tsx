@@ -22,87 +22,88 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full shadow-md transition-all">
-      {/* Top Info Strip */}
+    <header className="sticky top-0 z-50 w-full shadow-lg transition-all">
+      {/* Top Info Strip with High Contrast Text */}
       <div 
-        className="bg-[#005f43] text-white py-2 px-4 text-xs font-semibold flex flex-col sm:flex-row justify-between items-center gap-2 border-b border-[#004732]"
+        className="bg-[#004732] text-white py-2.5 px-4 text-xs font-bold flex flex-col sm:flex-row justify-between items-center gap-2 border-b border-[#003324]"
         role="status"
         aria-label="Contact Information"
       >
-        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6">
-          <span className="flex items-center gap-1.5 hover:text-[#00c853] transition-colors">
-            <Phone className="w-3.5 h-3.5 text-[#00c853]" />
-            <span>{t.phoneText}</span>
+        <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 text-emerald-100">
+          <span className="flex items-center gap-2 hover:text-white transition-colors duration-200">
+            <Phone className="w-4 h-4 text-[#00c853]" />
+            <span className="font-mono tracking-wide">{t.phoneText.replace("Phone: ", "").replace("Teléfono: ", "")}</span>
           </span>
-          <span className="hidden sm:inline text-white/30">|</span>
-          <span className="flex items-center gap-1.5 hover:text-[#00c853] transition-colors">
-            <Mail className="w-3.5 h-3.5 text-[#00c853]" />
-            <span>{t.emailText}</span>
+          <span className="hidden sm:inline text-emerald-800">|</span>
+          <span className="flex items-center gap-2 hover:text-white transition-colors duration-200">
+            <Mail className="w-4 h-4 text-[#00c853]" />
+            <span>contacto@gbrosservices.com</span>
           </span>
         </div>
-        <div className="text-[10px] uppercase tracking-wider text-[#00c853] font-black">
+        <div className="text-[10px] uppercase tracking-[0.2em] text-white bg-[#00c853]/20 px-3 py-1 rounded-full font-black border border-[#00c853]/30">
           {language === "english" ? "✨ G & Bros Premium Standard ✨" : "✨ Estándar Premium G & Bros ✨"}
         </div>
       </div>
 
       {/* Main Navbar */}
-      <div className="w-full bg-white/95 backdrop-blur-md border-b border-gray-200">
+      <div className="w-full bg-white/95 backdrop-blur-md border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             
-            {/* Logo Brand / Fallback safe SVG wrapper */}
+            {/* Logo Brand */}
             <div 
               role="button"
               tabIndex={0}
               onClick={() => onScrollTo("hero")}
               onKeyDown={(e) => handleKeyPress(e, "hero")}
-              className="flex items-center gap-2.5 cursor-pointer group focus:outline-none focus:ring-2 focus:ring-[#005f43] rounded-xl p-1"
+              className="flex items-center gap-3 cursor-pointer group focus:outline-none focus:ring-2 focus:ring-[#005f43] rounded-2xl p-1.5 transition-all"
               aria-label="G & Bros Premium Services Logo, scroll to top"
             >
-              <div className="p-2 bg-[#005f43] text-[#00c853] rounded-xl group-hover:rotate-12 transition-transform duration-300">
-                <Sparkles className="w-6 h-6 fill-[#00c853]" />
+              <div className="p-2.5 bg-[#005f43] text-white rounded-xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-md shadow-[#005f43]/10">
+                <Sparkles className="w-6 h-6 fill-[#00c853] text-[#00c853]" />
               </div>
               <div className="text-left">
-                <span className="text-lg font-black tracking-tight text-[#005f43] block font-serif leading-none">
+                <span className="text-xl font-black tracking-tight text-[#005f43] block font-serif leading-none">
                   G & Bros
                 </span>
-                <span className="text-[9px] tracking-widest text-[#00c853] font-black uppercase block mt-1">
+                <span className="text-[9px] tracking-[0.2em] text-[#00c853] font-black uppercase block mt-1.5">
                   Premium Services
                 </span>
               </div>
             </div>
 
-            {/* Navigation links with proper keyboard support */}
-            <nav className="hidden md:flex items-center gap-8 text-sm font-bold text-[#1e293b]" aria-label="Main Navigation">
+            {/* Navigation links with proper accessibility focus styling */}
+            <nav className="hidden md:flex items-center gap-8 text-sm font-bold text-slate-700" aria-label="Main Navigation">
               {(["services", "estimator", "qa", "contact"] as const).map((item) => (
                 <button
                   key={item}
                   onClick={() => onScrollTo(item)}
-                  className="hover:text-[#005f43] focus:text-[#005f43] focus:outline-none hover:underline focus:underline transition-colors py-2 relative group"
+                  className="hover:text-[#005f43] focus:text-[#005f43] focus:outline-none transition-colors py-2 relative group font-sans tracking-wide"
                   aria-label={`Scroll to ${t[item]}`}
                 >
                   {t[item]}
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#00c853] transition-all group-hover:w-full group-focus:w-full" />
                 </button>
               ))}
             </nav>
 
             {/* Language Switcher & Highlighted CTA */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               
-              {/* Language Switcher pill toggle button ES / EN */}
+              {/* Language Switcher toggle ES / EN */}
               <button
                 onClick={() => setLanguage(language === "english" ? "spanish" : "english")}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-full border-2 border-[#005f43]/20 hover:border-[#005f43] text-[#005f43] hover:bg-[#005f43]/5 text-xs font-black tracking-wider transition-all focus:outline-none focus:ring-2 focus:ring-[#005f43]"
+                className="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-slate-200 hover:border-[#005f43] text-[#005f43] hover:bg-[#FBF9F6] text-xs font-black tracking-wider transition-all focus:outline-none focus:ring-2 focus:ring-[#005f43]"
                 aria-label="Toggle language"
               >
-                <Globe className="w-3.5 h-3.5 text-[#00c853]" />
-                <span>{language === "english" ? "ES | EN" : "EN | ES"}</span>
+                <Globe className="w-4 h-4 text-[#00c853]" />
+                <span className="font-mono">{language === "english" ? "ES" : "EN"}</span>
               </button>
 
               {/* Learn More primary highlighted CTA */}
               <Button
                 onClick={() => onScrollTo("services")}
-                className="bg-[#005f43] hover:bg-[#004732] text-white font-bold px-5 py-2 rounded-xl shadow-md transition-all text-sm hover:translate-y-[-1px] focus:ring-2 focus:ring-[#005f43]"
+                className="bg-[#005f43] hover:bg-[#004732] text-white font-extrabold px-5 py-2 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-sm focus:ring-2 focus:ring-[#00c853]"
               >
                 {t.learnMore}
               </Button>

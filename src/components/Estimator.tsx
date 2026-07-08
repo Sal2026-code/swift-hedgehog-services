@@ -46,12 +46,6 @@ export const Estimator: React.FC<EstimatorProps> = ({
     mattress: 25
   };
 
-  // Live calculation engine based on Section 6 formulas:
-  // - Base: €45
-  // - Rooms: +€15 for each additional Bed/Living above 1
-  // - Baths: +€20 for each additional Bath above 1
-  // - Type Multipliers: Standard = 1.0, Deep Clean = +50% (1.5), Move-In/Out = +80% (1.8)
-  // - Addons: EXACT pricing sums
   useEffect(() => {
     const base = 45;
     const additionalRooms = Math.max(0, rooms - 1) * 15;
@@ -87,30 +81,30 @@ export const Estimator: React.FC<EstimatorProps> = ({
   };
 
   return (
-    <section id="estimator" className="py-20 bg-white relative border-b border-gray-150">
+    <section id="estimator" className="py-20 bg-white relative border-b border-slate-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="text-center mb-16">
-          <span className="text-xs font-bold tracking-[0.25em] text-[#00c853] uppercase block mb-3">
+          <span className="text-xs font-extrabold tracking-[0.25em] text-[#00c853] uppercase block mb-3">
             {t.subHeader}
           </span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight font-serif text-[#005f43]">
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tight font-serif text-[#005f43]">
             {t.title}
           </h2>
-          <div className="w-16 h-1 bg-[#00c853] mx-auto mt-6 rounded-full" />
+          <div className="w-20 h-1 bg-[#00c853] mx-auto mt-6 rounded-full" />
         </div>
 
         {/* Pricing Layout Calculator Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
           
           {/* Controls Column (Left) */}
-          <div className="lg:col-span-7 bg-[#FBF9F6] rounded-3xl p-6 sm:p-10 border border-[#005f43]/10 text-left space-y-8">
+          <div className="lg:col-span-7 bg-[#FBF9F6] rounded-3xl p-6 sm:p-10 border border-[#005f43]/10 text-left space-y-8 shadow-sm">
             
             {/* Step 1: Cleaning Tiers Buttons */}
             <div className="space-y-4">
               <h3 className="text-sm font-black uppercase tracking-wider text-[#005f43] flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-[#00c853]" />
+                <Sparkles className="w-4 h-4 text-[#00c853] fill-[#00c853]" />
                 {t.tierLabel}
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -119,7 +113,7 @@ export const Estimator: React.FC<EstimatorProps> = ({
                     key={tier}
                     type="button"
                     onClick={() => setCleaningTier(tier)}
-                    className={`py-3.5 px-4 rounded-xl border text-center font-bold text-sm transition-all duration-300 ${cleaningTier === tier ? "bg-[#005f43] text-white border-[#005f43]" : "bg-white border-gray-200 text-slate-700 hover:border-[#005f43]/40"}`}
+                    className={`py-4 px-4 rounded-xl border-2 text-center font-extrabold text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#005f43] ${cleaningTier === tier ? "bg-[#005f43] text-white border-[#005f43] shadow-md" : "bg-white border-slate-200 text-slate-700 hover:border-[#005f43]/40"}`}
                   >
                     {t[tier]}
                   </button>
@@ -135,56 +129,60 @@ export const Estimator: React.FC<EstimatorProps> = ({
               </h3>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                {/* Rooms controller plus/minus: Limits 1 to 6+ */}
+                {/* Rooms controller */}
                 <div className="space-y-3">
                   <label className="text-xs font-black uppercase text-slate-500 tracking-wider">
                     {t.bedsLabel}
                   </label>
-                  <div className="flex items-center gap-4 bg-white p-2 rounded-2xl border border-gray-150 justify-between">
+                  <div className="flex items-center gap-4 bg-white p-2 rounded-2xl border border-slate-200 justify-between shadow-inner">
                     <button
                       type="button"
                       disabled={rooms <= 1}
                       onClick={() => setRooms(rooms - 1)}
-                      className="w-10 h-10 rounded-xl bg-[#FBF9F6] border text-slate-600 flex items-center justify-center font-black text-lg hover:bg-slate-100 disabled:opacity-40"
+                      className="w-10 h-10 rounded-xl bg-[#FBF9F6] border border-slate-200 text-slate-700 flex items-center justify-center font-black text-xl hover:bg-slate-100 disabled:opacity-30 transition-colors"
+                      aria-label="Decrease bedroom count"
                     >
                       -
                     </button>
-                    <span className="font-extrabold text-slate-800 text-lg">
+                    <span className="font-black text-slate-800 text-lg">
                       {rooms >= 6 ? "6+" : rooms}
                     </span>
                     <button
                       type="button"
                       disabled={rooms >= 6}
                       onClick={() => setRooms(rooms + 1)}
-                      className="w-10 h-10 rounded-xl bg-[#FBF9F6] border text-slate-600 flex items-center justify-center font-black text-lg hover:bg-slate-100 disabled:opacity-40"
+                      className="w-10 h-10 rounded-xl bg-[#FBF9F6] border border-slate-200 text-slate-700 flex items-center justify-center font-black text-xl hover:bg-slate-100 disabled:opacity-30 transition-colors"
+                      aria-label="Increase bedroom count"
                     >
                       +
                     </button>
                   </div>
                 </div>
 
-                {/* Bathrooms controller plus/minus: Limits 1 to 4+ */}
+                {/* Bathrooms controller */}
                 <div className="space-y-3">
                   <label className="text-xs font-black uppercase text-slate-500 tracking-wider">
                     {t.bathsLabel}
                   </label>
-                  <div className="flex items-center gap-4 bg-white p-2 rounded-2xl border border-gray-150 justify-between">
+                  <div className="flex items-center gap-4 bg-white p-2 rounded-2xl border border-slate-200 justify-between shadow-inner">
                     <button
                       type="button"
                       disabled={baths <= 1}
                       onClick={() => setBaths(baths - 1)}
-                      className="w-10 h-10 rounded-xl bg-[#FBF9F6] border text-slate-600 flex items-center justify-center font-black text-lg hover:bg-slate-100 disabled:opacity-40"
+                      className="w-10 h-10 rounded-xl bg-[#FBF9F6] border border-slate-200 text-slate-700 flex items-center justify-center font-black text-xl hover:bg-slate-100 disabled:opacity-30 transition-colors"
+                      aria-label="Decrease bathroom count"
                     >
                       -
                     </button>
-                    <span className="font-extrabold text-slate-800 text-lg">
+                    <span className="font-black text-slate-800 text-lg">
                       {baths >= 4 ? "4+" : baths}
                     </span>
                     <button
                       type="button"
                       disabled={baths >= 4}
                       onClick={() => setBaths(baths + 1)}
-                      className="w-10 h-10 rounded-xl bg-[#FBF9F6] border text-slate-600 flex items-center justify-center font-black text-lg hover:bg-slate-100 disabled:opacity-40"
+                      className="w-10 h-10 rounded-xl bg-[#FBF9F6] border border-slate-200 text-slate-700 flex items-center justify-center font-black text-xl hover:bg-slate-100 disabled:opacity-30 transition-colors"
+                      aria-label="Increase bathroom count"
                     >
                       +
                     </button>
@@ -204,7 +202,7 @@ export const Estimator: React.FC<EstimatorProps> = ({
                   return (
                     <label
                       key={addonId}
-                      className={`flex items-center gap-3 p-3.5 bg-white rounded-xl border-2 transition-all cursor-pointer ${isChecked ? "border-[#005f43] bg-[#005f43]/5" : "border-gray-150 hover:border-[#005f43]/20"}`}
+                      className={`flex items-center gap-3.5 p-4 bg-white rounded-xl border-2 transition-all cursor-pointer ${isChecked ? "border-[#005f43] bg-[#005f43]/5" : "border-slate-200 hover:border-[#005f43]/20"}`}
                     >
                       <input
                         type="checkbox"
@@ -212,7 +210,7 @@ export const Estimator: React.FC<EstimatorProps> = ({
                         onChange={() => toggleAddon(addonId)}
                         className="rounded accent-[#00c853] w-4 h-4 cursor-pointer"
                       />
-                      <span className="text-xs font-bold text-slate-700">{t.addonsLabels[addonId]}</span>
+                      <span className="text-xs font-bold text-slate-800">{t.addonsLabels[addonId]}</span>
                     </label>
                   );
                 })}
@@ -222,55 +220,55 @@ export const Estimator: React.FC<EstimatorProps> = ({
           </div>
 
           {/* Sparkle Summary Receipt Column (Right) */}
-          <div className="lg:col-span-5 bg-[#005f43] text-white rounded-3xl p-6 sm:p-10 flex flex-col justify-between relative shadow-xl overflow-hidden self-start lg:sticky lg:top-24 border-2 border-[#00c853]/25">
+          <div className="lg:col-span-5 bg-[#004732] text-white rounded-3xl p-6 sm:p-10 flex flex-col justify-between relative shadow-2xl overflow-hidden self-start lg:sticky lg:top-24 border border-white/10">
             <div className="absolute top-0 inset-x-0 h-2 bg-[#00c853]" />
             
             <div className="space-y-8 text-left">
-              <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-3">
                 <Calculator className="w-5 h-5 text-[#00c853]" />
                 <h3 className="text-2xl font-serif font-black tracking-wide">
                   {t.receiptHeader}
                 </h3>
               </div>
 
-              {/* Dynamic itemized breakdown */}
-              <div className="space-y-3.5 border-t border-b border-white/10 py-6 text-sm font-medium text-slate-200">
+              {/* Itemized breakdown with High Contrast */}
+              <div className="space-y-3.5 border-t border-b border-white/10 py-6 text-sm font-bold text-emerald-100">
                 <div className="flex justify-between">
                   <span>{t.baseCleanLabel}</span>
-                  <span>€{baseCost}</span>
+                  <span className="font-mono text-white">€{baseCost}</span>
                 </div>
 
                 <div className="flex justify-between">
                   <span>{t.extraRoomsLabel}</span>
-                  <span>+€{extraRoomsCost}</span>
+                  <span className="font-mono text-white">+€{extraRoomsCost}</span>
                 </div>
 
                 <div className="flex justify-between">
                   <span>{t.extraBathsLabel}</span>
-                  <span>+€{extraBathsCost}</span>
+                  <span className="font-mono text-white">+€{extraBathsCost}</span>
                 </div>
 
                 {/* Premium adjustments indicator */}
                 {(cleaningTier === "deep" || cleaningTier === "move") && (
-                  <div className="flex justify-between text-[#00c853] font-bold text-xs bg-white/5 p-2 rounded-lg">
+                  <div className="flex justify-between text-[#00c853] font-black text-xs bg-black/10 p-2.5 rounded-lg border border-[#00c853]/20">
                     <span>
                       {cleaningTier === "deep" ? (language === "english" ? "Deep Premium (+50%)" : "Premium Profundo (+50%)") : (language === "english" ? "Move In/Out Premium (+80%)" : "Premium Entrada/Salida (+80%)")}
                     </span>
-                    <span>
+                    <span className="font-mono text-white">
                       +€{Math.round((baseCost + extraRoomsCost + extraBathsCost) * (cleaningTier === "deep" ? 0.5 : 0.8))}
                     </span>
                   </div>
                 )}
 
                 {selectedAddons.length > 0 && (
-                  <div className="pt-2.5 border-t border-white/5 space-y-2">
-                    <span className="text-[10px] uppercase font-bold tracking-wider text-[#00c853] block">
+                  <div className="pt-3 border-t border-white/10 space-y-2.5">
+                    <span className="text-[10px] uppercase font-black tracking-wider text-[#00c853] block">
                       {language === "english" ? "Premium Add-ons breakdown" : "Desglose de Extras Premium"}
                     </span>
                     {selectedAddons.map((addonId) => (
-                      <div key={addonId} className="flex justify-between text-xs text-slate-300">
+                      <div key={addonId} className="flex justify-between text-xs text-emerald-200">
                         <span>• {t.addonsLabels[addonId]?.split(" (")[0]}</span>
-                        <span>+€{addonsPrices[addonId]}</span>
+                        <span className="font-mono text-white">+€{addonsPrices[addonId]}</span>
                       </div>
                     ))}
                   </div>
@@ -278,14 +276,14 @@ export const Estimator: React.FC<EstimatorProps> = ({
               </div>
 
               {/* Estimate highlight total price */}
-              <div className="text-center py-4 bg-white/5 rounded-2xl border border-white/10">
-                <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#00c853] block mb-1">
+              <div className="text-center py-5 bg-[#003324] rounded-2xl border border-white/10">
+                <span className="text-[10px] uppercase font-black tracking-[0.2em] text-[#00c853] block mb-1">
                   {t.estimateText}
                 </span>
-                <span className="text-5xl font-serif font-black text-[#00c853]">
+                <span className="text-5xl font-serif font-black text-[#00c853] block tracking-tight">
                   ~€{livePrice}
                 </span>
-                <span className="text-[10px] text-slate-300 block mt-2">
+                <span className="text-[10px] text-emerald-300 font-medium block mt-2">
                   {t.disclaimer}
                 </span>
               </div>
@@ -295,10 +293,10 @@ export const Estimator: React.FC<EstimatorProps> = ({
             <div className="pt-8">
               <Button
                 onClick={handleApply}
-                className="w-full bg-[#00c853] hover:bg-[#00ad48] text-[#005f43] font-black py-4 rounded-xl shadow-lg transition-transform hover:-translate-y-0.5 text-base flex items-center justify-center gap-2 focus:ring-2 focus:ring-[#00c853]"
+                className="w-full bg-[#00c853] hover:bg-[#00ad48] text-[#004732] font-black py-4 rounded-xl shadow-lg hover:shadow-xl hover:translate-y-[-1px] transition-all duration-200 text-base flex items-center justify-center gap-2 focus:ring-2 focus:ring-[#00c853]"
               >
                 <span>{t.btnLabel}</span>
-                <ChevronRight className="w-5 h-5" />
+                <ChevronRight className="w-5 h-5 stroke-[2.5]" />
               </Button>
             </div>
 
