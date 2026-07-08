@@ -20,7 +20,7 @@ export const Services: React.FC<ServicesProps> = ({ language, onScrollTo, setCle
   };
 
   return (
-    <section id="services" className="py-20 bg-white relative" aria-label="Our Services">
+    <section id="services" className="py-20 bg-white relative overflow-hidden" aria-label="Our Services">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
@@ -41,12 +41,12 @@ export const Services: React.FC<ServicesProps> = ({ language, onScrollTo, setCle
             return (
               <div
                 key={idx}
-                className={`flex flex-col justify-between bg-white rounded-3xl border-2 p-6 sm:p-8 shadow-sm hover:shadow-xl transition-all duration-300 relative ${isPopular ? "border-[#00c853] ring-4 ring-[#00c853]/5" : "border-slate-100"}`}
+                className={`flex flex-col justify-between bg-white rounded-3xl border-2 p-6 sm:p-8 shadow-sm hover:shadow-2xl hover:scale-[1.03] active:scale-[0.99] transition-all duration-300 relative ${isPopular ? "border-[#00c853] ring-4 ring-[#00c853]/5" : "border-slate-100"}`}
               >
                 
                 {/* Popular Floating Badge Accent */}
                 {isPopular && (
-                  <span className="absolute -top-3.5 left-6 bg-[#00c853] text-[#004732] text-[10px] uppercase font-black px-4 py-1 rounded-full tracking-wider shadow-md">
+                  <span className="absolute -top-3.5 left-6 bg-[#00c853] text-[#004732] text-[10px] uppercase font-black px-4 py-1 rounded-full tracking-wider shadow-md animate-bounce">
                     {language === "english" ? "Popular Choice" : "Opción Popular"}
                   </span>
                 )}
@@ -63,7 +63,7 @@ export const Services: React.FC<ServicesProps> = ({ language, onScrollTo, setCle
                   {/* Checklist Items */}
                   <ul className="space-y-4 pt-2" aria-label={`${card.title} tasks checklist`}>
                     {card.bullets.map((bullet, bIdx) => (
-                      <li key={bIdx} className="flex items-start gap-3 text-sm">
+                      <li key={bIdx} className="flex items-start gap-3 text-sm hover:translate-x-1 transition-transform duration-200">
                         <div className="p-1 bg-[#005f43]/10 text-[#005f43] rounded-full mt-0.5 border border-[#005f43]/20" aria-hidden="true">
                           <Check className="w-3.5 h-3.5 stroke-[3.5]" />
                         </div>
@@ -83,7 +83,7 @@ export const Services: React.FC<ServicesProps> = ({ language, onScrollTo, setCle
                   {/* Pricing estimating selector button trigger */}
                   <Button
                     onClick={() => handleSelectService(card.id)}
-                    className={`w-full font-black py-4 rounded-xl shadow-sm transition-all duration-200 focus:ring-2 focus:ring-[#005f43] ${isPopular ? "bg-[#005f43] hover:bg-[#004732] text-white" : "bg-white hover:bg-[#005f43]/5 text-[#005f43] border-2 border-[#005f43]"}`}
+                    className={`w-full font-black py-4 rounded-xl shadow-sm hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 focus:ring-2 focus:ring-[#005f43] ${isPopular ? "bg-[#005f43] hover:bg-[#004732] text-white" : "bg-white hover:bg-[#005f43]/5 text-[#005f43] border-2 border-[#005f43]"}`}
                   >
                     {t.btn}
                   </Button>

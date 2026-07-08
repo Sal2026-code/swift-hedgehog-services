@@ -81,7 +81,7 @@ export const Estimator: React.FC<EstimatorProps> = ({
   };
 
   return (
-    <section id="estimator" className="py-20 bg-white relative border-b border-slate-100">
+    <section id="estimator" className="py-20 bg-white relative border-b border-slate-100 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
@@ -113,7 +113,7 @@ export const Estimator: React.FC<EstimatorProps> = ({
                     key={tier}
                     type="button"
                     onClick={() => setCleaningTier(tier)}
-                    className={`py-4 px-4 rounded-xl border-2 text-center font-extrabold text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#005f43] ${cleaningTier === tier ? "bg-[#005f43] text-white border-[#005f43] shadow-md" : "bg-white border-slate-200 text-slate-700 hover:border-[#005f43]/40"}`}
+                    className={`py-4 px-4 rounded-xl border-2 text-center font-extrabold text-sm hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#005f43] ${cleaningTier === tier ? "bg-[#005f43] text-white border-[#005f43] shadow-md" : "bg-white border-slate-200 text-slate-700 hover:border-[#005f43]/40"}`}
                   >
                     {t[tier]}
                   </button>
@@ -139,19 +139,19 @@ export const Estimator: React.FC<EstimatorProps> = ({
                       type="button"
                       disabled={rooms <= 1}
                       onClick={() => setRooms(rooms - 1)}
-                      className="w-10 h-10 rounded-xl bg-[#FBF9F6] border border-slate-200 text-slate-700 flex items-center justify-center font-black text-xl hover:bg-slate-100 disabled:opacity-30 transition-colors"
+                      className="w-10 h-10 rounded-xl bg-[#FBF9F6] border border-slate-200 text-slate-700 flex items-center justify-center font-black text-xl hover:bg-slate-100 active:scale-[0.95] disabled:opacity-30 transition-all"
                       aria-label="Decrease bedroom count"
                     >
                       -
                     </button>
-                    <span className="font-black text-slate-800 text-lg">
+                    <span className="font-black text-slate-800 text-lg transition-all" key={rooms}>
                       {rooms >= 6 ? "6+" : rooms}
                     </span>
                     <button
                       type="button"
                       disabled={rooms >= 6}
                       onClick={() => setRooms(rooms + 1)}
-                      className="w-10 h-10 rounded-xl bg-[#FBF9F6] border border-slate-200 text-slate-700 flex items-center justify-center font-black text-xl hover:bg-slate-100 disabled:opacity-30 transition-colors"
+                      className="w-10 h-10 rounded-xl bg-[#FBF9F6] border border-slate-200 text-slate-700 flex items-center justify-center font-black text-xl hover:bg-slate-100 active:scale-[0.95] disabled:opacity-30 transition-all"
                       aria-label="Increase bedroom count"
                     >
                       +
@@ -169,19 +169,19 @@ export const Estimator: React.FC<EstimatorProps> = ({
                       type="button"
                       disabled={baths <= 1}
                       onClick={() => setBaths(baths - 1)}
-                      className="w-10 h-10 rounded-xl bg-[#FBF9F6] border border-slate-200 text-slate-700 flex items-center justify-center font-black text-xl hover:bg-slate-100 disabled:opacity-30 transition-colors"
+                      className="w-10 h-10 rounded-xl bg-[#FBF9F6] border border-slate-200 text-slate-700 flex items-center justify-center font-black text-xl hover:bg-slate-100 active:scale-[0.95] disabled:opacity-30 transition-all"
                       aria-label="Decrease bathroom count"
                     >
                       -
                     </button>
-                    <span className="font-black text-slate-800 text-lg">
+                    <span className="font-black text-slate-800 text-lg transition-all" key={baths}>
                       {baths >= 4 ? "4+" : baths}
                     </span>
                     <button
                       type="button"
                       disabled={baths >= 4}
                       onClick={() => setBaths(baths + 1)}
-                      className="w-10 h-10 rounded-xl bg-[#FBF9F6] border border-slate-200 text-slate-700 flex items-center justify-center font-black text-xl hover:bg-slate-100 disabled:opacity-30 transition-colors"
+                      className="w-10 h-10 rounded-xl bg-[#FBF9F6] border border-slate-200 text-slate-700 flex items-center justify-center font-black text-xl hover:bg-slate-100 active:scale-[0.95] disabled:opacity-30 transition-all"
                       aria-label="Increase bathroom count"
                     >
                       +
@@ -202,7 +202,7 @@ export const Estimator: React.FC<EstimatorProps> = ({
                   return (
                     <label
                       key={addonId}
-                      className={`flex items-center gap-3.5 p-4 bg-white rounded-xl border-2 transition-all cursor-pointer ${isChecked ? "border-[#005f43] bg-[#005f43]/5" : "border-slate-200 hover:border-[#005f43]/20"}`}
+                      className={`flex items-center gap-3.5 p-4 bg-white rounded-xl border-2 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98] ${isChecked ? "border-[#005f43] bg-[#005f43]/5" : "border-slate-200 hover:border-[#005f43]/20"}`}
                     >
                       <input
                         type="checkbox"
@@ -233,24 +233,24 @@ export const Estimator: React.FC<EstimatorProps> = ({
 
               {/* Itemized breakdown with High Contrast */}
               <div className="space-y-3.5 border-t border-b border-white/10 py-6 text-sm font-bold text-emerald-100">
-                <div className="flex justify-between">
+                <div className="flex justify-between hover:translate-x-1 transition-transform duration-200">
                   <span>{t.baseCleanLabel}</span>
                   <span className="font-mono text-white">€{baseCost}</span>
                 </div>
 
-                <div className="flex justify-between">
+                <div className="flex justify-between hover:translate-x-1 transition-transform duration-200">
                   <span>{t.extraRoomsLabel}</span>
                   <span className="font-mono text-white">+€{extraRoomsCost}</span>
                 </div>
 
-                <div className="flex justify-between">
+                <div className="flex justify-between hover:translate-x-1 transition-transform duration-200">
                   <span>{t.extraBathsLabel}</span>
                   <span className="font-mono text-white">+€{extraBathsCost}</span>
                 </div>
 
                 {/* Premium adjustments indicator */}
                 {(cleaningTier === "deep" || cleaningTier === "move") && (
-                  <div className="flex justify-between text-[#00c853] font-black text-xs bg-black/10 p-2.5 rounded-lg border border-[#00c853]/20">
+                  <div className="flex justify-between text-[#00c853] font-black text-xs bg-black/10 p-2.5 rounded-lg border border-[#00c853]/20 animate-pulse">
                     <span>
                       {cleaningTier === "deep" ? (language === "english" ? "Deep Premium (+50%)" : "Premium Profundo (+50%)") : (language === "english" ? "Move In/Out Premium (+80%)" : "Premium Entrada/Salida (+80%)")}
                     </span>
@@ -266,7 +266,7 @@ export const Estimator: React.FC<EstimatorProps> = ({
                       {language === "english" ? "Premium Add-ons breakdown" : "Desglose de Extras Premium"}
                     </span>
                     {selectedAddons.map((addonId) => (
-                      <div key={addonId} className="flex justify-between text-xs text-emerald-200">
+                      <div key={addonId} className="flex justify-between text-xs text-emerald-200 hover:translate-x-1 transition-transform duration-200">
                         <span>• {t.addonsLabels[addonId]?.split(" (")[0]}</span>
                         <span className="font-mono text-white">+€{addonsPrices[addonId]}</span>
                       </div>
@@ -280,7 +280,7 @@ export const Estimator: React.FC<EstimatorProps> = ({
                 <span className="text-[10px] uppercase font-black tracking-[0.2em] text-[#00c853] block mb-1">
                   {t.estimateText}
                 </span>
-                <span className="text-5xl font-serif font-black text-[#00c853] block tracking-tight">
+                <span className="text-5xl font-serif font-black text-[#00c853] block tracking-tight transition-transform scale-105" key={livePrice}>
                   ~€{livePrice}
                 </span>
                 <span className="text-[10px] text-emerald-300 font-medium block mt-2">
@@ -293,7 +293,7 @@ export const Estimator: React.FC<EstimatorProps> = ({
             <div className="pt-8">
               <Button
                 onClick={handleApply}
-                className="w-full bg-[#00c853] hover:bg-[#00ad48] text-[#004732] font-black py-4 rounded-xl shadow-lg hover:shadow-xl hover:translate-y-[-1px] transition-all duration-200 text-base flex items-center justify-center gap-2 focus:ring-2 focus:ring-[#00c853]"
+                className="w-full bg-[#00c853] hover:bg-[#00ad48] text-[#004732] font-black py-4 rounded-xl shadow-lg hover:shadow-xl hover:translate-y-[-1px] hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 text-base flex items-center justify-center gap-2 focus:ring-2 focus:ring-[#00c853]"
               >
                 <span>{t.btnLabel}</span>
                 <ChevronRight className="w-5 h-5 stroke-[2.5]" />

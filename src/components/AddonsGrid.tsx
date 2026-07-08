@@ -30,7 +30,7 @@ export const AddonsGrid: React.FC<AddonsGridProps> = ({ language, selectedAddons
   };
 
   return (
-    <section id="addons" className="py-20 bg-[#FBF9F6] border-b border-slate-100">
+    <section id="addons" className="py-20 bg-[#FBF9F6] border-b border-slate-100 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
@@ -56,17 +56,17 @@ export const AddonsGrid: React.FC<AddonsGridProps> = ({ language, selectedAddons
                 tabIndex={0}
                 onClick={() => toggleAddon(addon.id)}
                 onKeyDown={(e) => handleKeyPress(e, addon.id)}
-                className={`cursor-pointer rounded-2xl border bg-white p-6 flex gap-4 transition-all duration-300 relative text-left focus:outline-none focus:ring-2 focus:ring-[#005f43] shadow-sm hover:shadow-md ${isSelected ? "border-[#005f43] ring-4 ring-[#005f43]/5" : "border-slate-200 hover:border-[#005f43]/40"}`}
+                className={`cursor-pointer rounded-2xl border bg-white p-6 flex gap-4 hover:border-[#005f43] hover:scale-[1.03] active:scale-[0.98] hover:shadow-lg transition-all duration-300 relative text-left focus:outline-none focus:ring-2 focus:ring-[#005f43] shadow-sm ${isSelected ? "border-[#005f43] ring-4 ring-[#005f43]/5" : "border-slate-200"}`}
               >
                 
                 {/* Selected Tag Indicator */}
                 {isSelected && (
-                  <div className="absolute top-4 right-4 w-6 h-6 bg-[#00c853] text-[#004732] rounded-full flex items-center justify-center font-extrabold text-sm shadow-sm border border-white">
+                  <div className="absolute top-4 right-4 w-6 h-6 bg-[#00c853] text-[#004732] rounded-full flex items-center justify-center font-extrabold text-sm shadow-sm border border-white animate-scale-in">
                     ✓
                   </div>
                 )}
 
-                <div className="p-3.5 bg-[#00c853]/15 text-[#005f43] rounded-xl h-fit border border-[#00c853]/20">
+                <div className="p-3.5 bg-[#00c853]/15 text-[#005f43] rounded-xl h-fit border border-[#00c853]/20 transition-all duration-300 group-hover:rotate-6">
                   {iconsMap[addon.id]}
                 </div>
 

@@ -49,7 +49,7 @@ export const Hero: React.FC<HeroProps> = ({ language, onScrollTo }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Header Badge */}
-        <div className="flex justify-start mb-6">
+        <div className="flex justify-start mb-6 opacity-0 animate-fade-in-up">
           <div className="inline-flex items-center gap-2 bg-[#00c853]/10 border border-[#00c853]/30 px-4 py-1.5 rounded-full text-xs font-extrabold text-[#005f43]">
             <CheckCircle className="w-4 h-4 text-[#00c853]" />
             <span>{t.badgeText}</span>
@@ -61,7 +61,7 @@ export const Hero: React.FC<HeroProps> = ({ language, onScrollTo }) => {
           {/* Left Column: Heading, Value Props & CTAs */}
           <div className="lg:col-span-7 text-left space-y-8">
             
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-800 font-serif leading-tight">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-800 font-serif leading-tight opacity-0 animate-fade-in-up delay-100">
               {t.headline.split("G & Bros").map((part, i, arr) => (
                 <React.Fragment key={i}>
                   {part}
@@ -77,27 +77,30 @@ export const Hero: React.FC<HeroProps> = ({ language, onScrollTo }) => {
 
             {/* 2x2 Value Proposition Grid with High Contrast */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
-              {t.values.map((v, idx) => (
-                <div 
-                  key={idx} 
-                  className="flex gap-4 bg-white p-5 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300"
-                >
-                  <div className="p-3 bg-[#00c853]/10 text-[#005f43] rounded-xl h-fit">
-                    {iconsMap[idx]}
+              {t.values.map((v, idx) => {
+                const delays = ["delay-100", "delay-200", "delay-300", "delay-400"];
+                return (
+                  <div 
+                    key={idx} 
+                    className={`flex gap-4 bg-white p-5 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md hover:scale-[1.02] active:scale-[0.99] transition-all duration-300 opacity-0 animate-fade-in-up ${delays[idx]}`}
+                  >
+                    <div className="p-3 bg-[#00c853]/10 text-[#005f43] rounded-xl h-fit">
+                      {iconsMap[idx]}
+                    </div>
+                    <div>
+                      <h2 className="font-extrabold text-sm text-slate-800">{v.title}</h2>
+                      <p className="text-xs text-slate-600 mt-1 leading-relaxed">{v.desc}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h2 className="font-extrabold text-sm text-slate-800">{v.title}</h2>
-                    <p className="text-xs text-slate-600 mt-1 leading-relaxed">{v.desc}</p>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Action Buttons Below Grid */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row gap-4 pt-4 opacity-0 animate-fade-in-up delay-500">
               <Button
                 onClick={() => onScrollTo("services")}
-                className="bg-[#005f43] hover:bg-[#004732] text-white font-extrabold px-8 py-6 rounded-xl text-base shadow-lg shadow-[#005f43]/10 flex items-center justify-center gap-2 transition-all duration-200"
+                className="bg-[#005f43] hover:bg-[#004732] text-white font-extrabold px-8 py-6 rounded-xl text-base shadow-lg shadow-[#005f43]/10 flex items-center justify-center gap-2 hover:scale-[1.03] active:scale-[0.98] transition-all duration-200"
               >
                 <span>{t.viewServices}</span>
                 <ArrowRight className="w-5 h-5 text-[#00c853]" />
@@ -106,7 +109,7 @@ export const Hero: React.FC<HeroProps> = ({ language, onScrollTo }) => {
               <Button
                 onClick={() => onScrollTo("qa")}
                 variant="outline"
-                className="border-2 border-[#005f43] text-[#005f43] hover:bg-[#005f43]/5 font-extrabold px-8 py-6 rounded-xl text-base flex items-center justify-center gap-2 transition-all duration-200"
+                className="border-2 border-[#005f43] text-[#005f43] hover:bg-[#005f43]/5 font-extrabold px-8 py-6 rounded-xl text-base flex items-center justify-center gap-2 hover:scale-[1.03] active:scale-[0.98] transition-all duration-200"
               >
                 <HelpCircle className="w-5 h-5" />
                 <span>{t.askQuestion}</span>
@@ -116,8 +119,8 @@ export const Hero: React.FC<HeroProps> = ({ language, onScrollTo }) => {
           </div>
 
           {/* Right Column: Premium Package Dark Container */}
-          <div className="lg:col-span-5">
-            <div className="bg-[#004732] text-white rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden text-left border border-white/10">
+          <div className="lg:col-span-5 opacity-0 animate-scale-in delay-300">
+            <div className="bg-[#004732] text-white rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden text-left border border-white/10 hover:shadow-emerald-950/20 hover:shadow-3xl transition-all duration-500">
               <div className="absolute top-0 inset-x-0 h-2 bg-[#00c853]" />
               
               <div className="flex justify-between items-start gap-4 mb-6">
@@ -129,7 +132,7 @@ export const Hero: React.FC<HeroProps> = ({ language, onScrollTo }) => {
                     {language === "english" ? "Deep standard package" : "Paquete estándar profundo"}
                   </p>
                 </div>
-                <span className="bg-[#00c853] text-[#004732] text-[10px] uppercase font-black px-3.5 py-1.5 rounded-full tracking-wider shadow-sm">
+                <span className="bg-[#00c853] text-[#004732] text-[10px] uppercase font-black px-3.5 py-1.5 rounded-full tracking-wider shadow-sm animate-pulse">
                   {t.premiumBadge}
                 </span>
               </div>
@@ -137,7 +140,7 @@ export const Hero: React.FC<HeroProps> = ({ language, onScrollTo }) => {
               {/* Task Checklist list */}
               <ul className="space-y-4 mb-8 text-left" aria-label="Premium package task list">
                 {t.premiumTasks.map((task, idx) => (
-                  <li key={idx} className="flex items-start gap-3 text-sm text-emerald-50 font-medium">
+                  <li key={idx} className="flex items-start gap-3 text-sm text-emerald-50 font-medium hover:translate-x-1 transition-transform duration-200">
                     <div className="p-1 bg-[#00c853]/20 text-[#00c853] rounded-full mt-0.5 border border-[#00c853]/30">
                       <Check className="w-3.5 h-3.5 stroke-[3.5]" />
                     </div>
@@ -153,7 +156,7 @@ export const Hero: React.FC<HeroProps> = ({ language, onScrollTo }) => {
                     <Star key={star} className="w-3.5 h-3.5 fill-[#00c853] text-[#00c853]" />
                   ))}
                 </div>
-                <p className="text-xs italic text-emerald-100 leading-relaxed font-serif min-h-[48px]">
+                <p className="text-xs italic text-emerald-100 leading-relaxed font-serif min-h-[48px] animate-fade-in" key={activeIdx}>
                   {language === "english" ? TESTIMONIALS[activeIdx].en : TESTIMONIALS[activeIdx].es}
                 </p>
                 <p className="text-[10px] font-black uppercase text-[#00c853] tracking-widest mt-3.5">
@@ -179,16 +182,16 @@ export const Hero: React.FC<HeroProps> = ({ language, onScrollTo }) => {
         </div>
 
         {/* Bottom Stats Ribbon */}
-        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 bg-[#005f43] text-white rounded-3xl p-6 sm:p-8 shadow-xl">
-          <div className="text-center space-y-1.5 py-2 md:py-0 md:border-r border-white/10 last:border-0">
+        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 bg-[#005f43] text-white rounded-3xl p-6 sm:p-8 shadow-xl opacity-0 animate-fade-in-up delay-500">
+          <div className="text-center space-y-1.5 py-2 md:py-0 md:border-r border-white/10 last:border-0 hover:scale-[1.03] transition-transform duration-300">
             <span className="block text-4xl font-serif font-black text-[#00c853]">100%</span>
             <span className="text-xs uppercase font-extrabold tracking-widest text-emerald-100">{t.trustMetric1}</span>
           </div>
-          <div className="text-center space-y-1.5 py-2 md:py-0 md:border-r border-white/10 last:border-0">
+          <div className="text-center space-y-1.5 py-2 md:py-0 md:border-r border-white/10 last:border-0 hover:scale-[1.03] transition-transform duration-300">
             <span className="block text-4xl font-serif font-black text-[#00c853]">4,800+</span>
             <span className="text-xs uppercase font-extrabold tracking-widest text-emerald-100">{t.trustMetric2}</span>
           </div>
-          <div className="text-center space-y-1.5 py-2 md:py-0 last:border-0">
+          <div className="text-center space-y-1.5 py-2 md:py-0 last:border-0 hover:scale-[1.03] transition-transform duration-300">
             <span className="block text-4xl font-serif font-black text-[#00c853]">100%</span>
             <span className="text-xs uppercase font-extrabold tracking-widest text-emerald-100">{t.trustMetric3}</span>
           </div>
