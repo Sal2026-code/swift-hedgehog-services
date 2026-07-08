@@ -151,7 +151,7 @@ export const Services: React.FC<ServicesProps> = ({ language, onSelectService })
                   </div>
 
                   <button
-                    onClick={() => onSelectService(title)}
+                    onClick={() => onSelectService(srv.titleEn)}
                     className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-teal-400 hover:text-teal-300 transition-colors w-fit group"
                   >
                     {t.btn}

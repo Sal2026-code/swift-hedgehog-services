@@ -15,8 +15,8 @@ interface Review {
   rating: number;
 }
 
-export const Testimonials: React.FC<TestimonialsProps> = ({ language }) => {
-  const [reviews, setReviews] = useState<Review[]>([
+const STATIC_REVIEWS_TRANSLATIONS = {
+  en: [
     {
       name: "Sarah Jenkins",
       location: "Tampa Bay",
@@ -35,8 +35,31 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ language }) => {
       text: "Truly detail-oriented deep cleaning work. They got rid of grout stains that had been in our guest bath for ages. Will hire them weekly now!",
       rating: 5
     }
-  ]);
+  ],
+  es: [
+    {
+      name: "Sarah Jenkins",
+      location: "Tampa Bay",
+      text: "G and Bros Services LLC limpió nuestra cocina y sala para una inspección de mudanza. ¡Salvadores absolutos! Nos devolvieron todo nuestro depósito de seguridad sin demoras.",
+      rating: 5
+    },
+    {
+      name: "Marcus Ramirez",
+      location: "St. Petersburg",
+      text: "Nuestras oficinas lucen increíblemente limpias cada mañana. Programación confiable, flexible y un servicio al cliente excepcional por parte de su amable personal.",
+      rating: 5
+    },
+    {
+      name: "Emily Watson",
+      location: "Clearwater",
+      text: "Un trabajo de limpieza profunda verdaderamente detallado. Eliminaron las manchas de las juntas de los azulejos que habían estado en nuestro baño de visitas por años. ¡Los contrataremos semanalmente ahora!",
+      rating: 5
+    }
+  ]
+};
 
+export const Testimonials: React.FC<TestimonialsProps> = ({ language }) => {
+  const [customReviews, setCustomReviews] = useState<Review[]>([]);
   const [newReview, setNewReview] = useState({ name: "", text: "", rating: 5, location: "" });
 
   const content = {
@@ -78,8 +101,8 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ language }) => {
       toast.error(t.toastError);
       return;
     }
-    setReviews([
-      ...reviews,
+    setCustomReviews([
+      ...customReviews,
       {
         name: newReview.name,
         location: newReview.location || (language === "en" ? "Customer" : "Cliente"),
@@ -90,6 +113,9 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ language }) => {
     toast.success(t.toastSuccess);
     setNewReview({ name: "", text: "", rating: 5, location: "" });
   };
+
+  // Combine properly translated static reviews with user-generated custom reviews
+  const currentReviews = [...STATIC_REVIEWS_TRANSLATIONS[language], ...customReviews];
 
   return (
     <section id="testimonials" className="py-24 bg-slate-900 text-white relative">
@@ -111,7 +137,7 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ language }) => {
 
         {/* Testimonials List */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {reviews.map((rev, idx) => (
+          {currentReviews.map((rev, idx) => (
             <div
               key={idx}
               className="bg-slate-950 border border-slate-800 rounded-3xl p-6 relative flex flex-col justify-between hover:border-teal-500/20 transition-all duration-300"
