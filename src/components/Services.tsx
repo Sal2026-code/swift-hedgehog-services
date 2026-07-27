@@ -19,9 +19,6 @@ export const Services: React.FC<ServicesProps> = ({ language }) => {
         
         {/* Section Header */}
         <div className="text-center mb-16">
-          <span className="text-xs font-extrabold tracking-[0.25em] text-[#00c853] uppercase block mb-3">
-            {t.subHeader}
-          </span>
           <h2 className="text-3xl sm:text-5xl font-black tracking-tight font-serif text-[#005f43]">
             {t.title}
           </h2>
