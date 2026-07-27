@@ -46,7 +46,7 @@ export const LOCALIZATION = {
     },
     services: {
       subHeader: "Tailored Solutions",
-      title: "Our Service Packages",
+      title: "Our Services",
       cards: [
         {
           id: "standard",
@@ -172,7 +172,7 @@ export const LOCALIZATION = {
     },
     services: {
       subHeader: "Soluciones a la Medida",
-      title: "Nuestros Paquetes de Servicio",
+      title: "Nuestros Servicios",
       cards: [
         {
           id: "standard",
