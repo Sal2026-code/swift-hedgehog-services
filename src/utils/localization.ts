@@ -101,6 +101,25 @@ export const LOCALIZATION = {
         { title: "Laundry Wash & Fold" }
       ]
     },
+    forum: {
+      subHeader: "Community Support",
+      title: "Frequently Asked Questions",
+      all: "All Questions",
+      pets: "Pets & Safety",
+      safety: "Trust & Access",
+      pricing: "Pricing & Plans",
+      general: "General Q&A",
+      helpfulText: "Helpful",
+      responseBadge: "Official G & Bros Response",
+      askTitle: "Ask a Question",
+      nameLabel: "Your Name (Optional)",
+      phName: "e.g. Alex M.",
+      catLabel: "Category",
+      queryLabel: "Your Question",
+      phQuery: "Ask about our services, products, or scheduling...",
+      submitBtn: "Post Question",
+      errQuery: "Please enter a question with at least 5 characters."
+    },
     contact: {
       subHeader: "Get In Touch",
       title: "Request a Callback or Quote",
@@ -223,6 +242,25 @@ export const LOCALIZATION = {
         { title: "Lavado y Doblado de Ropa" }
       ]
     },
+    forum: {
+      subHeader: "Soporte Comunitario",
+      title: "Preguntas Frecuentes",
+      all: "Todas las Preguntas",
+      pets: "Mascotas y Seguridad",
+      safety: "Confianza y Acceso",
+      pricing: "Precios y Planes",
+      general: "Preguntas Generales",
+      helpfulText: "Útil",
+      responseBadge: "Respuesta Oficial G & Bros",
+      askTitle: "Hacer una Pregunta",
+      nameLabel: "Su Nombre (Opcional)",
+      phName: "ej. Alejandro M.",
+      catLabel: "Categoría",
+      queryLabel: "Su Pregunta",
+      phQuery: "Pregunte sobre nuestros servicios, productos u horarios...",
+      submitBtn: "Publicar Pregunta",
+      errQuery: "Por favor ingrese una pregunta de al menos 5 caracteres."
+    },
     contact: {
       subHeader: "Póngase en Contacto",
       title: "Solicite una Llamada o Cotización",
@@ -240,7 +278,7 @@ export const LOCALIZATION = {
       submittingBtn: "Enviando Solicitud...",
       successTitle: "¡Solicitud Recibida!",
       successDesc: "Gracias por contactar a G & Bros. Un miembro de nuestro equipo le contactará en breve.",
-      confidentiality: "Sus datos están estrictamente protegidos y nunca serán compartidos."
+      confidentiality: "Sus datos están strictly protegidos y nunca serán compartidos."
     }
   }
 };
