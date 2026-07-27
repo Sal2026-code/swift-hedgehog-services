@@ -25,7 +25,7 @@ const TESTIMONIALS = [
 
 export const Hero: React.FC<HeroProps> = ({ language, onScrollTo }) => {
   const [activeIdx, setActiveIdx] = useState(0);
-  const t = LOCALIZATION[language].hero;
+  const t = LOCALIZATION[language]?.hero || LOCALIZATION.english.hero;
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -40,6 +40,8 @@ export const Hero: React.FC<HeroProps> = ({ language, onScrollTo }) => {
     <Award key="award" className="w-5 h-5 text-[#005f43]" />,
     <Languages key="languages" className="w-5 h-5 text-[#005f43]" />
   ];
+
+  const headlineText = t.headline || "Spotless Cleanliness with G & Bros, Zero Compromise.";
 
   return (
     <section 
@@ -62,7 +64,7 @@ export const Hero: React.FC<HeroProps> = ({ language, onScrollTo }) => {
           <div className="lg:col-span-7 text-left space-y-8">
             
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-800 font-serif leading-tight opacity-0 animate-fade-in-up delay-100">
-              {t.headline.split("G & Bros").map((part, i, arr) => (
+              {headlineText.split("G & Bros").map((part, i, arr) => (
                 <React.Fragment key={i}>
                   {part}
                   {i < arr.length - 1 && (
