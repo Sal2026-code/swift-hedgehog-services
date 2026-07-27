@@ -62,17 +62,26 @@ export const Services: React.FC<ServicesProps> = ({ language, onScrollTo, setCle
 
                   <div className="w-12 h-1 bg-[#00c853] rounded-full" />
 
+                  {/* Description Paragraph */}
+                  {"description" in card && card.description && (
+                    <p className="text-slate-700 font-semibold text-sm leading-relaxed pt-1">
+                      {card.description}
+                    </p>
+                  )}
+
                   {/* Checklist Items */}
-                  <ul className="space-y-4 pt-2" aria-label={`${card.title} tasks checklist`}>
-                    {card.bullets.map((bullet, bIdx) => (
-                      <li key={bIdx} className="flex items-start gap-3 text-sm hover:translate-x-1 transition-transform duration-200">
-                        <div className="p-1 bg-[#005f43]/10 text-[#005f43] rounded-full mt-0.5 border border-[#005f43]/20" aria-hidden="true">
-                          <Check className="w-3.5 h-3.5 stroke-[3.5]" />
-                        </div>
-                        <span className="text-slate-700 font-semibold leading-relaxed">{bullet}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  {card.bullets && card.bullets.length > 0 && (
+                    <ul className="space-y-4 pt-2" aria-label={`${card.title} tasks checklist`}>
+                      {card.bullets.map((bullet, bIdx) => (
+                        <li key={bIdx} className="flex items-start gap-3 text-sm hover:translate-x-1 transition-transform duration-200">
+                          <div className="p-1 bg-[#005f43]/10 text-[#005f43] rounded-full mt-0.5 border border-[#005f43]/20" aria-hidden="true">
+                            <Check className="w-3.5 h-3.5 stroke-[3.5]" />
+                          </div>
+                          <span className="text-slate-700 font-semibold leading-relaxed">{bullet}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
 
                 </div>
 
@@ -84,7 +93,7 @@ export const Services: React.FC<ServicesProps> = ({ language, onScrollTo, setCle
 
                   {/* Service selection trigger */}
                   <Button
-                    onClick={() => handleSelectService(card.id)}
+                    onClick={() => handleSelectService(card.id as "standard" | "deep" | "move")}
                     className={`w-full font-black py-4 rounded-xl shadow-sm hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 focus:ring-2 focus:ring-[#005f43] ${isPopular ? "bg-[#005f43] hover:bg-[#004732] text-white" : "bg-white hover:bg-[#005f43]/5 text-[#005f43] border-2 border-[#005f43]"}`}
                   >
                     {card.btn}

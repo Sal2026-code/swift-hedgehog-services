@@ -51,13 +51,8 @@ export const LOCALIZATION = {
         {
           id: "standard",
           title: "Residential Cleaning",
-          bullets: [
-            "Dusting furniture, shelves & electronics",
-            "Mopping & vacuuming all rooms",
-            "Full bathroom & toilet sanitation",
-            "Kitchen counter & sink cleanup",
-            "Making beds & tidying up spaces"
-          ],
+          description: "Enjoy a clean, fresh, and comfortable home without the stress. We provide reliable residential cleaning services tailored to your needs, including routine cleaning, deep cleaning, move-in and move-out cleaning, and customized cleaning plans.",
+          bullets: [],
           bottomAccent: "Ideal for weekly or bi-weekly maintenance",
           btn: "Select Residential Clean"
         },
@@ -192,13 +187,8 @@ export const LOCALIZATION = {
         {
           id: "standard",
           title: "Limpieza Residencial",
-          bullets: [
-            "Limpieza de polvo en muebles, estantes y electrónicos",
-            "Fregado y aspirado de todas las habitaciones",
-            "Desinfección completa de baño y aseo",
-            "Limpieza de encimera y fregadero de cocina",
-            "Hacer camas y ordenar espacios generales"
-          ],
+          description: "Disfrute de un hogar limpio, fresco y cómodo sin estrés. Ofrecemos servicios confiables de limpieza residencial adaptados a sus necesidades, incluyendo limpieza de rutina, limpieza profunda, limpieza de entrada y salida, y planes de limpieza personalizados.",
+          bullets: [],
           bottomAccent: "Ideal para mantenimiento semanal o quincenal",
           btn: "Seleccionar Residencial"
         },
