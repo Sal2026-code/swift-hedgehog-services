@@ -27,6 +27,16 @@ export const LOCALIZATION = {
       trustMetric3: "Vetted & Insured Staff"
     },
     badges: {
+      subHeader: "Why Choose G & Bros",
+      title: "Our Trust & Quality Standards",
+      items: [
+        "100% Vetted Staff",
+        "Eco-Friendly Products",
+        "Satisfaction Guaranteed",
+        "Pet Safe Cleaners",
+        "Dedicated Support",
+        "Fully Insured Service"
+      ],
       verifiedTitle: "100% Vetted Cleaners",
       verifiedDesc: "Background checked and rigorously trained staff.",
       ecoTitle: "Pet & Eco Friendly",
@@ -139,6 +149,16 @@ export const LOCALIZATION = {
       trustMetric3: "Personal Verificado y Asegurado"
     },
     badges: {
+      subHeader: "Por Qué Elegir G & Bros",
+      title: "Nuestros Estándares de Confianza y Calidad",
+      items: [
+        "Personal 100% Verificado",
+        "Productos Ecológicos",
+        "Garantía de Satisfacción",
+        "Seguro para Mascotas",
+        "Soporte Dedicado",
+        "Servicio Totalmente Asegurado"
+      ],
       verifiedTitle: "Limpiadores 100% Verificados",
       verifiedDesc: "Personal capacitado rigurosamente y con antecedentes comprobados.",
       ecoTitle: "Seguro para Mascotas y Ecológico",
