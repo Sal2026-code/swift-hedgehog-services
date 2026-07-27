@@ -59,13 +59,8 @@ export const LOCALIZATION = {
         {
           id: "deep",
           title: "Commercial Cleaning",
-          bullets: [
-            "Office spaces, retail stores & commercial facilities",
-            "Sanitation of desks, workstations & common areas",
-            "Restroom disinfection & restocking supplies",
-            "Floor vacuuming, sweeping & mopping",
-            "Trash bin emptying & liner replacements"
-          ],
+          description: "Keep your business clean, professional, and welcoming. We provide dependable commercial cleaning services for offices, condominiums, community areas, clubhouses, medical offices, and other commercial properties.",
+          bullets: [],
           bottomAccent: "Flexible scheduling for daily, weekly, or after-hours cleaning",
           btn: "Select Commercial Clean"
         },
@@ -195,13 +190,8 @@ export const LOCALIZATION = {
         {
           id: "deep",
           title: "Limpieza Comercial",
-          bullets: [
-            "Oficinas, locales comerciales e instalaciones corporativas",
-            "Desinfección de escritorios, estaciones de trabajo y áreas comunes",
-            "Desinfección de aseos y reposición de suministros",
-            "Aspirado, barrido y fregado de suelos",
-            "Vaciado de papeleras y cambio de bolsas"
-          ],
+          description: "Mantenga su negocio limpio, profesional y acogedor. Ofrecemos servicios confiables de limpieza comercial para oficinas, condominios, áreas comunitarias, casas club, consultorios médicos y otras propiedades comerciales.",
+          bullets: [],
           bottomAccent: "Horarios flexibles para limpieza diaria, semanal o fuera de horario",
           btn: "Seleccionar Comercial"
         },
@@ -243,7 +233,7 @@ export const LOCALIZATION = {
       helpfulText: "Útil",
       responseBadge: "Respuesta Oficial G & Bros",
       askTitle: "Hacer una Pregunta",
-      nameLabel: "Su Nombre (Opcional)",
+      nameLabel: "Su Nombre (Opciones)",
       phName: "ej. Alejandro M.",
       catLabel: "Categoría",
       queryLabel: "Su Pregunta",
@@ -268,7 +258,7 @@ export const LOCALIZATION = {
       submittingBtn: "Enviando Solicitud...",
       successTitle: "¡Solicitud Recibida!",
       successDesc: "Gracias por contactar a G & Bros. Un miembro de nuestro equipo le contactará en breve.",
-      confidentiality: "Sus datos están strictly protegidos y nunca serán compartidos."
+      confidentiality: "Sus datos están estrictamente protegidos y nunca serán compartidos."
     }
   }
 };
