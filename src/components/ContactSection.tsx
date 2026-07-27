@@ -93,8 +93,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                 <p className="text-xs font-black uppercase text-[#005f43] tracking-wider mb-1.5">
                   {language === "english" ? "Email Address" : "Dirección de Correo"}
                 </p>
-                <a href="mailto:contacto@gbrosservices.com" className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block">
-                  contacto@gbrosservices.com
+                <a href="mailto:gandbrosteam@gmail.com" className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block">
+                  gandbrosteam@gmail.com
                 </a>
               </div>
             </div>
@@ -108,8 +108,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                 <p className="text-xs font-black uppercase text-[#005f43] tracking-wider mb-1.5">
                   {language === "english" ? "Phone Number" : "Número de Teléfono"}
                 </p>
-                <a href="tel:+34600123456" className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block font-mono">
-                  +34 600 123 456
+                <a href="tel:+17276089599" className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block font-mono">
+                  +1 727-608-9599
                 </a>
               </div>
             </div>
@@ -200,7 +200,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                       required
                       value={phone}
                       onChange={handlePhoneChange}
-                      placeholder="+34 600..."
+                      placeholder="+1 727..."
                       className="w-full bg-[#FBF9F6] border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-800 focus:outline-none focus:border-[#005f43] focus:ring-2 focus:ring-[#005f43]/10 transition-all font-semibold shadow-inner"
                     />
                   </div>
@@ -217,7 +217,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="contacto@..."
+                    placeholder="gandbrosteam@gmail.com"
                     className="w-full bg-[#FBF9F6] border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-800 focus:outline-none focus:border-[#005f43] focus:ring-2 focus:ring-[#005f43]/10 transition-all font-semibold shadow-inner"
                   />
                 </div>

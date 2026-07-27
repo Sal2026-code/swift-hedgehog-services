@@ -1,7 +1,7 @@
 export const LOCALIZATION = {
   english: {
     header: {
-      phoneText: "Phone: +34 600 123 456",
+      phoneText: "Phone: +1 727-608-9599",
       services: "Services",
       qa: "Q&A Community",
       contact: "Contact",
@@ -142,7 +142,7 @@ export const LOCALIZATION = {
   },
   spanish: {
     header: {
-      phoneText: "Teléfono: +34 600 123 456",
+      phoneText: "Teléfono: +1 727-608-9599",
       services: "Servicios",
       qa: "Comunidad Q&A",
       contact: "Contacto",
@@ -278,7 +278,7 @@ export const LOCALIZATION = {
       submittingBtn: "Enviando Solicitud...",
       successTitle: "¡Solicitud Recibida!",
       successDesc: "Gracias por contactar a G & Bros. Un miembro de nuestro equipo le contactará en breve.",
-      confidentiality: "Sus datos están strictly protegidos y nunca serán compartidos."
+      confidentiality: "Sus datos están estrictamente protegidos y nunca serán compartidos."
     }
   }
 };
