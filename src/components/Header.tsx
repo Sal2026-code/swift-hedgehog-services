@@ -59,7 +59,6 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
               className="flex items-center gap-3 cursor-pointer group focus:outline-none focus:ring-2 focus:ring-[#005f43] rounded-2xl p-1.5 transition-all"
               aria-label="G & Bros Premium Services Logo, scroll to top"
             >
-              {/* Custom Corporate SVG Logo */}
               <div className="p-2 bg-[#005f43] text-white rounded-xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-md shadow-[#005f43]/10 flex items-center justify-center w-12 h-12">
                 <svg viewBox="0 0 100 100" className="w-8 h-8 fill-none stroke-[#00c853]" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M80 40 C80 20, 20 20, 20 50 C20 80, 80 80, 80 60 L50 60" />
@@ -77,9 +76,9 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
               </div>
             </div>
 
-            {/* Navigation links with proper accessibility focus styling */}
+            {/* Navigation links */}
             <nav className="hidden md:flex items-center gap-8 text-sm font-bold text-slate-700" aria-label="Main Navigation">
-              {(["services", "estimator", "qa", "contact"] as const).map((item) => (
+              {(["services", "qa", "contact"] as const).map((item) => (
                 <button
                   key={item}
                   onClick={() => onScrollTo(item)}
@@ -94,8 +93,6 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
 
             {/* Language Switcher & Highlighted CTA */}
             <div className="flex items-center gap-3">
-              
-              {/* Language Switcher toggle ES / EN */}
               <button
                 onClick={() => setLanguage(language === "english" ? "spanish" : "english")}
                 className="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-slate-200 hover:border-[#005f43] text-[#005f43] hover:bg-[#FBF9F6] text-xs font-black tracking-wider transition-all focus:outline-none focus:ring-2 focus:ring-[#005f43]"
@@ -105,9 +102,8 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
                 <span className="font-mono">{language === "english" ? "ES" : "EN"}</span>
               </button>
 
-              {/* Learn More primary highlighted CTA */}
               <Button
-                onClick={() => onScrollTo("services")}
+                onClick={() => onScrollTo("contact")}
                 className="bg-[#005f43] hover:bg-[#004732] text-white font-extrabold px-5 py-2 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-sm focus:ring-2 focus:ring-[#00c853]"
               >
                 {t.learnMore}
