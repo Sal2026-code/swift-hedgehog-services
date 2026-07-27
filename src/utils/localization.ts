@@ -85,13 +85,14 @@ export const LOCALIZATION = {
     addons: {
       subHeader: "Custom Upgrades",
       title: "Specialized Add-On Services",
+      priceLabel: "Starts at $",
       items: [
-        { title: "Interior Fridge Deep Cleaning" },
-        { title: "Interior Oven & Degreasing" },
-        { title: "Window Glass & Frame Detail" },
-        { title: "Inside Kitchen Cabinets" },
-        { title: "Balcony & Patio Sweep" },
-        { title: "Laundry Wash & Fold" }
+        { id: "fridge", title: "Interior Fridge Deep Cleaning", price: "35" },
+        { id: "oven", title: "Interior Oven & Degreasing", price: "35" },
+        { id: "windows", title: "Window Glass & Frame Detail", price: "45" },
+        { id: "mattress", title: "Inside Kitchen Cabinets", price: "30" },
+        { id: "balcony", title: "Balcony & Patio Sweep", price: "25" },
+        { id: "ironing", title: "Laundry Wash & Fold", price: "20" }
       ]
     },
     forum: {
@@ -219,13 +220,14 @@ export const LOCALIZATION = {
     addons: {
       subHeader: "Mejoras Personalizadas",
       title: "Servicios Adicionales Especializados",
+      priceLabel: "Desde $",
       items: [
-        { title: "Limpieza Profunda de Nevera Interior" },
-        { title: "Limpieza de Horno Interior y Desengrase" },
-        { title: "Limpieza Detallada de Cristales y Marcos" },
-        { title: "Limpieza Interior de Muebles de Cocina" },
-        { title: "Barrido y Limpieza de Balcón o Terraza" },
-        { title: "Lavado y Doblado de Ropa" }
+        { id: "fridge", title: "Limpieza Profunda de Nevera Interior", price: "35" },
+        { id: "oven", title: "Limpieza de Horno Interior y Desengrase", price: "35" },
+        { id: "windows", title: "Limpieza Detallada de Cristales y Marcos", price: "45" },
+        { id: "mattress", title: "Limpieza Interior de Muebles de Cocina", price: "30" },
+        { id: "balcony", title: "Barrido y Limpieza de Balcón o Terraza", price: "25" },
+        { id: "ironing", title: "Lavado y Doblado de Ropa", price: "20" }
       ]
     },
     forum: {

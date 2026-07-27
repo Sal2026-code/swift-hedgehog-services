@@ -46,7 +46,7 @@ export const AddonsGrid: React.FC<AddonsGridProps> = ({ language, selectedAddons
 
         {/* 2x3 grid of interactive block cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" role="group" aria-label="Add-on selection controls">
-          {t.items.map((addon) => {
+          {t.items.map((addon: any) => {
             const isSelected = selectedAddons.includes(addon.id);
             return (
               <div
@@ -81,7 +81,7 @@ export const AddonsGrid: React.FC<AddonsGridProps> = ({ language, selectedAddons
                   </div>
 
                   <span className="text-sm font-black text-[#005f43] bg-[#00c853]/10 px-3 py-1 rounded-full w-fit tracking-wide mt-4 border border-[#00c853]/20">
-                    {t.priceLabel}{addon.price}
+                    {"priceLabel" in t ? t.priceLabel : ""}{addon.price}
                   </span>
                 </div>
 
