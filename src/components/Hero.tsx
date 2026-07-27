@@ -19,26 +19,26 @@ export const Hero: React.FC<HeroProps> = ({ language, onScrollTo }) => {
       id="hero" 
       className="relative pt-16 pb-24 bg-gradient-to-br from-[#FBF9F6] via-white to-[#FBF9F6] border-b border-slate-100 overflow-hidden"
     >
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center sm:text-left">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
         
         {/* Header Badge */}
-        <div className="flex justify-center sm:justify-start mb-6 opacity-0 animate-fade-in-up">
-          <div className="inline-flex items-center gap-2 bg-[#00c853]/10 border border-[#00c853]/30 px-4 py-1.5 rounded-full text-xs font-extrabold text-[#005f43]">
+        <div className="flex justify-center mb-6 opacity-0 animate-fade-in-up">
+          <div className="inline-flex items-center gap-2 bg-[#00c853]/10 border border-[#00c853]/30 px-5 py-2 rounded-full text-xs font-extrabold text-[#005f43] tracking-wider uppercase">
             <CheckCircle className="w-4 h-4 text-[#00c853]" />
             <span>{t.badgeText}</span>
           </div>
         </div>
 
-        {/* Heading & CTAs */}
-        <div className="space-y-8 max-w-3xl">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-800 font-serif leading-tight opacity-0 animate-fade-in-up delay-100">
+        {/* Heading & CTAs - Expanded for Wide Display */}
+        <div className="space-y-8 max-w-6xl mx-auto">
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-wide text-slate-800 font-serif leading-tight sm:leading-none opacity-0 animate-fade-in-up delay-100">
             {headlineText.split("G & Bros").map((part, i, arr) => (
               <React.Fragment key={i}>
                 {part}
                 {i < arr.length - 1 && (
-                  <span className="text-[#005f43] inline relative">
+                  <span className="text-[#005f43] inline-block relative px-2">
                     G & Bros
-                    <span className="absolute left-0 bottom-1 w-full h-1.5 bg-[#00c853] rounded-full" />
+                    <span className="absolute left-0 bottom-1 w-full h-2 bg-[#00c853] rounded-full opacity-80" />
                   </span>
                 )}
               </React.Fragment>
@@ -46,7 +46,7 @@ export const Hero: React.FC<HeroProps> = ({ language, onScrollTo }) => {
           </h1>
 
           {/* Action Buttons Below Heading */}
-          <div className="flex flex-col sm:flex-row gap-4 pt-4 justify-center sm:justify-start opacity-0 animate-fade-in-up delay-300">
+          <div className="flex flex-col sm:flex-row gap-4 pt-4 justify-center opacity-0 animate-fade-in-up delay-300">
             <Button
               onClick={() => onScrollTo("services")}
               className="bg-[#005f43] hover:bg-[#004732] text-white font-extrabold px-8 py-6 rounded-xl text-base shadow-lg shadow-[#005f43]/10 flex items-center justify-center gap-2 hover:scale-[1.03] active:scale-[0.98] transition-all duration-200"
