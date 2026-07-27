@@ -71,6 +71,14 @@ export const LOCALIZATION = {
           bullets: [],
           bottomAccent: "Perfect for Airbnb, Vrbo & property managers",
           btn: "Select Vacation Rental Clean"
+        },
+        {
+          id: "property_watch",
+          title: "Property Watch Services",
+          description: "Protect your property while you are away. Our property watch service includes scheduled visual inspections, checking doors and windows, looking for leaks or visible damage, monitoring air conditioning, and reporting any concerns promptly.",
+          bullets: [],
+          bottomAccent: "Peace of mind for absentee homeowners",
+          btn: "Select Property Watch"
         }
       ]
     },
@@ -119,7 +127,7 @@ export const LOCALIZATION = {
       emailField: "Email Address",
       phMsg: "Tell us about your home or specific cleaning requests...",
       submitBtn: "Request Callback",
-      submittingBtn: "Sending Request...",
+      submittingBtn: "Enviando Solicitud...",
       successTitle: "Inquiry Received!",
       successDesc: "Thank you for reaching out to G & Bros. A member of our team will contact you shortly.",
       confidentiality: "Your data is strictly protected and never shared."
@@ -197,6 +205,14 @@ export const LOCALIZATION = {
           bullets: [],
           bottomAccent: "Ideal para Airbnb, Vrbo y gestores de propiedades",
           btn: "Seleccionar Alquiler Vacacional"
+        },
+        {
+          id: "property_watch",
+          title: "Servicios de Inspección de Propiedades",
+          description: "Proteja su propiedad mientras está fuera. Nuestro servicio de inspección de propiedades incluye inspecciones visuales programadas, verificación de puertas y ventanas, búsqueda de fugas o daños visibles, monitoreo del aire acondicionado y reporte oportuno de cualquier inquietud.",
+          bullets: [],
+          bottomAccent: "Tranquilidad total para propietarios ausentes",
+          btn: "Seleccionar Inspección"
         }
       ]
     },
@@ -248,7 +264,7 @@ export const LOCALIZATION = {
       submittingBtn: "Enviando Solicitud...",
       successTitle: "¡Solicitud Recibida!",
       successDesc: "Gracias por contactar a G & Bros. Un miembro de nuestro equipo le contactará en breve.",
-      confidentiality: "Sus datos están estrictamente protegidos y nunca serán compartidos."
+      confidentiality: "Sus datos están strictly protegidos y nunca serán compartidos."
     }
   }
 };

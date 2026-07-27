@@ -7,7 +7,7 @@ import { LOCALIZATION } from "@/utils/localization";
 interface ServicesProps {
   language: "english" | "spanish";
   onScrollTo?: (elementId: string) => void;
-  setCleaningTier?: (tier: "standard" | "deep" | "move") => void;
+  setCleaningTier?: (tier: string) => void;
 }
 
 export const Services: React.FC<ServicesProps> = ({ language }) => {
@@ -25,13 +25,13 @@ export const Services: React.FC<ServicesProps> = ({ language }) => {
           <div className="w-20 h-1 bg-[#00c853] mx-auto mt-6 rounded-full" />
         </div>
 
-        {/* 3 Tier Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* 4 Cards Responsive Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {t.cards.map((card, idx) => {
             return (
               <div
                 key={idx}
-                className="flex flex-col justify-between bg-white rounded-3xl border-2 border-slate-100 p-6 sm:p-8 shadow-sm hover:shadow-2xl hover:scale-[1.03] active:scale-[0.99] transition-all duration-300 relative"
+                className="flex flex-col justify-between bg-white rounded-3xl border-2 border-slate-100 p-6 sm:p-7 shadow-sm hover:shadow-2xl hover:scale-[1.03] active:scale-[0.99] transition-all duration-300 relative"
               >
                 <div className="text-left space-y-4">
                   
