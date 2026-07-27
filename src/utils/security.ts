@@ -2,8 +2,6 @@ import { z } from "zod";
 
 /**
  * Security utility to obfuscate contact information and sanitize input.
- * These schemas are designed to be portable so they can be reused 
- * in a Node.js backend to ensure server-side parity.
  */
 
 export const CONTACT_INFO = {
@@ -19,10 +17,6 @@ export const CONTACT_INFO = {
   }
 };
 
-/**
- * Portable Validation Schemas
- * IMPORTANT: These must be mirrored or shared with the server-side implementation.
- */
 export const ContactFormSchema = z.object({
   name: z.string().trim().min(3, "Name must be at least 3 characters"),
   email: z.string().email("Please enter a valid email address"),
@@ -37,8 +31,7 @@ export const ForumQuestionSchema = z.object({
 });
 
 /**
- * Basic HTML sanitization to prevent XSS by encoding special characters.
- * Note: Server-side sanitization is still mandatory.
+ * FIXED: Proper HTML entity mapping for ampersands and other characters.
  */
 export const sanitizeInput = (str: string): string => {
   if (!str) return "";
@@ -50,6 +43,26 @@ export const sanitizeInput = (str: string): string => {
     "'": '&#39;'
   };
   return str.replace(/[&<>"']/g, (m) => map[m] || m);
+};
+
+/**
+ * Client-side Throttling / Rate Limiting
+ */
+export const checkRateLimit = (actionKey: string, cooldownMs: number = 60000): { allowed: boolean; remaining: number } => {
+  const lastAction = localStorage.getItem(`rate_limit_${actionKey}`);
+  const now = Date.now();
+  
+  if (lastAction) {
+    const elapsed = now - parseInt(lastAction);
+    if (elapsed < cooldownMs) {
+      return { allowed: false, remaining: Math.ceil((cooldownMs - elapsed) / 1000) };
+    }
+  }
+  return { allowed: true, remaining: 0 };
+};
+
+export const updateRateLimit = (actionKey: string) => {
+  localStorage.setItem(`rate_limit_${actionKey}`, Date.now().toString());
 };
 
 export const getFullEmail = () => `${CONTACT_INFO.email.user}@${CONTACT_INFO.email.domain}`;

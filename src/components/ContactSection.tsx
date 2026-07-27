@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { Mail, Phone, MapPin, Clock, Send, ShieldCheck, CheckCircle } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, Send, ShieldCheck, CheckCircle, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LOCALIZATION } from "@/utils/localization";
 import { showError, showSuccess } from "@/utils/toast";
-import { getFullEmail, handleMailTo, CONTACT_INFO, sanitizeInput, ContactFormSchema } from "@/utils/security";
+import { getFullEmail, handleMailTo, CONTACT_INFO, sanitizeInput, ContactFormSchema, checkRateLimit, updateRateLimit } from "@/utils/security";
 
 interface ContactSectionProps {
   language: "english" | "spanish";
@@ -20,6 +20,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
   const [honeypot, setHoneypot] = useState("");
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [showEmail, setShowEmail] = useState(false);
 
   const t = LOCALIZATION[language].contact;
 
@@ -39,7 +40,15 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
 
     if (honeypot) return;
 
-    // Use portable Zod schema for validation
+    // Rate limiting check
+    const rateCheck = checkRateLimit("contact_submission", 60000); // 1 minute cooldown
+    if (!rateCheck.allowed) {
+      showError(language === "english" 
+        ? `Please wait ${rateCheck.remaining}s before sending another request.` 
+        : `Por favor espere ${rateCheck.remaining}s antes de enviar otra solicitud.`);
+      return;
+    }
+
     const result = ContactFormSchema.safeParse({
       name,
       email,
@@ -53,7 +62,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
       return;
     }
 
-    // Sanitize inputs for added security
     const sanitizedData = {
       name: sanitizeInput(result.data.name),
       email: sanitizeInput(result.data.email),
@@ -62,11 +70,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
     };
 
     setLoading(true);
-    console.log("Validation passed. Ready for server transmission:", sanitizedData);
+    console.log("Validation passed. Sanity Data:", sanitizedData);
 
     setTimeout(() => {
       setLoading(false);
       setSubmitted(true);
+      updateRateLimit("contact_submission");
       showSuccess(t.successTitle);
     }, 1200);
   };
@@ -96,16 +105,26 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
               <div className="p-3 bg-[#005f43]/10 text-[#005f43] rounded-2xl h-fit border border-[#005f43]/20">
                 <Mail className="w-5 h-5 text-[#00c853]" />
               </div>
-              <div>
+              <div className="flex-1">
                 <p className="text-xs font-black uppercase text-[#005f43] tracking-wider mb-1.5">
                   {language === "english" ? "Email Address" : "Dirección de Correo"}
                 </p>
-                <button 
-                  onClick={handleMailTo}
-                  className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block text-left"
-                >
-                  {getFullEmail()}
-                </button>
+                {showEmail ? (
+                  <button 
+                    onClick={handleMailTo}
+                    className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block text-left animate-fade-in"
+                  >
+                    {getFullEmail()}
+                  </button>
+                ) : (
+                  <button 
+                    onClick={() => setShowEmail(true)}
+                    className="bg-[#00c853]/10 hover:bg-[#00c853]/20 text-[#005f43] px-3 py-1.5 rounded-lg text-xs font-black flex items-center gap-2 transition-all"
+                  >
+                    <Eye className="w-3.5 h-3.5" />
+                    {language === "english" ? "Show Business Email" : "Ver Correo de Negocio"}
+                  </button>
+                )}
               </div>
             </div>
 
@@ -153,7 +172,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                 </p>
               </div>
             </div>
-
           </div>
 
           <div className="lg:col-span-7">
@@ -201,7 +219,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder={t.phName}
-                      className="w-full bg-[#FBF9F6] border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-800 focus:outline-none focus:border-[#005f43] focus:ring-2 focus:ring-[#005f43]/10 transition-all font-semibold shadow-inner"
+                      className="w-full bg-[#FBF9F6] border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-800 focus:outline-none focus:border-[#005f43] transition-all font-semibold"
                     />
                   </div>
 
@@ -216,7 +234,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                       value={phone}
                       onChange={handlePhoneChange}
                       placeholder="+1 727..."
-                      className="w-full bg-[#FBF9F6] border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-800 focus:outline-none focus:border-[#005f43] focus:ring-2 focus:ring-[#005f43]/10 transition-all font-semibold shadow-inner"
+                      className="w-full bg-[#FBF9F6] border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-800 focus:outline-none focus:border-[#005f43] transition-all font-semibold"
                     />
                   </div>
                 </div>
@@ -231,8 +249,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder={getFullEmail()}
-                    className="w-full bg-[#FBF9F6] border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-800 focus:outline-none focus:border-[#005f43] focus:ring-2 focus:ring-[#005f43]/10 transition-all font-semibold shadow-inner"
+                    placeholder={language === 'english' ? 'your@email.com' : 'su@correo.com'}
+                    className="w-full bg-[#FBF9F6] border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-800 focus:outline-none focus:border-[#005f43] transition-all font-semibold"
                   />
                 </div>
 
@@ -246,7 +264,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder={t.phMsg}
-                    className="w-full bg-[#FBF9F6] border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-800 focus:outline-none focus:border-[#005f43] focus:ring-2 focus:ring-[#005f43]/10 transition-all resize-none font-semibold shadow-inner"
+                    className="w-full bg-[#FBF9F6] border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-800 focus:outline-none focus:border-[#005f43] transition-all resize-none font-semibold"
                   />
                 </div>
 
@@ -254,7 +272,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-[#005f43] hover:bg-[#004732] text-white font-extrabold py-4.5 rounded-xl text-base tracking-wide flex items-center justify-center gap-2 shadow-md focus:ring-2 focus:ring-[#005f43]"
+                    className="w-full bg-[#005f43] hover:bg-[#004732] text-white font-extrabold py-4.5 rounded-xl text-base tracking-wide flex items-center justify-center gap-2 shadow-md transition-all"
                   >
                     <Send className="w-5 h-5 text-[#00c853]" />
                     <span>{loading ? t.submittingBtn : t.submitBtn}</span>
@@ -265,13 +283,10 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                     <span>{t.confidentiality}</span>
                   </div>
                 </div>
-
               </form>
             )}
           </div>
-
         </div>
-
       </div>
     </section>
   );

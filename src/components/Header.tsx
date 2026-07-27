@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { Phone, Mail, Globe } from "lucide-react";
+import React, { useState } from "react";
+import { Phone, Mail, Globe, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LOCALIZATION } from "@/utils/localization";
 import { getFullEmail, handleMailTo, CONTACT_INFO } from "@/utils/security";
@@ -13,6 +13,7 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollTo }) => {
+  const [showEmail, setShowEmail] = useState(false);
   const t = LOCALIZATION[language].header;
 
   const handleKeyPress = (e: React.KeyboardEvent, sectionId: string) => {
@@ -24,7 +25,6 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
 
   return (
     <header className="sticky top-0 z-50 w-full shadow-lg transition-all">
-      {/* Top Info Strip with High Contrast Text */}
       <div 
         className="bg-[#004732] text-white py-2.5 px-4 text-xs font-bold flex flex-col sm:flex-row justify-between items-center gap-2 border-b border-[#003324]"
         role="status"
@@ -36,25 +36,34 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
             <span className="font-mono tracking-wide">{CONTACT_INFO.phone.display}</span>
           </a>
           <span className="hidden sm:inline text-emerald-800">|</span>
-          <button 
-            onClick={handleMailTo}
-            className="flex items-center gap-2 hover:text-white transition-colors duration-200 focus:outline-none"
-          >
+          <div className="flex items-center gap-2">
             <Mail className="w-4 h-4 text-[#00c853]" />
-            <span>{getFullEmail()}</span>
-          </button>
+            {showEmail ? (
+              <button 
+                onClick={handleMailTo}
+                className="hover:text-white transition-colors duration-200 focus:outline-none animate-fade-in"
+              >
+                {getFullEmail()}
+              </button>
+            ) : (
+              <button 
+                onClick={() => setShowEmail(true)}
+                className="bg-[#00c853]/20 hover:bg-[#00c853]/40 px-2 py-0.5 rounded text-[10px] flex items-center gap-1.5 transition-all"
+              >
+                <Eye className="w-3 h-3" />
+                {language === "english" ? "Show Email" : "Ver Correo"}
+              </button>
+            )}
+          </div>
         </div>
         <div className="text-[10px] uppercase tracking-[0.2em] text-white bg-[#00c853]/20 px-3 py-1 rounded-full font-black border border-[#00c853]/30">
           {language === "english" ? "✨ G & Bros Premium Standard ✨" : "✨ Estándar Premium G & Bros ✨"}
         </div>
       </div>
 
-      {/* Main Navbar */}
       <div className="w-full bg-white/95 backdrop-blur-md border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
-            
-            {/* Logo Brand */}
             <div 
               role="button"
               tabIndex={0}
@@ -80,7 +89,6 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
               </div>
             </div>
 
-            {/* Navigation links */}
             <nav className="hidden md:flex items-center gap-8 text-sm font-bold text-slate-700" aria-label="Main Navigation">
               {(["services", "qa", "contact"] as const).map((item) => (
                 <button
@@ -95,7 +103,6 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
               ))}
             </nav>
 
-            {/* Language Switcher & Highlighted CTA */}
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setLanguage(language === "english" ? "spanish" : "english")}
@@ -113,7 +120,6 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
                 {t.learnMore}
               </Button>
             </div>
-
           </div>
         </div>
       </div>

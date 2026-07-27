@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MessageSquare, ThumbsUp, Send, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ForumQuestion } from "@/pages/Index";
 import { LOCALIZATION } from "@/utils/localization";
 import { showSuccess, showError } from "@/utils/toast";
-import { sanitizeInput, ForumQuestionSchema } from "@/utils/security";
+import { sanitizeInput, ForumQuestionSchema, checkRateLimit, updateRateLimit } from "@/utils/security";
 
 interface ForumSectionProps {
   language: "english" | "spanish";
@@ -31,11 +31,26 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
 
   const t = LOCALIZATION[language].forum;
 
+  // Load upvotes from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem("forum_upvotes");
+    if (saved) {
+      try {
+        setUpvotedIds(JSON.parse(saved));
+      } catch (e) {
+        console.error("Failed to load upvotes", e);
+      }
+    }
+  }, []);
+
   const handleLike = (id: number, e: React.MouseEvent) => {
     e.stopPropagation();
     if (upvotedIds.includes(id)) return;
     
-    setUpvotedIds((prev) => [...prev, id]);
+    const newUpvoted = [...upvotedIds, id];
+    setUpvotedIds(newUpvoted);
+    localStorage.setItem("forum_upvotes", JSON.stringify(newUpvoted));
+
     setQuestions((prev) =>
       prev.map((q) => (q.id === id ? { ...q, likes: q.likes + 1 } : q))
     );
@@ -47,7 +62,15 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
 
     if (honeypot) return;
 
-    // Use portable Zod schema for validation
+    // Rate limiting check
+    const rateCheck = checkRateLimit("forum_submission", 30000); // 30s cooldown
+    if (!rateCheck.allowed) {
+      showError(language === "english" 
+        ? `Please wait ${rateCheck.remaining}s before posting another question.` 
+        : `Por favor espere ${rateCheck.remaining}s antes de publicar otra pregunta.`);
+      return;
+    }
+
     const result = ForumQuestionSchema.safeParse({
       name,
       category,
@@ -64,6 +87,7 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
     const sanitizedQuery = sanitizeInput(result.data.query);
 
     onAddQuestion(sanitizedName, result.data.category, sanitizedQuery);
+    updateRateLimit("forum_submission");
     setName("");
     setQuery("");
   };
@@ -90,9 +114,7 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-          
           <div className="lg:col-span-8 space-y-6">
-
             <div className="space-y-4 text-left animate-fade-in">
               {questions.map((q) => {
                 const isExpanded = expandedId === q.id;
@@ -130,14 +152,14 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
                           <ThumbsUp className={`w-3.5 h-3.5 ${isUpvoted ? "fill-white" : ""}`} />
                           <span>{t.helpfulText} ({q.likes})</span>
                         </button>
-                        {isExpanded ? <ChevronUp className="w-4 h-4 text-slate-400 transition-transform duration-300" /> : <ChevronDown className="w-4 h-4 text-slate-400 transition-transform duration-300" />}
+                        {isExpanded ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
                       </div>
                     </div>
 
                     {isExpanded && (
                       <div className="px-5 pb-5 pt-1 border-t border-slate-100 bg-[#FBF9F6]/30 animate-fade-in">
                         <div className="bg-white border-l-4 border-[#00c853] rounded-r-2xl p-5 shadow-sm relative">
-                          <span className="bg-[#005f43] text-[#00c853] text-[10px] uppercase font-black px-3.5 py-1 rounded-full tracking-wider inline-block mb-3 animate-pulse">
+                          <span className="bg-[#005f43] text-[#00c853] text-[10px] uppercase font-black px-3.5 py-1 rounded-full tracking-wider inline-block mb-3">
                             {t.responseBadge}
                           </span>
                           <p className="text-xs text-slate-700 leading-relaxed font-semibold">
@@ -146,18 +168,15 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
                         </div>
                       </div>
                     )}
-
                   </div>
                 );
               })}
             </div>
-
           </div>
 
           <div className="lg:col-span-4">
             <div className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-md text-left space-y-6 relative hover:shadow-lg transition-all duration-300">
               <div className="absolute top-0 inset-x-0 h-1 bg-[#005f43]" />
-              
               <div className="flex items-center gap-3">
                 <MessageSquare className="w-5 h-5 text-[#005f43]" />
                 <h3 className="text-xl font-serif font-black text-[#005f43]">
@@ -187,7 +206,7 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder={t.phName}
-                    className="w-full bg-[#FBF9F6] border border-slate-200 rounded-xl px-4 py-3.5 text-xs text-slate-800 focus:outline-none focus:border-[#005f43] focus:ring-2 focus:ring-[#005f43]/10 transition-all font-semibold shadow-inner"
+                    className="w-full bg-[#FBF9F6] border border-slate-200 rounded-xl px-4 py-3.5 text-xs text-slate-800 focus:outline-none focus:border-[#005f43] transition-all font-semibold"
                   />
                 </div>
 
@@ -199,7 +218,7 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
                     id="forum-category"
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full bg-[#FBF9F6] border border-slate-200 rounded-xl px-4 py-3.5 text-xs text-slate-800 focus:outline-none focus:border-[#005f43] focus:ring-2 focus:ring-[#005f43]/10 transition-all font-black shadow-inner"
+                    className="w-full bg-[#FBF9F6] border border-slate-200 rounded-xl px-4 py-3.5 text-xs text-slate-800 focus:outline-none focus:border-[#005f43] font-black"
                   >
                     <option value="general">{t.general}</option>
                     <option value="pets">{t.pets}</option>
@@ -219,24 +238,21 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder={t.phQuery}
-                    className="w-full bg-[#FBF9F6] border border-slate-200 rounded-xl px-4 py-3.5 text-xs text-slate-800 focus:outline-none focus:border-[#005f43] focus:ring-2 focus:ring-[#005f43]/10 transition-all resize-none font-semibold shadow-inner"
+                    className="w-full bg-[#FBF9F6] border border-slate-200 rounded-xl px-4 py-3.5 text-xs text-slate-800 focus:outline-none focus:border-[#005f43] resize-none font-semibold"
                   />
                 </div>
 
                 <Button
                   type="submit"
-                  className="w-full bg-[#005f43] hover:bg-[#004732] text-white font-extrabold py-4 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all focus:ring-2 focus:ring-[#005f43]"
+                  className="w-full bg-[#005f43] hover:bg-[#004732] text-white font-extrabold py-4 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all"
                 >
                   <Send className="w-3.5 h-3.5 text-[#00c853]" />
                   <span>{t.submitBtn}</span>
                 </Button>
               </form>
-
             </div>
           </div>
-
         </div>
-
       </div>
     </section>
   );
