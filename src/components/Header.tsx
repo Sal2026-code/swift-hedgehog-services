@@ -37,7 +37,7 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
           <span className="hidden sm:inline text-emerald-800">|</span>
           <span className="flex items-center gap-2 hover:text-white transition-colors duration-200">
             <Mail className="w-4 h-4 text-[#00c853]" />
-            <span>contacto@gbrosservices.com</span>
+            <span>gandbrosteam@gmail.com</span>
           </span>
         </div>
         <div className="text-[10px] uppercase tracking-[0.2em] text-white bg-[#00c853]/20 px-3 py-1 rounded-full font-black border border-[#00c853]/30">
