@@ -5,6 +5,7 @@ import { Mail, Phone, MapPin, Clock, Send, ShieldCheck, CheckCircle } from "luci
 import { Button } from "@/components/ui/button";
 import { LOCALIZATION } from "@/utils/localization";
 import { showError, showSuccess } from "@/utils/toast";
+import { getFullEmail, handleMailTo, CONTACT_INFO } from "@/utils/security";
 
 interface ContactSectionProps {
   language: "english" | "spanish";
@@ -16,6 +17,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
+  const [honeypot, setHoneypot] = useState(""); // Bot protection field
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
@@ -34,6 +36,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Honeypot check - if filled, it's likely a bot
+    if (honeypot) {
+      console.warn("Bot submission detected via honeypot.");
+      return;
+    }
 
     if (!name.trim() || name.length < 3) {
       showError(language === "english" ? "Please enter a valid full name." : "Por favor introduzca un nombre válido.");
@@ -93,9 +101,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                 <p className="text-xs font-black uppercase text-[#005f43] tracking-wider mb-1.5">
                   {language === "english" ? "Email Address" : "Dirección de Correo"}
                 </p>
-                <a href="mailto:gandbrosteam@gmail.com" className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block">
-                  gandbrosteam@gmail.com
-                </a>
+                <button 
+                  onClick={handleMailTo}
+                  className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block text-left"
+                >
+                  {getFullEmail()}
+                </button>
               </div>
             </div>
 
@@ -108,8 +119,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                 <p className="text-xs font-black uppercase text-[#005f43] tracking-wider mb-1.5">
                   {language === "english" ? "Phone Number" : "Número de Teléfono"}
                 </p>
-                <a href="tel:+17276089599" className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block font-mono">
-                  +1 727-608-9599
+                <a href={`tel:${CONTACT_INFO.phone.raw}`} className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block font-mono">
+                  {CONTACT_INFO.phone.display}
                 </a>
               </div>
             </div>
@@ -168,6 +179,18 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
               <form onSubmit={handleSubmit} className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-10 space-y-6 shadow-xl relative" aria-label="Callback Inquiry Form">
                 <div className="absolute top-0 inset-x-0 h-2 bg-[#005f43]" />
                 
+                {/* Honeypot field - Hidden from users */}
+                <div className="hidden" aria-hidden="true">
+                  <input
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={honeypot}
+                    onChange={(e) => setHoneypot(e.target.value)}
+                    placeholder="Work title"
+                  />
+                </div>
+
                 <h3 className="text-xl font-serif font-black text-[#005f43] mb-4">
                   {t.formTitle}
                 </h3>
@@ -217,7 +240,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="gandbrosteam@gmail.com"
+                    placeholder={getFullEmail()}
                     className="w-full bg-[#FBF9F6] border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-800 focus:outline-none focus:border-[#005f43] focus:ring-2 focus:ring-[#005f43]/10 transition-all font-semibold shadow-inner"
                   />
                 </div>

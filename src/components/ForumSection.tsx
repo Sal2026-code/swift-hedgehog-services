@@ -27,6 +27,7 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
   const [name, setName] = useState("");
   const [category, setCategory] = useState("general");
   const [query, setQuery] = useState("");
+  const [honeypot, setHoneypot] = useState(""); // Bot protection field
 
   const t = LOCALIZATION[language].forum;
 
@@ -45,6 +46,12 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Honeypot check
+    if (honeypot) {
+      return;
+    }
+
     if (!query.trim() || query.length < 5) {
       showError(t.errQuery);
       return;
@@ -161,6 +168,18 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Honeypot - hidden from users */}
+                <div className="hidden" aria-hidden="true">
+                  <input
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={honeypot}
+                    onChange={(e) => setHoneypot(e.target.value)}
+                    placeholder="Verify age"
+                  />
+                </div>
+
                 <div className="space-y-1">
                   <label htmlFor="forum-name" className="text-[10px] font-black uppercase tracking-wider text-slate-500 block">
                     {t.nameLabel}

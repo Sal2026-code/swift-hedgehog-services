@@ -4,6 +4,7 @@ import React from "react";
 import { Phone, Mail, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LOCALIZATION } from "@/utils/localization";
+import { getFullEmail, handleMailTo, CONTACT_INFO } from "@/utils/security";
 
 interface HeaderProps {
   language: "english" | "spanish";
@@ -30,15 +31,18 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
         aria-label="Contact Information"
       >
         <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 text-emerald-100">
-          <span className="flex items-center gap-2 hover:text-white transition-colors duration-200">
+          <a href={`tel:${CONTACT_INFO.phone.raw}`} className="flex items-center gap-2 hover:text-white transition-colors duration-200">
             <Phone className="w-4 h-4 text-[#00c853]" />
-            <span className="font-mono tracking-wide">{t.phoneText.replace("Phone: ", "").replace("Teléfono: ", "")}</span>
-          </span>
+            <span className="font-mono tracking-wide">{CONTACT_INFO.phone.display}</span>
+          </a>
           <span className="hidden sm:inline text-emerald-800">|</span>
-          <span className="flex items-center gap-2 hover:text-white transition-colors duration-200">
+          <button 
+            onClick={handleMailTo}
+            className="flex items-center gap-2 hover:text-white transition-colors duration-200 focus:outline-none"
+          >
             <Mail className="w-4 h-4 text-[#00c853]" />
-            <span>gandbrosteam@gmail.com</span>
-          </span>
+            <span>{getFullEmail()}</span>
+          </button>
         </div>
         <div className="text-[10px] uppercase tracking-[0.2em] text-white bg-[#00c853]/20 px-3 py-1 rounded-full font-black border border-[#00c853]/30">
           {language === "english" ? "✨ G & Bros Premium Standard ✨" : "✨ Estándar Premium G & Bros ✨"}
