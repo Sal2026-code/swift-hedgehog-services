@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ForumQuestion } from "@/pages/Index";
 import { LOCALIZATION } from "@/utils/localization";
 import { showSuccess, showError } from "@/utils/toast";
-import { sanitizeInput } from "@/utils/security";
+import { sanitizeInput, ForumQuestionSchema } from "@/utils/security";
 
 interface ForumSectionProps {
   language: "english" | "spanish";
@@ -24,19 +24,16 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [upvotedIds, setUpvotedIds] = useState<number[]>([]);
 
-  // Form input fields
   const [name, setName] = useState("");
   const [category, setCategory] = useState("general");
   const [query, setQuery] = useState("");
-  const [honeypot, setHoneypot] = useState(""); // Bot protection field
+  const [honeypot, setHoneypot] = useState("");
 
   const t = LOCALIZATION[language].forum;
 
   const handleLike = (id: number, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (upvotedIds.includes(id)) {
-      return;
-    }
+    if (upvotedIds.includes(id)) return;
     
     setUpvotedIds((prev) => [...prev, id]);
     setQuestions((prev) =>
@@ -48,21 +45,25 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Honeypot check
-    if (honeypot) {
+    if (honeypot) return;
+
+    // Use portable Zod schema for validation
+    const result = ForumQuestionSchema.safeParse({
+      name,
+      category,
+      query
+    });
+
+    if (!result.success) {
+      const errorMsg = result.error.errors[0].message;
+      showError(errorMsg);
       return;
     }
 
-    if (!query.trim() || query.length < 5) {
-      showError(t.errQuery);
-      return;
-    }
+    const sanitizedName = sanitizeInput(result.data.name || "");
+    const sanitizedQuery = sanitizeInput(result.data.query);
 
-    // Sanitize user inputs before processing
-    const sanitizedName = sanitizeInput(name);
-    const sanitizedQuery = sanitizeInput(query);
-
-    onAddQuestion(sanitizedName, category, sanitizedQuery);
+    onAddQuestion(sanitizedName, result.data.category, sanitizedQuery);
     setName("");
     setQuery("");
   };
@@ -78,7 +79,6 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
     <section id="qa" className="py-20 bg-[#FBF9F6] border-b border-slate-100 relative overflow-hidden" aria-label="Q&A Forum">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Header */}
         <div className="text-center mb-16">
           <span className="text-xs font-extrabold tracking-[0.25em] text-[#00c853] uppercase block mb-3">
             {t.subHeader}
@@ -89,13 +89,10 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
           <div className="w-20 h-1 bg-[#00c853] mx-auto mt-6 rounded-full" />
         </div>
 
-        {/* Two Column Forum Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
           
-          {/* Question Feed */}
           <div className="lg:col-span-8 space-y-6">
 
-            {/* Questions Feed list accordions */}
             <div className="space-y-4 text-left animate-fade-in">
               {questions.map((q) => {
                 const isExpanded = expandedId === q.id;
@@ -108,7 +105,6 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
                     key={q.id}
                     className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md"
                   >
-                    {/* Collapsible Trigger */}
                     <div
                       role="button"
                       tabIndex={0}
@@ -125,22 +121,19 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
                       </div>
                       
                       <div className="flex items-center gap-3 shrink-0">
-                        {/* Helpful upvote button */}
                         <button
                           type="button"
                           onClick={(e) => handleLike(q.id, e)}
                           disabled={isUpvoted}
                           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-[11px] font-black transition-all hover:scale-[1.03] active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-[#005f43] ${isUpvoted ? "bg-[#005f43] text-white border-[#005f43]" : "bg-[#FBF9F6] text-slate-600 hover:text-[#005f43] border-slate-200"}`}
-                          aria-label={`Upvote question as helpful. Current helpful count: ${q.likes}`}
                         >
                           <ThumbsUp className={`w-3.5 h-3.5 ${isUpvoted ? "fill-white" : ""}`} />
                           <span>{t.helpfulText} ({q.likes})</span>
                         </button>
-                        {isExpanded ? <ChevronUp className="w-4 h-4 text-slate-400 transition-transform duration-300 rotate-180" /> : <ChevronDown className="w-4 h-4 text-slate-400 transition-transform duration-300" />}
+                        {isExpanded ? <ChevronUp className="w-4 h-4 text-slate-400 transition-transform duration-300" /> : <ChevronDown className="w-4 h-4 text-slate-400 transition-transform duration-300" />}
                       </div>
                     </div>
 
-                    {/* Accordion Response body nested box */}
                     {isExpanded && (
                       <div className="px-5 pb-5 pt-1 border-t border-slate-100 bg-[#FBF9F6]/30 animate-fade-in">
                         <div className="bg-white border-l-4 border-[#00c853] rounded-r-2xl p-5 shadow-sm relative">
@@ -161,7 +154,6 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
 
           </div>
 
-          {/* Ask a New Question Form Card */}
           <div className="lg:col-span-4">
             <div className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-md text-left space-y-6 relative hover:shadow-lg transition-all duration-300">
               <div className="absolute top-0 inset-x-0 h-1 bg-[#005f43]" />
@@ -174,7 +166,6 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Honeypot - hidden from users */}
                 <div className="hidden" aria-hidden="true">
                   <input
                     type="text"

@@ -1,6 +1,9 @@
+import { z } from "zod";
+
 /**
- * Security utility to obfuscate contact information from simple web scrapers
- * and sanitize user input to prevent XSS.
+ * Security utility to obfuscate contact information and sanitize input.
+ * These schemas are designed to be portable so they can be reused 
+ * in a Node.js backend to ensure server-side parity.
  */
 
 export const CONTACT_INFO = {
@@ -17,25 +20,36 @@ export const CONTACT_INFO = {
 };
 
 /**
+ * Portable Validation Schemas
+ * IMPORTANT: These must be mirrored or shared with the server-side implementation.
+ */
+export const ContactFormSchema = z.object({
+  name: z.string().trim().min(3, "Name must be at least 3 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  phone: z.string().regex(/^\+?[\d\s-]{9,}$/, "Please enter a valid phone number (min 9 digits)"),
+  message: z.string().optional(),
+});
+
+export const ForumQuestionSchema = z.object({
+  name: z.string().trim().optional(),
+  category: z.enum(["pets", "safety", "pricing", "general"]),
+  query: z.string().trim().min(5, "Question must be at least 5 characters"),
+});
+
+/**
  * Basic HTML sanitization to prevent XSS by encoding special characters.
+ * Note: Server-side sanitization is still mandatory.
  */
 export const sanitizeInput = (str: string): string => {
   if (!str) return "";
-  return str.replace(/[&<>"']/g, (m) => ({
+  const map: Record<string, string> = {
     '&': '&',
     '<': '<',
     '>': '>',
     '"': '&quot;',
     "'": '&#39;'
-  }[m as keyof typeof map] || m));
-};
-
-const map = {
-  '&': '&',
-  '<': '<',
-  '>': '>',
-  '"': '&quot;',
-  "'": '&#39;'
+  };
+  return str.replace(/[&<>"']/g, (m) => map[m] || m);
 };
 
 export const getFullEmail = () => `${CONTACT_INFO.email.user}@${CONTACT_INFO.email.domain}`;

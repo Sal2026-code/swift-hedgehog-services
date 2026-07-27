@@ -5,7 +5,7 @@ import { Mail, Phone, MapPin, Clock, Send, ShieldCheck, CheckCircle } from "luci
 import { Button } from "@/components/ui/button";
 import { LOCALIZATION } from "@/utils/localization";
 import { showError, showSuccess } from "@/utils/toast";
-import { getFullEmail, handleMailTo, CONTACT_INFO, sanitizeInput } from "@/utils/security";
+import { getFullEmail, handleMailTo, CONTACT_INFO, sanitizeInput, ContactFormSchema } from "@/utils/security";
 
 interface ContactSectionProps {
   language: "english" | "spanish";
@@ -17,7 +17,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
-  const [honeypot, setHoneypot] = useState(""); // Bot protection field
+  const [honeypot, setHoneypot] = useState("");
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
@@ -37,40 +37,32 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Honeypot check - if filled, it's likely a bot
-    if (honeypot) {
-      console.warn("Bot submission detected via honeypot.");
+    if (honeypot) return;
+
+    // Use portable Zod schema for validation
+    const result = ContactFormSchema.safeParse({
+      name,
+      email,
+      phone,
+      message
+    });
+
+    if (!result.success) {
+      const errorMsg = result.error.errors[0].message;
+      showError(errorMsg);
       return;
     }
 
-    if (!name.trim() || name.length < 3) {
-      showError(language === "english" ? "Please enter a valid full name." : "Por favor introduzca un nombre válido.");
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      showError(language === "english" ? "Please enter a valid email address." : "Por favor introduzca un correo válido.");
-      return;
-    }
-
-    const digitsOnly = phone.replace(/\D/g, "");
-    if (digitsOnly.length < 9) {
-      showError(language === "english" ? "Please enter a valid phone number (min 9 digits)." : "Por favor introduzca un teléfono válido (mínimo 9 dígitos).");
-      return;
-    }
-
-    // Sanitize inputs before "processing"
+    // Sanitize inputs for added security
     const sanitizedData = {
-      name: sanitizeInput(name),
-      email: sanitizeInput(email),
-      phone: sanitizeInput(phone),
-      message: sanitizeInput(message)
+      name: sanitizeInput(result.data.name),
+      email: sanitizeInput(result.data.email),
+      phone: sanitizeInput(result.data.phone),
+      message: sanitizeInput(result.data.message || "")
     };
 
     setLoading(true);
-    // In a real application, sanitizedData would be sent to the server here
-    console.log("Submitting sanitized inquiry:", sanitizedData);
+    console.log("Validation passed. Ready for server transmission:", sanitizedData);
 
     setTimeout(() => {
       setLoading(false);
@@ -83,7 +75,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
     <section id="contact" className="py-20 bg-white relative" aria-label="Contact G & Bros Services">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Header */}
         <div className="text-center mb-16">
           <span className="text-xs font-extrabold tracking-[0.25em] text-[#00c853] uppercase block mb-3">
             {t.subHeader}
@@ -94,16 +85,13 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
           <div className="w-20 h-1 bg-[#00c853] mx-auto mt-6 rounded-full" />
         </div>
 
-        {/* Split grid layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start text-left">
           
-          {/* Office Info column (Left 5 Columns) */}
           <div className="lg:col-span-5 bg-[#FBF9F6] border border-slate-200 rounded-3xl p-6 sm:p-10 space-y-8 shadow-sm">
             <h3 className="text-2xl font-serif font-black text-[#005f43]">
               {language === "english" ? "Office details" : "Detalles de Oficina"}
             </h3>
 
-            {/* Email Block */}
             <div className="flex gap-4 items-start">
               <div className="p-3 bg-[#005f43]/10 text-[#005f43] rounded-2xl h-fit border border-[#005f43]/20">
                 <Mail className="w-5 h-5 text-[#00c853]" />
@@ -121,7 +109,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
               </div>
             </div>
 
-            {/* Phone Block */}
             <div className="flex gap-4 items-start">
               <div className="p-3 bg-[#005f43]/10 text-[#005f43] rounded-2xl h-fit border border-[#005f43]/20">
                 <Phone className="w-5 h-5 text-[#00c853]" />
@@ -136,7 +123,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
               </div>
             </div>
 
-            {/* Address Block */}
             <div className="flex gap-4 items-start">
               <div className="p-3 bg-[#005f43]/10 text-[#005f43] rounded-2xl h-fit border border-[#005f43]/20">
                 <MapPin className="w-5 h-5 text-[#00c853]" />
@@ -151,7 +137,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
               </div>
             </div>
 
-            {/* Business Hours Block */}
             <div className="flex gap-4 items-start">
               <div className="p-3 bg-[#005f43]/10 text-[#005f43] rounded-2xl h-fit border border-[#005f43]/20">
                 <Clock className="w-5 h-5 text-[#00c853]" />
@@ -171,7 +156,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
 
           </div>
 
-          {/* Form input fields column (Right 7 Columns) */}
           <div className="lg:col-span-7">
             {submitted ? (
               <div className="bg-[#FBF9F6] border-2 border-[#00c853]/30 rounded-3xl p-8 sm:p-12 text-center space-y-6 relative overflow-hidden shadow-lg" role="status">
@@ -190,7 +174,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
               <form onSubmit={handleSubmit} className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-10 space-y-6 shadow-xl relative" aria-label="Callback Inquiry Form">
                 <div className="absolute top-0 inset-x-0 h-2 bg-[#005f43]" />
                 
-                {/* Honeypot field - Hidden from users */}
                 <div className="hidden" aria-hidden="true">
                   <input
                     type="text"
@@ -207,7 +190,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                 </h3>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {/* Name field */}
                   <div className="space-y-2">
                     <label htmlFor="contact-name" className="text-xs font-black uppercase text-slate-800 tracking-wider block">
                       {t.nameField} <span className="text-red-500">*</span>
@@ -223,7 +205,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                     />
                   </div>
 
-                  {/* Phone field */}
                   <div className="space-y-2">
                     <label htmlFor="contact-phone" className="text-xs font-black uppercase text-slate-800 tracking-wider block">
                       {t.phoneField} <span className="text-red-500">*</span>
@@ -240,7 +221,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                   </div>
                 </div>
 
-                {/* Email field */}
                 <div className="space-y-2">
                   <label htmlFor="contact-email" className="text-xs font-black uppercase text-slate-800 tracking-wider block">
                     {t.emailField} <span className="text-red-500">*</span>
@@ -256,7 +236,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                   />
                 </div>
 
-                {/* Message field */}
                 <div className="space-y-2">
                   <label htmlFor="contact-message" className="text-xs font-black uppercase text-slate-700 tracking-wider block leading-relaxed">
                     {language === "english" ? "Describe apartment size, specific cleaning conditions, or your preferred callback times..." : "Describa el tamaño de su apartamento, condiciones específicas de limpieza, o sus horarios preferidos para la llamada..."}
@@ -271,7 +250,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                   />
                 </div>
 
-                {/* Submit button & Under Form Accent */}
                 <div className="pt-4 space-y-4">
                   <Button
                     type="submit"
