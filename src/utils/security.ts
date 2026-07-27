@@ -1,6 +1,6 @@
 /**
- * Security utility to obfuscate contact information from simple web scrapers.
- * We store details in parts or encoded formats to prevent plaintext harvesting.
+ * Security utility to obfuscate contact information from simple web scrapers
+ * and sanitize user input to prevent XSS.
  */
 
 export const CONTACT_INFO = {
@@ -9,12 +9,33 @@ export const CONTACT_INFO = {
     domain: "gmail.com"
   },
   phone: {
-    // Stored in parts to break simple regex scrapers
     country: "+1",
     area: "727",
     prefix: "608",
     line: "9599"
   }
+};
+
+/**
+ * Basic HTML sanitization to prevent XSS by encoding special characters.
+ */
+export const sanitizeInput = (str: string): string => {
+  if (!str) return "";
+  return str.replace(/[&<>"']/g, (m) => ({
+    '&': '&',
+    '<': '<',
+    '>': '>',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[m as keyof typeof map] || m));
+};
+
+const map = {
+  '&': '&',
+  '<': '<',
+  '>': '>',
+  '"': '&quot;',
+  "'": '&#39;'
 };
 
 export const getFullEmail = () => `${CONTACT_INFO.email.user}@${CONTACT_INFO.email.domain}`;

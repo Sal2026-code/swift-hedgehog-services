@@ -5,7 +5,7 @@ import { Mail, Phone, MapPin, Clock, Send, ShieldCheck, CheckCircle } from "luci
 import { Button } from "@/components/ui/button";
 import { LOCALIZATION } from "@/utils/localization";
 import { showError, showSuccess } from "@/utils/toast";
-import { getFullEmail, handleMailTo, CONTACT_INFO } from "@/utils/security";
+import { getFullEmail, handleMailTo, CONTACT_INFO, sanitizeInput } from "@/utils/security";
 
 interface ContactSectionProps {
   language: "english" | "spanish";
@@ -60,7 +60,18 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
       return;
     }
 
+    // Sanitize inputs before "processing"
+    const sanitizedData = {
+      name: sanitizeInput(name),
+      email: sanitizeInput(email),
+      phone: sanitizeInput(phone),
+      message: sanitizeInput(message)
+    };
+
     setLoading(true);
+    // In a real application, sanitizedData would be sent to the server here
+    console.log("Submitting sanitized inquiry:", sanitizedData);
+
     setTimeout(() => {
       setLoading(false);
       setSubmitted(true);

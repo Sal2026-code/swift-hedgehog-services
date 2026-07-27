@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ForumQuestion } from "@/pages/Index";
 import { LOCALIZATION } from "@/utils/localization";
 import { showSuccess, showError } from "@/utils/toast";
+import { sanitizeInput } from "@/utils/security";
 
 interface ForumSectionProps {
   language: "english" | "spanish";
@@ -56,7 +57,12 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
       showError(t.errQuery);
       return;
     }
-    onAddQuestion(name, category, query);
+
+    // Sanitize user inputs before processing
+    const sanitizedName = sanitizeInput(name);
+    const sanitizedQuery = sanitizeInput(query);
+
+    onAddQuestion(sanitizedName, category, sanitizedQuery);
     setName("");
     setQuery("");
   };
