@@ -1,7 +1,9 @@
+import { getDisplayPhone } from "./security";
+
 export const LOCALIZATION = {
   english: {
     header: {
-      phoneText: "Phone: +1 727-608-9599",
+      phoneText: `Phone: ${getDisplayPhone()}`,
       services: "Services",
       qa: "Q&A Community",
       contact: "Contact",
@@ -136,7 +138,7 @@ export const LOCALIZATION = {
   },
   spanish: {
     header: {
-      phoneText: "Teléfono: +1 727-608-9599",
+      phoneText: `Teléfono: ${getDisplayPhone()}`,
       services: "Servicios",
       qa: "Comunidad Q&A",
       contact: "Contacto",

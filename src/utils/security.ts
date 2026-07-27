@@ -1,6 +1,6 @@
 /**
- * Simple utility to prevent web scrapers from harvesting email addresses.
- * We split the email and join it via JS, and provide a helper for mailto links.
+ * Security utility to obfuscate contact information from simple web scrapers.
+ * We store details in parts or encoded formats to prevent plaintext harvesting.
  */
 
 export const CONTACT_INFO = {
@@ -9,12 +9,21 @@ export const CONTACT_INFO = {
     domain: "gmail.com"
   },
   phone: {
-    display: "+1 727-608-9599",
-    raw: "+17276089599"
+    // Stored in parts to break simple regex scrapers
+    country: "+1",
+    area: "727",
+    prefix: "608",
+    line: "9599"
   }
 };
 
 export const getFullEmail = () => `${CONTACT_INFO.email.user}@${CONTACT_INFO.email.domain}`;
+
+export const getDisplayPhone = () => 
+  `${CONTACT_INFO.phone.country} ${CONTACT_INFO.phone.area}-${CONTACT_INFO.phone.prefix}-${CONTACT_INFO.phone.line}`;
+
+export const getRawPhone = () => 
+  `${CONTACT_INFO.phone.country}${CONTACT_INFO.phone.area}${CONTACT_INFO.phone.prefix}${CONTACT_INFO.phone.line}`;
 
 export const handleMailTo = (e: React.MouseEvent | React.KeyboardEvent) => {
   e.preventDefault();
