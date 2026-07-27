@@ -2,24 +2,16 @@
 
 import React from "react";
 import { Check } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { LOCALIZATION } from "@/utils/localization";
 
 interface ServicesProps {
   language: "english" | "spanish";
-  onScrollTo: (elementId: string) => void;
+  onScrollTo?: (elementId: string) => void;
   setCleaningTier?: (tier: "standard" | "deep" | "move") => void;
 }
 
-export const Services: React.FC<ServicesProps> = ({ language, onScrollTo, setCleaningTier }) => {
+export const Services: React.FC<ServicesProps> = ({ language }) => {
   const t = LOCALIZATION[language].services;
-
-  const handleSelectService = (tier: "standard" | "deep" | "move") => {
-    if (setCleaningTier) {
-      setCleaningTier(tier);
-    }
-    onScrollTo("contact");
-  };
 
   return (
     <section id="services" className="py-20 bg-white relative overflow-hidden" aria-label="Our Services">
@@ -39,20 +31,11 @@ export const Services: React.FC<ServicesProps> = ({ language, onScrollTo, setCle
         {/* 3 Tier Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {t.cards.map((card, idx) => {
-            const isPopular = card.id === "deep";
             return (
               <div
                 key={idx}
-                className={`flex flex-col justify-between bg-white rounded-3xl border-2 p-6 sm:p-8 shadow-sm hover:shadow-2xl hover:scale-[1.03] active:scale-[0.99] transition-all duration-300 relative ${isPopular ? "border-[#00c853] ring-4 ring-[#00c853]/5" : "border-slate-100"}`}
+                className="flex flex-col justify-between bg-white rounded-3xl border-2 border-slate-100 p-6 sm:p-8 shadow-sm hover:shadow-2xl hover:scale-[1.03] active:scale-[0.99] transition-all duration-300 relative"
               >
-                
-                {/* Popular Floating Badge Accent */}
-                {isPopular && (
-                  <span className="absolute -top-3.5 left-6 bg-[#00c853] text-[#004732] text-[10px] uppercase font-black px-4 py-1 rounded-full tracking-wider shadow-md animate-bounce">
-                    {language === "english" ? "Popular Choice" : "Opción Popular"}
-                  </span>
-                )}
-
                 <div className="text-left space-y-4">
                   
                   {/* Service Tier Details */}
@@ -84,22 +67,6 @@ export const Services: React.FC<ServicesProps> = ({ language, onScrollTo, setCle
                   )}
 
                 </div>
-
-                <div className="pt-8 text-left space-y-4">
-                  {/* Bottom high-contrast label tag */}
-                  <div className="bg-[#FBF9F6] border border-slate-200 text-xs font-bold text-slate-700 py-3 px-4 rounded-xl text-center">
-                    {card.bottomAccent}
-                  </div>
-
-                  {/* Service selection trigger */}
-                  <Button
-                    onClick={() => handleSelectService(card.id as "standard" | "deep" | "move")}
-                    className={`w-full font-black py-4 rounded-xl shadow-sm hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 focus:ring-2 focus:ring-[#005f43] ${isPopular ? "bg-[#005f43] hover:bg-[#004732] text-white" : "bg-white hover:bg-[#005f43]/5 text-[#005f43] border-2 border-[#005f43]"}`}
-                  >
-                    {card.btn}
-                  </Button>
-                </div>
-
               </div>
             );
           })}
