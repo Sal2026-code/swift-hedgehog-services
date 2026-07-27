@@ -12,7 +12,7 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ language, onScrollTo }) => {
   const t = LOCALIZATION[language]?.hero || LOCALIZATION.english.hero;
-  const headlineText = t.headline || "Spotless Cleanliness with G & Bros, Zero Compromise.";
+  const headlineText = t.headline || "Spotless Cleanliness with G & Bros Services, Zero Compromise.";
 
   return (
     <section 
@@ -32,12 +32,12 @@ export const Hero: React.FC<HeroProps> = ({ language, onScrollTo }) => {
         {/* Heading & CTAs - Expanded for Wide Display */}
         <div className="space-y-8 max-w-6xl mx-auto">
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-wide text-slate-800 font-serif leading-tight sm:leading-none opacity-0 animate-fade-in-up delay-100">
-            {headlineText.split("G & Bros").map((part, i, arr) => (
+            {headlineText.split("G & Bros Services").map((part, i, arr) => (
               <React.Fragment key={i}>
                 {part}
                 {i < arr.length - 1 && (
                   <span className="text-[#005f43] inline-block relative px-2">
-                    G & Bros
+                    G & Bros Services
                     <span className="absolute left-0 bottom-1 w-full h-2 bg-[#00c853] rounded-full opacity-80" />
                   </span>
                 )}

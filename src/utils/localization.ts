@@ -10,7 +10,7 @@ export const LOCALIZATION = {
     },
     hero: {
       badgeText: "Verified Cleaning Professionals",
-      headline: "Spotless Cleanliness with G & Bros, Zero Compromise.",
+      headline: "Spotless Cleanliness with G & Bros Services, Zero Compromise.",
       viewServices: "Explore Services",
       askQuestion: "Ask Q&A",
       premiumPlanTitle: "Standard Deep Cleaning Package",
@@ -127,7 +127,7 @@ export const LOCALIZATION = {
       emailField: "Email Address",
       phMsg: "Tell us about your home or specific cleaning requests...",
       submitBtn: "Request Callback",
-      submittingBtn: "Enviando Solicitud...",
+      submittingBtn: "Sending Request...",
       successTitle: "Inquiry Received!",
       successDesc: "Thank you for reaching out to G & Bros. A member of our team will contact you shortly.",
       confidentiality: "Your data is strictly protected and never shared."
@@ -144,7 +144,7 @@ export const LOCALIZATION = {
     },
     hero: {
       badgeText: "Profesionales de Limpieza Verificados",
-      headline: "Limpieza Impecable con G & Bros, Sin Compromisos.",
+      headline: "Limpieza Impecable con G & Bros Services, Sin Compromisos.",
       viewServices: "Explorar Servicios",
       askQuestion: "Hacer Pregunta",
       premiumPlanTitle: "Paquete Estándar de Limpieza Profunda",
@@ -264,7 +264,7 @@ export const LOCALIZATION = {
       submittingBtn: "Enviando Solicitud...",
       successTitle: "¡Solicitud Recibida!",
       successDesc: "Gracias por contactar a G & Bros. Un miembro de nuestro equipo le contactará en breve.",
-      confidentiality: "Sus datos están strictly protegidos y nunca serán compartidos."
+      confidentiality: "Sus datos están estrictamente protegidos y nunca serán compartidos."
     }
   }
 };
