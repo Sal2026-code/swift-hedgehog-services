@@ -36,20 +36,32 @@ export const Estimator: React.FC<EstimatorProps> = ({
   const [extraBathsCost, setExtraBathsCost] = useState<number>(0);
 
   const t = LOCALIZATION[language].estimator;
+  const isEn = language === "english";
 
-  const addonsPrices: Record<string, number> = {
+  // Pricing values based on currency
+  const baseRate = isEn ? 45 : 900;
+  const roomRate = isEn ? 15 : 300;
+  const bathRate = isEn ? 20 : 400;
+
+  const addonsPrices: Record<string, number> = isEn ? {
     oven: 25,
     fridge: 20,
     windows: 35,
     balcony: 30,
     ironing: 15,
     mattress: 25
+  } : {
+    oven: 500,
+    fridge: 400,
+    windows: 700,
+    balcony: 600,
+    ironing: 300,
+    mattress: 500
   };
 
   useEffect(() => {
-    const base = 45;
-    const additionalRooms = Math.max(0, rooms - 1) * 15;
-    const additionalBaths = Math.max(0, baths - 1) * 20;
+    const additionalRooms = Math.max(0, rooms - 1) * roomRate;
+    const additionalBaths = Math.max(0, baths - 1) * bathRate;
 
     let multiplier = 1.0;
     if (cleaningTier === "deep") {
@@ -58,24 +70,24 @@ export const Estimator: React.FC<EstimatorProps> = ({
       multiplier = 1.8;
     }
 
-    const calculatedSubtotal = (base + additionalRooms + additionalBaths) * multiplier;
+    const calculatedSubtotal = (baseRate + additionalRooms + additionalBaths) * multiplier;
     const extrasTotal = selectedAddons.reduce((sum, id) => sum + (addonsPrices[id] || 0), 0);
     const finalTotal = calculatedSubtotal + extrasTotal;
 
-    setBaseCost(base);
+    setBaseCost(baseRate);
     setExtraRoomsCost(additionalRooms);
     setExtraBathsCost(additionalBaths);
     setLivePrice(Math.round(finalTotal));
-  }, [cleaningTier, rooms, baths, selectedAddons]);
+  }, [cleaningTier, rooms, baths, selectedAddons, language]);
 
   const handleApply = () => {
     const formattedExtras = selectedAddons.length > 0 
       ? selectedAddons.map(id => t.addonsLabels[id]?.split(" (")[0] || id).join(", ") 
-      : (language === "english" ? "None" : "Ninguno");
+      : (isEn ? "None" : "Ninguno");
 
-    const formattedQuoteText = language === "english"
-      ? `G & Bros Estimator Summary:\nCleaning Tier: ${cleaningTier}\nSize: ${rooms} Bed/Living Room(s), ${baths} Bathroom(s)\nSelected Extras: ${formattedExtras}\nBallpark Price: €${livePrice}\nPlease finalize my firm booking.`
-      : `Resumen del Estimador de G & Bros:\nTipo de Limpieza: ${cleaningTier}\nTamaño: ${rooms} Habitación(es), ${baths} Baño(s)\nExtras Seleccionados: ${formattedExtras}\nPrecio de Referencia: €${livePrice}\nPor favor, finalice mi reserva firme.`;
+    const formattedQuoteText = isEn
+      ? `G & Bros Estimator Summary:\nCleaning Tier: ${cleaningTier}\nSize: ${rooms} Bed/Living Room(s), ${baths} Bathroom(s)\nSelected Extras: ${formattedExtras}\nBallpark Price: $${livePrice} USD\nPlease finalize my firm booking.`
+      : `Resumen del Estimador de G & Bros:\nTipo de Limpieza: ${cleaningTier}\nTamaño: ${rooms} Habitación(es), ${baths} Baño(s)\nExtras Seleccionados: ${formattedExtras}\nPrecio de Referencia: $${livePrice} pesos\nPor favor, finalice mi reserva firme.`;
 
     onApplyEstimate(formattedQuoteText);
   };
@@ -125,7 +137,7 @@ export const Estimator: React.FC<EstimatorProps> = ({
             <div className="space-y-6">
               <h3 className="text-sm font-black uppercase tracking-wider text-[#005f43] flex items-center gap-2">
                 <Home className="w-4 h-4 text-[#00c853]" />
-                {language === "english" ? "2. Configure Size parameters" : "2. Configure los parámetros de tamaño"}
+                {isEn ? "2. Configure Size parameters" : "2. Configure los parámetros de tamaño"}
               </h3>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
@@ -235,27 +247,27 @@ export const Estimator: React.FC<EstimatorProps> = ({
               <div className="space-y-3.5 border-t border-b border-white/10 py-6 text-sm font-bold text-emerald-100">
                 <div className="flex justify-between hover:translate-x-1 transition-transform duration-200">
                   <span>{t.baseCleanLabel}</span>
-                  <span className="font-mono text-white">€{baseCost}</span>
+                  <span className="font-mono text-white">${baseCost} {t.currencyCode}</span>
                 </div>
 
                 <div className="flex justify-between hover:translate-x-1 transition-transform duration-200">
                   <span>{t.extraRoomsLabel}</span>
-                  <span className="font-mono text-white">+€{extraRoomsCost}</span>
+                  <span className="font-mono text-white">+${extraRoomsCost} {t.currencyCode}</span>
                 </div>
 
                 <div className="flex justify-between hover:translate-x-1 transition-transform duration-200">
                   <span>{t.extraBathsLabel}</span>
-                  <span className="font-mono text-white">+€{extraBathsCost}</span>
+                  <span className="font-mono text-white">+${extraBathsCost} {t.currencyCode}</span>
                 </div>
 
                 {/* Premium adjustments indicator */}
                 {(cleaningTier === "deep" || cleaningTier === "move") && (
                   <div className="flex justify-between text-[#00c853] font-black text-xs bg-black/10 p-2.5 rounded-lg border border-[#00c853]/20 animate-pulse">
                     <span>
-                      {cleaningTier === "deep" ? (language === "english" ? "Deep Premium (+50%)" : "Premium Profundo (+50%)") : (language === "english" ? "Move In/Out Premium (+80%)" : "Premium Entrada/Salida (+80%)")}
+                      {cleaningTier === "deep" ? (isEn ? "Deep Premium (+50%)" : "Premium Profundo (+50%)") : (isEn ? "Move In/Out Premium (+80%)" : "Premium Entrada/Salida (+80%)")}
                     </span>
                     <span className="font-mono text-white">
-                      +€{Math.round((baseCost + extraRoomsCost + extraBathsCost) * (cleaningTier === "deep" ? 0.5 : 0.8))}
+                      +${Math.round((baseCost + extraRoomsCost + extraBathsCost) * (cleaningTier === "deep" ? 0.5 : 0.8))} {t.currencyCode}
                     </span>
                   </div>
                 )}
@@ -263,12 +275,12 @@ export const Estimator: React.FC<EstimatorProps> = ({
                 {selectedAddons.length > 0 && (
                   <div className="pt-3 border-t border-white/10 space-y-2.5">
                     <span className="text-[10px] uppercase font-black tracking-wider text-[#00c853] block">
-                      {language === "english" ? "Premium Add-ons breakdown" : "Desglose de Extras Premium"}
+                      {isEn ? "Premium Add-ons breakdown" : "Desglose de Extras Premium"}
                     </span>
                     {selectedAddons.map((addonId) => (
                       <div key={addonId} className="flex justify-between text-xs text-emerald-200 hover:translate-x-1 transition-transform duration-200">
                         <span>• {t.addonsLabels[addonId]?.split(" (")[0]}</span>
-                        <span className="font-mono text-white">+€{addonsPrices[addonId]}</span>
+                        <span className="font-mono text-white">+${addonsPrices[addonId]} {t.currencyCode}</span>
                       </div>
                     ))}
                   </div>
@@ -281,7 +293,7 @@ export const Estimator: React.FC<EstimatorProps> = ({
                   {t.estimateText}
                 </span>
                 <span className="text-5xl font-serif font-black text-[#00c853] block tracking-tight transition-transform scale-105" key={livePrice}>
-                  ~€{livePrice}
+                  ~${livePrice} {t.currencyCode}
                 </span>
                 <span className="text-[10px] text-emerald-300 font-medium block mt-2">
                   {t.disclaimer}
