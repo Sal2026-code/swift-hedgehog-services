@@ -20,7 +20,6 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
   setQuestions,
   onAddQuestion
 }) => {
-  const [activeTab, setActiveTab] = useState<"all" | "pets" | "safety" | "pricing" | "general">("all");
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [upvotedIds, setUpvotedIds] = useState<number[]>([]);
 
@@ -62,10 +61,6 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
     }
   };
 
-  const filteredQuestions = activeTab === "all"
-    ? questions
-    : questions.filter((q) => q.category === activeTab);
-
   return (
     <section id="qa" className="py-20 bg-[#FBF9F6] border-b border-slate-100 relative overflow-hidden" aria-label="Q&A Forum">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -84,30 +79,12 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
         {/* Two Column Forum Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
           
-          {/* Question Feed & Tab Controllers */}
+          {/* Question Feed */}
           <div className="lg:col-span-8 space-y-6">
-            
-            {/* Category Tab filter buttons */}
-            <div className="flex flex-wrap gap-2 pb-2" role="tablist" aria-label="Q&A category filter tabs">
-              {(["all", "pets", "safety", "pricing", "general"] as const).map((tabId) => (
-                <button
-                  key={tabId}
-                  role="tab"
-                  aria-selected={activeTab === tabId}
-                  onClick={() => {
-                    setActiveTab(tabId);
-                    setExpandedId(null);
-                  }}
-                  className={`py-2.5 px-4 rounded-xl font-bold text-xs tracking-wide transition-all border-2 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#005f43] ${activeTab === tabId ? "bg-[#005f43] border-[#005f43] text-white shadow-md" : "bg-white border-slate-200 text-slate-700 hover:border-[#005f43]/30"}`}
-                >
-                  {t[tabId]}
-                </button>
-              ))}
-            </div>
 
             {/* Questions Feed list accordions */}
-            <div className="space-y-4 text-left animate-fade-in" key={activeTab}>
-              {filteredQuestions.map((q) => {
+            <div className="space-y-4 text-left animate-fade-in">
+              {questions.map((q) => {
                 const isExpanded = expandedId === q.id;
                 const isUpvoted = upvotedIds.includes(q.id);
                 const questionText = language === "english" ? q.questionEn : q.questionEs;
