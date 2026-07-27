@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ShieldCheck, Leaf, Award, Languages, Check, ArrowRight, HelpCircle, Star, CheckCircle } from "lucide-react";
+import { Check, ArrowRight, HelpCircle, Star, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LOCALIZATION } from "@/utils/localization";
 
@@ -34,13 +34,6 @@ export const Hero: React.FC<HeroProps> = ({ language, onScrollTo }) => {
     return () => clearInterval(timer);
   }, []);
 
-  const iconsMap = [
-    <ShieldCheck key="shield" className="w-5 h-5 text-[#005f43]" />,
-    <Leaf key="leaf" className="w-5 h-5 text-[#005f43]" />,
-    <Award key="award" className="w-5 h-5 text-[#005f43]" />,
-    <Languages key="languages" className="w-5 h-5 text-[#005f43]" />
-  ];
-
   const headlineText = t.headline || "Spotless Cleanliness with G & Bros, Zero Compromise.";
 
   return (
@@ -60,7 +53,7 @@ export const Hero: React.FC<HeroProps> = ({ language, onScrollTo }) => {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
-          {/* Left Column: Heading, Value Props & CTAs */}
+          {/* Left Column: Heading & CTAs */}
           <div className="lg:col-span-7 text-left space-y-8">
             
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-800 font-serif leading-tight opacity-0 animate-fade-in-up delay-100">
@@ -77,29 +70,8 @@ export const Hero: React.FC<HeroProps> = ({ language, onScrollTo }) => {
               ))}
             </h1>
 
-            {/* 2x2 Value Proposition Grid with High Contrast */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
-              {t.values.map((v, idx) => {
-                const delays = ["delay-100", "delay-200", "delay-300", "delay-400"];
-                return (
-                  <div 
-                    key={idx} 
-                    className={`flex gap-4 bg-white p-5 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md hover:scale-[1.02] active:scale-[0.99] transition-all duration-300 opacity-0 animate-fade-in-up ${delays[idx]}`}
-                  >
-                    <div className="p-3 bg-[#00c853]/10 text-[#005f43] rounded-xl h-fit">
-                      {iconsMap[idx]}
-                    </div>
-                    <div>
-                      <h2 className="font-extrabold text-sm text-slate-800">{v.title}</h2>
-                      <p className="text-xs text-slate-600 mt-1 leading-relaxed">{v.desc}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Action Buttons Below Grid */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-4 opacity-0 animate-fade-in-up delay-500">
+            {/* Action Buttons Below Heading */}
+            <div className="flex flex-col sm:flex-row gap-4 pt-4 opacity-0 animate-fade-in-up delay-300">
               <Button
                 onClick={() => onScrollTo("services")}
                 className="bg-[#005f43] hover:bg-[#004732] text-white font-extrabold px-8 py-6 rounded-xl text-base shadow-lg shadow-[#005f43]/10 flex items-center justify-center gap-2 hover:scale-[1.03] active:scale-[0.98] transition-all duration-200"
