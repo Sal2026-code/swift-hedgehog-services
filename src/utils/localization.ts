@@ -58,16 +58,16 @@ export const LOCALIZATION = {
         },
         {
           id: "deep",
-          title: "Deep Detail Clean",
+          title: "Commercial Cleaning",
           bullets: [
-            "Includes everything in Standard Clean",
-            "Deep grease removal in kitchen & backsplash",
-            "Scrubbing tile grout, shower doors & tubs",
-            "Wiping door frames, switches & baseboards",
-            "Under-furniture vacuuming where accessible"
+            "Office spaces, retail stores & commercial facilities",
+            "Sanitation of desks, workstations & common areas",
+            "Restroom disinfection & restocking supplies",
+            "Floor vacuuming, sweeping & mopping",
+            "Trash bin emptying & liner replacements"
           ],
-          bottomAccent: "Recommended for first-time or seasonal deep cleans",
-          btn: "Select Deep Clean"
+          bottomAccent: "Flexible scheduling for daily, weekly, or after-hours cleaning",
+          btn: "Select Commercial Clean"
         },
         {
           id: "move",
@@ -194,16 +194,16 @@ export const LOCALIZATION = {
         },
         {
           id: "deep",
-          title: "Limpieza Profunda Detallada",
+          title: "Limpieza Comercial",
           bullets: [
-            "Incluye todo lo de la Limpieza Estándar",
-            "Eliminación profunda de grasa en cocina y azulejos",
-            "Frotado de juntas de azulejos, mamparas y bañeras",
-            "Limpieza de marcos de puertas, interruptores y rodapiés",
-            "Aspirado bajo muebles accesibles"
+            "Oficinas, locales comerciales e instalaciones corporativas",
+            "Desinfección de escritorios, estaciones de trabajo y áreas comunes",
+            "Desinfección de aseos y reposición de suministros",
+            "Aspirado, barrido y fregado de suelos",
+            "Vaciado de papeleras y cambio de bolsas"
           ],
-          bottomAccent: "Recomendado para primera vez o limpiezas de temporada",
-          btn: "Seleccionar Profunda"
+          bottomAccent: "Horarios flexibles para limpieza diaria, semanal o fuera de horario",
+          btn: "Seleccionar Comercial"
         },
         {
           id: "move",
@@ -268,7 +268,7 @@ export const LOCALIZATION = {
       submittingBtn: "Enviando Solicitud...",
       successTitle: "¡Solicitud Recibida!",
       successDesc: "Gracias por contactar a G & Bros. Un miembro de nuestro equipo le contactará en breve.",
-      confidentiality: "Sus datos están estrictamente protegidos y nunca serán compartidos."
+      confidentiality: "Sus datos están strictly protegidos y nunca serán compartidos."
     }
   }
 };
