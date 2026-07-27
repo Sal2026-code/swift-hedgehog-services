@@ -1,334 +1,226 @@
 export const LOCALIZATION = {
   english: {
     header: {
-      phoneText: "+1 727-608-9599",
+      phoneText: "Phone: +34 600 123 456",
       services: "Services",
-      estimator: "Cost Calculator",
-      qa: "Q&A Forum",
-      contact: "Contact Us",
-      learnMore: "Get Free Quote",
-      rights: "© 2025 G & Bros Services Inc. All rights reserved. Premium Professional Cleaning.",
+      qa: "Q&A Community",
+      contact: "Contact",
+      learnMore: "Get Quote",
+      rights: "© " + new Date().getFullYear() + " G & Bros Services Inc. All rights reserved."
     },
     hero: {
-      badgeText: "Rated #1 Commercial & Residential Cleaning",
+      badgeText: "Verified Cleaning Professionals",
       headline: "Spotless Cleanliness with G & Bros, Zero Compromise.",
-      values: [
-        { title: "Vetted Professionals", desc: "Background-checked & trained cleaning specialists." },
-        { title: "Eco-Friendly Products", desc: "Non-toxic, child & pet-safe solutions." },
-        { title: "100% Guaranteed", desc: "Not satisfied? We re-clean free of charge." },
-        { title: "Bilingual Service", desc: "Seamless communication in English & Spanish." }
-      ],
-      viewServices: "View Our Services",
-      askQuestion: "Ask a Question",
-      premiumPlanTitle: "Standard Deep Cleaning",
-      premiumBadge: "Most Popular",
+      viewServices: "Explore Services",
+      askQuestion: "Ask Q&A",
+      premiumPlanTitle: "Standard Deep Cleaning Package",
+      premiumBadge: "Most Requested",
       premiumTasks: [
-        "Dusting & sanitizing all surfaces & baseboards",
-        "Deep scrubbing kitchen & bathroom tiles",
-        "Vacuuming, floor wash & spot removal",
-        "Trash removal & fresh linen setup"
+        "Dusting and wiping all reachable surfaces & baseboards",
+        "Deep sanitation of kitchen counters, sink & appliance exteriors",
+        "Disinfection and scrub of full bathroom fixtures",
+        "Vacuuming carpets & mopping hard surface floors throughout",
+        "Trash removal & replacing fresh bin liners"
       ],
-      trustMetric1: "Satisfaction Guaranteed",
-      trustMetric2: "Homes & Offices Cleaned",
-      trustMetric3: "Insured & Vetted Staff"
+      trustMetric1: "Satisfaction Guarantee",
+      trustMetric2: "Cleaning Jobs Completed",
+      trustMetric3: "Vetted & Insured Staff"
     },
     badges: {
-      subHeader: "WHY CHOOSE US",
-      title: "Trusted & Accredited Care",
-      items: [
-        "Certified Cleaners",
-        "Fully Insured",
-        "Top Rated",
-        "Eco Friendly",
-        "Customer Support",
-        "Key Holder Safe"
-      ]
+      verifiedTitle: "100% Vetted Cleaners",
+      verifiedDesc: "Background checked and rigorously trained staff.",
+      ecoTitle: "Pet & Eco Friendly",
+      ecoDesc: "Non-toxic, safe cleaning agents for your entire family.",
+      satisfactionTitle: "Satisfaction Guarantee",
+      satisfactionDesc: "If you're not delighted, we re-clean for free within 24 hours."
     },
     services: {
-      subHeader: "OUR OFFERINGS",
-      title: "Tailored Cleaning Packages",
+      subHeader: "Tailored Solutions",
+      title: "Our Service Packages",
       cards: [
         {
-          id: "standard" as const,
-          title: "Standard Care",
+          id: "standard",
+          title: "Standard Recurring Clean",
           bullets: [
-            "Dusting accessible surfaces & furniture",
-            "Vacuuming carpets & washing floors",
-            "Sanitizing bathrooms & kitchen sinks",
-            "Trash emptying & liner replacement"
+            "Dusting furniture, shelves & electronics",
+            "Mopping & vacuuming all rooms",
+            "Full bathroom & toilet sanitation",
+            "Kitchen counter & sink cleanup",
+            "Making beds & tidying up spaces"
           ],
           bottomAccent: "Ideal for weekly or bi-weekly maintenance",
-          btn: "Select Standard"
+          btn: "Select Standard Clean"
         },
         {
-          id: "deep" as const,
-          title: "Deep Restoration",
+          id: "deep",
+          title: "Deep Detail Clean",
           bullets: [
-            "Includes all Standard Care services",
-            "Detailed cleaning of baseboards & doors",
-            "Deep grout scrub & fixture polishing",
-            "Behind appliance & heavy dust removal"
+            "Includes everything in Standard Clean",
+            "Deep grease removal in kitchen & backsplash",
+            "Scrubbing tile grout, shower doors & tubs",
+            "Wiping door frames, switches & baseboards",
+            "Under-furniture vacuuming where accessible"
           ],
-          bottomAccent: "Recommended for first-time or monthly cleanings",
+          bottomAccent: "Recommended for first-time or seasonal deep cleans",
           btn: "Select Deep Clean"
         },
         {
-          id: "move" as const,
-          title: "Move In / Move Out",
+          id: "move",
+          title: "Move-In / Move-Out Clean",
           bullets: [
-            "Complete empty-home deep cleaning",
-            "Inside kitchen cabinets & drawers",
-            "Inside oven & refrigerator sanitizing",
-            "Window sills, frames & door tracks"
+            "Complete empty property deep sanitation",
+            "Inside cabinet & drawer wiping (empty)",
+            "Interior appliance cleaning (oven/fridge optional)",
+            "Detailed window sill & frame cleaning",
+            "Deposit refund guarantee quality check"
           ],
-          bottomAccent: "Perfect for tenants, landlords & realtors",
-          btn: "Select Move In/Out"
+          bottomAccent: "Perfect for landlords, tenants & real estate sales",
+          btn: "Select Move-In Clean"
         }
       ]
     },
     addons: {
-      subHeader: "CUSTOM EXTRAS",
-      title: "Enhance Your Clean",
-      priceLabel: "Price: $",
+      subHeader: "Custom Upgrades",
+      title: "Specialized Add-On Services",
       items: [
-        { id: "oven", title: "Inside Oven Deep Scrub", price: 25 },
-        { id: "fridge", title: "Inside Refrigerator", price: 20 },
-        { id: "windows", title: "Interior Windows & Tracks", price: 35 },
-        { id: "balcony", title: "Balcony / Terrace Sweep", price: 30 },
-        { id: "ironing", title: "Ironing & Laundry Care", price: 15 },
-        { id: "mattress", title: "Mattress Deep Sanitization", price: 25 }
+        { title: "Interior Fridge Deep Cleaning" },
+        { title: "Interior Oven & Degreasing" },
+        { title: "Window Glass & Frame Detail" },
+        { title: "Inside Kitchen Cabinets" },
+        { title: "Balcony & Patio Sweep" },
+        { title: "Laundry Wash & Fold" }
       ]
     },
-    estimator: {
-      subHeader: "INSTANT ESTIMATE",
-      title: "Calculate Your Ballpark Price",
-      tierLabel: "1. Select Cleaning Service Level",
-      standard: "Standard Care",
-      deep: "Deep Clean",
-      move: "Move In/Out",
-      bedsLabel: "Bedrooms / Living Spaces",
-      bathsLabel: "Bathrooms",
-      extrasLabel: "3. Choose Additional Extras",
-      receiptHeader: "Quote Summary",
-      baseCleanLabel: "Base Service Rate",
-      extraRoomsLabel: "Additional Bedrooms",
-      extraBathsLabel: "Additional Bathrooms",
-      currencyCode: "USD",
-      estimateText: "Estimated Price",
-      disclaimer: "*Final quote confirmed upon inspection if needed.",
-      btnLabel: "Apply Quote to Booking Form",
-      addonsLabels: {
-        oven: "Inside Oven ($25)",
-        fridge: "Inside Refrigerator ($20)",
-        windows: "Interior Windows ($35)",
-        balcony: "Balcony Sweep ($30)",
-        ironing: "Ironing Care ($15)",
-        mattress: "Mattress Sanitizing ($25)"
-      } as Record<string, string>
-    },
-    forum: {
-      subHeader: "HELP & COMMUNITY",
-      title: "Client Q&A Forum",
-      all: "All Topics",
-      pets: "Pet Safety",
-      safety: "Home Access",
-      pricing: "Pricing",
-      general: "General",
-      helpfulText: "Helpful",
-      responseBadge: "G & Bros Response",
-      askTitle: "Ask a Question",
-      nameLabel: "Your Name",
-      phName: "e.g. Sarah M.",
-      catLabel: "Category",
-      queryLabel: "Question Details",
-      phQuery: "Ask about supplies, scheduling, or special instructions...",
-      submitBtn: "Post Question",
-      errQuery: "Please enter at least 5 characters for your question."
-    },
     contact: {
-      subHeader: "CONTACT US",
-      title: "Book Your Cleaning Today",
-      address: "Serving Tampa Bay, St. Petersburg & Surrounding Areas",
-      hoursLabel: "Operating Hours",
-      weekdays: "Mon - Sat: 7:00 AM - 7:00 PM",
+      subHeader: "Get In Touch",
+      title: "Request a Callback or Quote",
+      address: "Calle Velázquez 45, 28001 Madrid, Spain",
+      hoursLabel: "Business Hours",
+      weekdays: "Monday to Friday: 7:00 A.M. – 4:00 P.M.",
       sunday: "Sunday: Closed",
-      successTitle: "Quote Request Received!",
-      successDesc: "Thank you for reaching out. A G & Bros representative will call or email you shortly to confirm your booking.",
-      formTitle: "Request a Call Back or Free Quote",
+      formTitle: "Schedule Your Free Consultation",
       nameField: "Full Name",
-      phName: "John Doe",
+      phName: "e.g. John Doe",
       phoneField: "Phone Number",
       emailField: "Email Address",
-      phMsg: "Provide details on square footage, special requests or preferred appointment dates...",
-      submitBtn: "Submit Quote Request",
-      submittingBtn: "Submitting...",
-      confidentiality: "Your contact details are 100% safe & confidential."
+      phMsg: "Tell us about your home or specific cleaning requests...",
+      submitBtn: "Request Callback",
+      submittingBtn: "Sending Request...",
+      successTitle: "Inquiry Received!",
+      successDesc: "Thank you for reaching out to G & Bros. A member of our team will contact you shortly.",
+      confidentiality: "Your data is strictly protected and never shared."
     }
   },
   spanish: {
     header: {
-      phoneText: "+1 727-608-9599",
+      phoneText: "Teléfono: +34 600 123 456",
       services: "Servicios",
-      estimator: "Calculadora de Costos",
-      qa: "Foro Preguntas",
-      contact: "Contáctenos",
-      learnMore: "Cotización Gratis",
-      rights: "© 2025 G & Bros Services Inc. Todos los derechos reservados. Limpieza Profesional Premium.",
+      qa: "Comunidad Q&A",
+      contact: "Contacto",
+      learnMore: "Cotizar",
+      rights: "© " + new Date().getFullYear() + " G & Bros Services Inc. Todos los derechos reservados."
     },
     hero: {
-      badgeText: "Limpieza Comercial y Residencial #1",
-      headline: "Limpieza Impecable con G & Bros, Cero Complicaciones.",
-      values: [
-        { title: "Profesionales Verificados", desc: "Especialistas en limpieza evaluados y capacitados." },
-        { title: "Productos Ecológicos", desc: "Soluciones no tóxicas, seguras para niños y mascotas." },
-        { title: "Garantía 100%", desc: "¿No quedó satisfecho? Re-limpiamos sin costo adicional." },
-        { title: "Atención Bilingüe", desc: "Comunicación fluida en español e inglés." }
-      ],
-      viewServices: "Ver Nuestros Servicios",
-      askQuestion: "Hacer una Pregunta",
-      premiumPlanTitle: "Limpieza Profunda Estándar",
-      premiumBadge: "Más Popular",
+      badgeText: "Profesionales de Limpieza Verificados",
+      headline: "Limpieza Impecable con G & Bros, Sin Compromisos.",
+      viewServices: "Explorar Servicios",
+      askQuestion: "Hacer Pregunta",
+      premiumPlanTitle: "Paquete Estándar de Limpieza Profunda",
+      premiumBadge: "Más Solicitado",
       premiumTasks: [
-        "Sacudido y desinfección de superficies y zócalos",
-        "Limpieza profunda de azulejos de cocina y baños",
-        "Aspirado, trapeado y eliminación de manchas",
-        "Retiro de basura y cambio de ropa de cama"
+        "Polvo y limpieza de todas las superficies accesibles y rodapiés",
+        "Desinfección profunda de mostradores, fregadero y exterior de electrodomésticos",
+        "Desinfección y frotado de sanitarios y baño completo",
+        "Aspirado de alfombras y fregado de suelos en todas las áreas",
+        "Retiro de basura y reemplazo de bolsas"
       ],
-      trustMetric1: "Satisfacción Garantizada",
-      trustMetric2: "Casas y Oficinas Limpiadas",
-      trustMetric3: "Personal Asegurado"
+      trustMetric1: "Garantía de Satisfacción",
+      trustMetric2: "Trabajos de Limpieza Realizados",
+      trustMetric3: "Personal Verificado y Asegurado"
     },
     badges: {
-      subHeader: "POR QUÉ ELEGIRNOS",
-      title: "Confianza y Acreditación",
-      items: [
-        "Personal Certificado",
-        "Asegurados",
-        "Mejor Valorados",
-        "Ecológico",
-        "Soporte Continuo",
-        "Guarda Llaves Seguro"
-      ]
+      verifiedTitle: "Limpiadores 100% Verificados",
+      verifiedDesc: "Personal capacitado rigurosamente y con antecedentes comprobados.",
+      ecoTitle: "Seguro para Mascotas y Ecológico",
+      ecoDesc: "Productos de limpieza no tóxicos y seguros para toda la familia.",
+      satisfactionTitle: "Garantía de Satisfacción",
+      satisfactionDesc: "Si no queda satisfecho, volvemos a limpiar gratis en 24 horas."
     },
     services: {
-      subHeader: "NUESTROS SERVICIOS",
-      title: "Paquetes de Limpieza a la Medida",
+      subHeader: "Soluciones a la Medida",
+      title: "Nuestros Paquetes de Servicio",
       cards: [
         {
-          id: "standard" as const,
-          title: "Mantenimiento Estándar",
+          id: "standard",
+          title: "Limpieza Mantenimiento Estándar",
           bullets: [
-            "Sacudido de muebles y superficies accesibles",
-            "Aspirado de alfombras y trapeado de pisos",
-            "Desinfección de baños y lavamanos de cocina",
-            "Vaciado de papeleras y cambio de bolsas"
+            "Limpieza de polvo en muebles, estantes y electrónicos",
+            "Fregado y aspirado de todas las habitaciones",
+            "Desinfección completa de baño y aseo",
+            "Limpieza de encimera y fregadero de cocina",
+            "Hacer camas y ordenar espacios generales"
           ],
           bottomAccent: "Ideal para mantenimiento semanal o quincenal",
           btn: "Seleccionar Estándar"
         },
         {
-          id: "deep" as const,
-          title: "Limpieza Profunda",
+          id: "deep",
+          title: "Limpieza Profunda Detallada",
           bullets: [
-            "Incluye todo el servicio de Mantenimiento Estándar",
-            "Limpieza detallada de zócalos y puertas",
-            "Fregado de azulejos y pulido de grifería",
-            "Limpieza detrás de electrodomésticos y polvo pesado"
+            "Incluye todo lo de la Limpieza Estándar",
+            "Eliminación profunda de grasa en cocina y azulejos",
+            "Frotado de juntas de azulejos, mamparas y bañeras",
+            "Limpieza de marcos de puertas, interruptores y rodapiés",
+            "Aspirado bajo muebles accesibles"
           ],
-          bottomAccent: "Recomendado para la primera sesión o mensual",
+          bottomAccent: "Recomendado para primera vez o limpiezas de temporada",
           btn: "Seleccionar Profunda"
         },
         {
-          id: "move" as const,
-          title: "Mudanza (Entrada / Salida)",
+          id: "move",
+          title: "Limpieza Mudanza (Entrada/Salida)",
           bullets: [
-            "Limpieza profunda completa de inmuebles vacíos",
-            "Interior de gabinetes y cajones de cocina",
-            "Desinfección interior de horno y refrigerador",
-            "Limpieza de marfiles, marcos de ventanas y rieles"
+            "Desinfección profunda de propiedad vacía",
+            "Limpieza interior de armarios y cajones (vacíos)",
+            "Limpieza de electrodomésticos por dentro (opcional)",
+            "Limpieza detallada de rieles y marcos de ventanas",
+            "Revisión de calidad para devolución de fianza"
           ],
-          bottomAccent: "Perfecto para inquilinos, dueños y agentes inmobiliarios",
+          bottomAccent: "Perfecto para propietarios, inquilinos e inmobiliarias",
           btn: "Seleccionar Mudanza"
         }
       ]
     },
     addons: {
-      subHeader: "SERVICIOS ADICIONALES",
-      title: "Complemente su Limpieza",
-      priceLabel: "Precio: $",
+      subHeader: "Mejoras Personalizadas",
+      title: "Servicios Adicionales Especializados",
       items: [
-        { id: "oven", title: "Limpieza Interna de Horno", price: 25 },
-        { id: "fridge", title: "Limpieza Interna de Refrigerador", price: 20 },
-        { id: "windows", title: "Ventanas Interiores y Rieles", price: 35 },
-        { id: "balcony", title: "Barrido de Balcón / Terraza", price: 30 },
-        { id: "ironing", title: "Planchado y Cuidado de Ropa", price: 15 },
-        { id: "mattress", title: "Desinfección de Colchón", price: 25 }
+        { title: "Limpieza Profunda de Nevera Interior" },
+        { title: "Limpieza de Horno Interior y Desengrase" },
+        { title: "Limpieza Detallada de Cristales y Marcos" },
+        { title: "Limpieza Interior de Muebles de Cocina" },
+        { title: "Barrido y Limpieza de Balcón o Terraza" },
+        { title: "Lavado y Doblado de Ropa" }
       ]
     },
-    estimator: {
-      subHeader: "PRECIOS AL INSTANTE",
-      title: "Calculadora Estimada de Costos",
-      tierLabel: "1. Seleccione el Nivel de Servicio",
-      standard: "Estándar",
-      deep: "Profunda",
-      move: "Mudanza",
-      bedsLabel: "Habitaciones / Salones",
-      bathsLabel: "Baños",
-      extrasLabel: "3. Seleccione Extras Adicionales",
-      receiptHeader: "Resumen de Cotización",
-      baseCleanLabel: "Tarifa Base del Servicio",
-      extraRoomsLabel: "Habitaciones Adicionales",
-      extraBathsLabel: "Baños Adicionales",
-      currencyCode: "USD",
-      estimateText: "Precio Estimado",
-      disclaimer: "*Cotización final confirmada al inspeccionar si es necesario.",
-      btnLabel: "Aplicar Cotización al Formulario",
-      addonsLabels: {
-        oven: "Interior Horno ($25)",
-        fridge: "Interior Refrigerador ($20)",
-        windows: "Ventanas Interiores ($35)",
-        balcony: "Barrido Balcón ($30)",
-        ironing: "Planchado de Ropa ($15)",
-        mattress: "Desinfección Colchón ($25)"
-      } as Record<string, string>
-    },
-    forum: {
-      subHeader: "AYUDA Y COMUNIDAD",
-      title: "Foro de Preguntas de Clientes",
-      all: "Todos los Temas",
-      pets: "Seguridad Mascotas",
-      safety: "Acceso al Hogar",
-      pricing: "Precios",
-      general: "General",
-      helpfulText: "Útil",
-      responseBadge: "Respuesta de G & Bros",
-      askTitle: "Hacer una Pregunta",
-      nameLabel: "Su Nombre",
-      phName: "ej. María S.",
-      catLabel: "Categoría",
-      queryLabel: "Detalle de la Pregunta",
-      phQuery: "Pregunte sobre insumos, horarios o instrucciones especiales...",
-      submitBtn: "Publicar Pregunta",
-      errQuery: "Por favor ingrese al menos 5 caracteres para su pregunta."
-    },
     contact: {
-      subHeader: "CONTÁCTENOS",
-      title: "Reserve su Servicio Hoy",
-      address: "Atendiendo Tampa Bay, St. Petersburg y áreas cercanas",
+      subHeader: "Póngase en Contacto",
+      title: "Solicite una Llamada o Cotización",
+      address: "Calle Velázquez 45, 28001 Madrid, España",
       hoursLabel: "Horario de Atención",
-      weekdays: "Lun - Sáb: 7:00 AM - 7:00 PM",
+      weekdays: "Lunes a Viernes: 7:00 A.M. – 4:00 P.M.",
       sunday: "Domingo: Cerrado",
-      successTitle: "¡Solicitud de Cotización Recibida!",
-      successDesc: "Gracias por contactarnos. Un representante de G & Bros le llamará o enviará un correo a la brevedad.",
-      formTitle: "Solicite una Llamada o Cotización Gratis",
+      formTitle: "Programe su Consulta Gratuita",
       nameField: "Nombre Completo",
-      phName: "Juan Pérez",
+      phName: "ej. Juan Pérez",
       phoneField: "Número de Teléfono",
       emailField: "Correo Electrónico",
-      phMsg: "Proporcione detalles sobre metros cuadrados, solicitudes especiales o fechas preferidas...",
-      submitBtn: "Enviar Solicitud",
-      submittingBtn: "Enviando...",
-      confidentiality: "Sus datos de contacto son 100% confidenciales y seguros."
+      phMsg: "Describa el tamaño de su vivienda o peticiones específicas...",
+      submitBtn: "Solicitar Llamada",
+      submittingBtn: "Enviando Solicitud...",
+      successTitle: "¡Solicitud Recibida!",
+      successDesc: "Gracias por contactar a G & Bros. Un miembro de nuestro equipo le contactará en breve.",
+      confidentiality: "Sus datos están estrictamente protegidos y nunca serán compartidos."
     }
   }
 };
