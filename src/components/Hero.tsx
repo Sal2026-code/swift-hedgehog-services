@@ -36,9 +36,8 @@ export const Hero: React.FC<HeroProps> = ({ language, onScrollTo }) => {
               <React.Fragment key={i}>
                 {part}
                 {i < arr.length - 1 && (
-                  <span className="text-[#005f43] inline-block relative px-2">
+                  <span className="text-[#005f43] inline-block px-2">
                     G & Bros Services
-                    <span className="absolute left-0 bottom-1 w-full h-2 bg-[#00c853] rounded-full opacity-80" />
                   </span>
                 )}
               </React.Fragment>
