@@ -8,15 +8,17 @@ import { LOCALIZATION } from "@/utils/localization";
 interface ServicesProps {
   language: "english" | "spanish";
   onScrollTo: (elementId: string) => void;
-  setCleaningTier: (tier: "standard" | "deep" | "move") => void;
+  setCleaningTier?: (tier: "standard" | "deep" | "move") => void;
 }
 
 export const Services: React.FC<ServicesProps> = ({ language, onScrollTo, setCleaningTier }) => {
   const t = LOCALIZATION[language].services;
 
   const handleSelectService = (tier: "standard" | "deep" | "move") => {
-    setCleaningTier(tier);
-    onScrollTo("estimator");
+    if (setCleaningTier) {
+      setCleaningTier(tier);
+    }
+    onScrollTo("contact");
   };
 
   return (
@@ -34,7 +36,7 @@ export const Services: React.FC<ServicesProps> = ({ language, onScrollTo, setCle
           <div className="w-20 h-1 bg-[#00c853] mx-auto mt-6 rounded-full" />
         </div>
 
-        {/* 3 Tier Cards Grid with High contrast colors */}
+        {/* 3 Tier Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {t.cards.map((card, idx) => {
             const isPopular = card.id === "deep";
@@ -80,12 +82,12 @@ export const Services: React.FC<ServicesProps> = ({ language, onScrollTo, setCle
                     {card.bottomAccent}
                   </div>
 
-                  {/* Pricing estimating selector button trigger */}
+                  {/* Service selection trigger */}
                   <Button
                     onClick={() => handleSelectService(card.id)}
                     className={`w-full font-black py-4 rounded-xl shadow-sm hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 focus:ring-2 focus:ring-[#005f43] ${isPopular ? "bg-[#005f43] hover:bg-[#004732] text-white" : "bg-white hover:bg-[#005f43]/5 text-[#005f43] border-2 border-[#005f43]"}`}
                   >
-                    {t.btn}
+                    {card.btn}
                   </Button>
                 </div>
 
