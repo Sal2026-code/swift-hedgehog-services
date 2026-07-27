@@ -66,16 +66,11 @@ export const LOCALIZATION = {
         },
         {
           id: "move",
-          title: "Move-In / Move-Out Clean",
-          bullets: [
-            "Complete empty property deep sanitation",
-            "Inside cabinet & drawer wiping (empty)",
-            "Interior appliance cleaning (oven/fridge optional)",
-            "Detailed window sill & frame cleaning",
-            "Deposit refund guarantee quality check"
-          ],
-          bottomAccent: "Perfect for landlords, tenants & real estate sales",
-          btn: "Select Move-In Clean"
+          title: "Vacation Rental Cleaning",
+          description: "We help vacation rental owners provide an excellent experience for every guest. Our turnover cleaning services include thorough cleaning, sanitizing, linen preparation, restocking checks, and reporting any visible damage or maintenance concerns.",
+          bullets: [],
+          bottomAccent: "Perfect for Airbnb, Vrbo & property managers",
+          btn: "Select Vacation Rental Clean"
         }
       ]
     },
@@ -197,16 +192,11 @@ export const LOCALIZATION = {
         },
         {
           id: "move",
-          title: "Limpieza Mudanza (Entrada/Salida)",
-          bullets: [
-            "Desinfección profunda de propiedad vacía",
-            "Limpieza interior de armarios y cajones (vacíos)",
-            "Limpieza de electrodomésticos por dentro (opcional)",
-            "Limpieza detallada de rieles y marcos de ventanas",
-            "Revisión de calidad para devolución de fianza"
-          ],
-          bottomAccent: "Perfecto para propietarios, inquilinos e inmobiliarias",
-          btn: "Seleccionar Mudanza"
+          title: "Limpieza de Alquiler Vacacional",
+          description: "Ayudamos a los propietarios de alquileres vacacionales a brindar una experiencia excelente a cada huésped. Nuestros servicios de limpieza de rotación incluyen limpieza profunda, desinfección, preparación de ropa de cama, verificación de insumos e informe de daños o mantenimiento visibles.",
+          bullets: [],
+          bottomAccent: "Ideal para Airbnb, Vrbo y gestores de propiedades",
+          btn: "Seleccionar Alquiler Vacacional"
         }
       ]
     },
@@ -233,7 +223,7 @@ export const LOCALIZATION = {
       helpfulText: "Útil",
       responseBadge: "Respuesta Oficial G & Bros",
       askTitle: "Hacer una Pregunta",
-      nameLabel: "Su Nombre (Opciones)",
+      nameLabel: "Su Nombre (Opcional)",
       phName: "ej. Alejandro M.",
       catLabel: "Categoría",
       queryLabel: "Su Pregunta",
