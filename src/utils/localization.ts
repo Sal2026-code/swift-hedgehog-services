@@ -50,7 +50,7 @@ export const LOCALIZATION = {
       cards: [
         {
           id: "standard",
-          title: "Standard Recurring Clean",
+          title: "Residential Cleaning",
           bullets: [
             "Dusting furniture, shelves & electronics",
             "Mopping & vacuuming all rooms",
@@ -59,7 +59,7 @@ export const LOCALIZATION = {
             "Making beds & tidying up spaces"
           ],
           bottomAccent: "Ideal for weekly or bi-weekly maintenance",
-          btn: "Select Standard Clean"
+          btn: "Select Residential Clean"
         },
         {
           id: "deep",
@@ -191,7 +191,7 @@ export const LOCALIZATION = {
       cards: [
         {
           id: "standard",
-          title: "Limpieza Mantenimiento Estándar",
+          title: "Limpieza Residencial",
           bullets: [
             "Limpieza de polvo en muebles, estantes y electrónicos",
             "Fregado y aspirado de todas las habitaciones",
@@ -200,7 +200,7 @@ export const LOCALIZATION = {
             "Hacer camas y ordenar espacios generales"
           ],
           bottomAccent: "Ideal para mantenimiento semanal o quincenal",
-          btn: "Seleccionar Estándar"
+          btn: "Seleccionar Residencial"
         },
         {
           id: "deep",
