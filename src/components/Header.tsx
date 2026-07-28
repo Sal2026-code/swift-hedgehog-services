@@ -20,11 +20,7 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 40) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 30);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -39,11 +35,11 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full shadow-lg transition-all duration-300">
+    <header className="sticky top-0 z-50 w-full shadow-md bg-white/95 backdrop-blur-md transition-all duration-300">
       {/* Top Banner Bar - Collapses smoothly when scrolled */}
       <div 
-        className={`bg-[#004732] text-white px-4 font-bold flex flex-col sm:flex-row justify-between items-center gap-2 border-b border-[#003324] transition-all duration-300 overflow-hidden ${
-          isScrolled ? "max-h-0 py-0 opacity-0 border-0" : "max-h-24 py-2.5 opacity-100 text-xs"
+        className={`bg-[#004732] text-white px-4 font-bold flex flex-col sm:flex-row justify-between items-center gap-2 border-b border-[#003324] transition-all duration-300 ease-in-out overflow-hidden ${
+          isScrolled ? "max-h-0 py-0 opacity-0 pointer-events-none border-0" : "max-h-16 py-2.5 opacity-100 text-xs"
         }`}
         role="status"
         aria-label="Contact Information"
@@ -79,12 +75,12 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
         </div>
       </div>
 
-      {/* Main Sticky Navigation Bar - Shrinks height & logo on scroll */}
-      <div className="w-full bg-white/95 backdrop-blur-md border-b border-slate-100 transition-all duration-300">
+      {/* Main Sticky Navigation Bar */}
+      <div className="w-full border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div 
-            className={`flex items-center justify-between transition-all duration-300 ${
-              isScrolled ? "py-2 min-h-[4.5rem]" : "py-3 min-h-[14rem]"
+            className={`flex items-center justify-between transition-all duration-300 ease-in-out ${
+              isScrolled ? "py-1.5 min-h-[4.25rem]" : "py-3 min-h-[6.5rem]"
             }`}
           >
             <div 
@@ -98,8 +94,8 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
               <img 
                 src="/logo.png" 
                 alt="G & Bros Services Logo" 
-                className={`w-auto object-contain group-hover:scale-105 transition-all duration-300 ${
-                  isScrolled ? "h-14 sm:h-16" : "h-52 sm:h-64"
+                className={`w-auto object-contain transition-all duration-300 ease-in-out ${
+                  isScrolled ? "h-12 sm:h-14" : "h-20 sm:h-24"
                 }`}
               />
             </div>
