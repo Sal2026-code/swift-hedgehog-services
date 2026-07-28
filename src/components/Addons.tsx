@@ -13,8 +13,7 @@ export const Addons: React.FC<AddonsProps> = ({ language }) => {
 
   return (
     <section id="addons" className="py-20 bg-gradient-to-b from-white to-[#FBF9F6] border-b border-slate-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+      
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
           <div className="inline-flex items-center gap-2 bg-[#00c853]/10 border border-[#00c853]/30 px-4 py-1.5 rounded-full text-xs font-extrabold text-[#005f43]">
             <Sparkles className="w-4 h-4 text-[#00c853]" />
@@ -43,7 +42,6 @@ export const Addons: React.FC<AddonsProps> = ({ language }) => {
           ))}
         </div>
 
-      </div>
-    </section>
+      </section>
   );
 };
