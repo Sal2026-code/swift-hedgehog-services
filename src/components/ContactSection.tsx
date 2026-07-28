@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Mail, Phone, MapPin, Clock, Send, ShieldCheck, CheckCircle, Eye } from "lucide-react";
+import { Mail, Phone, Clock, Send, ShieldCheck, CheckCircle, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LOCALIZATION } from "@/utils/localization";
 import { showError, showSuccess } from "@/utils/toast";
@@ -139,20 +139,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                 <a href={`tel:${CONTACT_INFO.phone.raw}`} className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block font-mono">
                   {CONTACT_INFO.phone.display}
                 </a>
-              </div>
-            </div>
-
-            <div className="flex gap-4 items-start">
-              <div className="p-3 bg-[#005f43]/10 text-[#005f43] rounded-2xl h-fit border border-[#005f43]/20">
-                <MapPin className="w-5 h-5 text-[#00c853]" />
-              </div>
-              <div>
-                <p className="text-xs font-black uppercase text-[#005f43] tracking-wider mb-1.5">
-                  {language === "english" ? "Corporate Headquarters" : "Sede Corporativa"}
-                </p>
-                <p className="text-slate-800 text-sm font-semibold leading-relaxed">
-                  {t.address}
-                </p>
               </div>
             </div>
 
