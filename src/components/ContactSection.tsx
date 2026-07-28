@@ -125,23 +125,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                 <p className="text-xs font-black uppercase text-[#005f43] tracking-wider mb-1.5">
                   {language === "english" ? "Phone Number" : "Número de Teléfono"}
                 </p>
-                <a href={`tel:${CONTACT_INFO.phone.country}${CONTACT_INFO.phone.area}${CONTACT_INFO.phone.prefix}${CONTACT_INFO.phone.line}`} className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block font-mono">
-                  {getDisplayPhone()}
+                <a href={`tel:${CONTACT_INFO.phone.raw}`} className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block font-mono">
+                  {CONTACT_INFO.phone.display}
                 </a>
-              </div>
-            </div>
-
-            <div className="flex gap-4 items-start">
-              <div className="p-3 bg-[#005f43]/10 text-[#005f43] rounded-2xl h-fit border border-[#005f43]/20">
-                <MapPin className="w-5 h-5 text-[#00c853]" />
-              </div>
-              <div>
-                <p className="text-xs font-black uppercase text-[#005f43] tracking-wider mb-1.5">
-                  {language === "english" ? "Corporate Headquarters" : "Sede Corporativa"}
-                </p>
-                <p className="text-slate-800 text-sm font-semibold leading-relaxed">
-                  {t.address}
-                </p>
               </div>
             </div>
 
@@ -268,7 +254,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                   </Button>
 
                   <div className="flex items-center justify-center gap-2 text-xs text-[#004732] bg-[#00c853]/10 py-2.5 px-4 rounded-xl font-bold uppercase tracking-wider border border-[#00c853]/25 shadow-sm">
-                    <ShieldCheck className="w-5 h-5 text-[#00c853}" />
+                    <ShieldCheck className="w-5 h-5 text-[#00c853]" />
                     <span>{t.confidentiality}</span>
                   </div>
                 </div>
