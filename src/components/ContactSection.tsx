@@ -5,7 +5,7 @@ import { Mail, Phone, MapPin, Clock, Send, ShieldCheck, CheckCircle, Eye } from 
 import { Button } from "@/components/ui/button";
 import { LOCALIZATION } from "@/utils/localization";
 import { showError, showSuccess } from "@/utils/toast";
-import { getFullEmail, handleMailTo, CONTACT_INFO, sanitizeInput, ContactFormSchema, checkRateLimit, updateRateLimit } from "@/utils/security";
+import { getFullEmail, handleMailTo, CONTACT_INFO, sanitizeInput, ContactFormSchema, checkRateLimit, updateRateLimit, getDisplayPhone } from "@/utils/security";
 
 interface ContactSectionProps {
   language: "english" | "spanish";
@@ -125,8 +125,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                 <p className="text-xs font-black uppercase text-[#005f43] tracking-wider mb-1.5">
                   {language === "english" ? "Phone Number" : "Número de Teléfono"}
                 </p>
-                <a href={`tel:${CONTACT_INFO.phone.raw}`} className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block font-mono">
-                  {CONTACT_INFO.phone.display}
+                <a href={`tel:${CONTACT_INFO.phone.country}${CONTACT_INFO.phone.area}${CONTACT_INFO.phone.prefix}${CONTACT_INFO.phone.line}`} className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block font-mono">
+                  {getDisplayPhone()}
                 </a>
               </div>
             </div>
