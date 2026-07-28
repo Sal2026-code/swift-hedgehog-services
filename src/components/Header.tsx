@@ -63,7 +63,7 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
 
       <div className="w-full bg-white/95 backdrop-blur-md border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between py-2 min-h-[6.5rem]">
+          <div className="flex items-center justify-between py-3 min-h-[14rem]">
             <div 
               role="button"
               tabIndex={0}
@@ -75,7 +75,7 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
               <img 
                 src="/logo.png" 
                 alt="G & Bros Services Logo" 
-                className="h-28 sm:h-32 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
+                className="h-52 sm:h-64 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
               />
             </div>
 
@@ -84,7 +84,7 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
                 <button
                   key={item}
                   onClick={() => onScrollTo(item)}
-                  className="hover:text-[#005f43] focus:text-[#005f43] focus:outline-none transition-colors py-2 relative group font-sans tracking-wide"
+                  className="hover:text-[#005f43] focus:text-[#005f43] focus:outline-none transition-colors py-2 relative group font-sans tracking-wide text-base"
                   aria-label={`Scroll to ${t[item]}`}
                 >
                   {t[item]}
