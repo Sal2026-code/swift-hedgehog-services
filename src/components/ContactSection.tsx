@@ -102,6 +102,20 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
 
             <div className="flex gap-4 items-start">
               <div className="p-3 bg-[#005f43]/10 text-[#005f43] rounded-2xl h-fit border border-[#005f43]/20">
+                <Phone className="w-5 h-5 text-[#00c853]" />
+              </div>
+              <div>
+                <p className="text-xs font-black uppercase text-[#005f43] tracking-wider mb-1.5">
+                  {language === "english" ? "Phone Number" : "Número de Teléfono"}
+                </p>
+                <a href={`tel:${CONTACT_INFO.phone.raw}`} className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block font-mono">
+                  {CONTACT_INFO.phone.display}
+                </a>
+              </div>
+            </div>
+
+            <div className="flex gap-4 items-start">
+              <div className="p-3 bg-[#005f43]/10 text-[#005f43] rounded-2xl h-fit border border-[#005f43]/20">
                 <Mail className="w-5 h-5 text-[#00c853]" />
               </div>
               <div className="flex-1">
@@ -114,20 +128,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                 >
                   {getFullEmail()}
                 </button>
-              </div>
-            </div>
-
-            <div className="flex gap-4 items-start">
-              <div className="p-3 bg-[#005f43]/10 text-[#005f43] rounded-2xl h-fit border border-[#005f43]/20">
-                <Phone className="w-5 h-5 text-[#00c853]" />
-              </div>
-              <div>
-                <p className="text-xs font-black uppercase text-[#005f43] tracking-wider mb-1.5">
-                  {language === "english" ? "Phone Number" : "Número de Teléfono"}
-                </p>
-                <a href={`tel:${CONTACT_INFO.phone.raw}`} className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block font-mono">
-                  {CONTACT_INFO.phone.display}
-                </a>
               </div>
             </div>
 
