@@ -42,9 +42,11 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
     // Rate limiting check
     const rateCheck = checkRateLimit("contact_submission", 60000); // 1 minute cooldown
     if (!rateCheck.allowed) {
-      showError(language === "english" 
-         `Please wait ${rateCheck.remaining}s before sending another request.` 
-        : `Por favor espere ${rateCheck.remaining}s antes de enviar otra solicitud.`);
+      showError(
+        language === "english"
+          ? `Please wait ${rateCheck.remaining}s before sending another request.`
+          : `Por favor espere ${rateCheck.remaining}s antes de enviar otra solicitud.`
+      );
       return;
     }
 
@@ -97,7 +99,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
           
           <div className="lg:col-span-5 bg-[#FBF9F6] border border-slate-200 rounded-3xl p-6 sm:p-10 space-y-8 shadow-sm">
             <h3 className="text-2xl font-serif font-black text-[#005f43]">
-              {language === "english"? "Office details" : "Detalles de Oficina"}
+              {language === "english" ? "Office details" : "Detalles de Oficina"}
             </h3>
 
             <div className="flex gap-4 items-start">
@@ -106,7 +108,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
               </div>
               <div className="flex-1">
                 <p className="text-xs font-black uppercase text-[#005f43] tracking-wider mb-1.5">
-                  {language === "english"? "Email Address" : "Dirección de Correo"}
+                  {language === "english" ? "Email Address" : "Dirección de Correo"}
                 </p>
                 <button 
                   onClick={handleMailTo}
@@ -123,7 +125,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
               </div>
               <div>
                 <p className="text-xs font-black uppercase text-[#005f43] tracking-wider mb-1.5">
-                  {language === "english"? "Phone Number" : "Número de Teléfono"}
+                  {language === "english" ? "Phone Number" : "Número de Teléfono"}
                 </p>
                 <a href="tel:+17276089599" className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block font-mono">
                   +1 727-608-9599
@@ -150,7 +152,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
           </div>
 
           <div className="lg:col-span-7">
-            {submitted? (
+            {submitted ? (
               <div className="bg-[#FBF9F6] border-2 border-[#00c853]/30 rounded-3xl p-8 sm:p-12 text-center space-y-6 relative overflow-hidden shadow-lg" role="status">
                 <div className="absolute top-0 inset-x-0 h-2 bg-[#00c853]" />
                 <div className="w-16 h-16 bg-[#00c853]/15 text-[#005f43] rounded-full flex items-center justify-center mx-auto border border-[#00c853]/30">
@@ -224,14 +226,14 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder={language === 'english'? 'your@email.com' : 'u@correo.com'}
+                    placeholder={language === 'english' ? 'your@email.com' : 'su@correo.com'}
                     className="w-full bg-[#FBF9F6] border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-800 focus:outline-none focus:border-[#005f43] transition-all font-semibold"
                   />
                 </div>
 
                 <div className="space-y-2">
                   <label htmlFor="contact-message" className="text-xs font-black uppercase text-slate-700 tracking-wider block leading-relaxed">
-                    {language === "english"? "Describe apartment size, specific cleaning conditions, or your preferred callback times..." : "Describa el tamaño de su apartamento, condiciones específicas de limpieza, o sus horarios preferidos para la llamada..."}
+                    {language === "english" ? "Describe apartment size, specific cleaning conditions, or your preferred callback times..." : "Describa el tamaño de su apartamento, condiciones específicas de limpieza, o sus horarios preferidos para la llamada..."}
                   </label>
                   <textarea
                     id="contact-message"
@@ -250,7 +252,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                     className="w-full bg-[#005f43] hover:bg-[#004732] text-white font-extrabold py-4.5 rounded-xl text-base tracking-wide flex items-center justify-center gap-2 shadow-md transition-all"
                   >
                     <Send className="w-5 h-5 text-[#00c853]" />
-                    <span>{loading? t.submittingBtn : t.submitBtn}</span>
+                    <span>{loading ? t.submittingBtn : t.submitBtn}</span>
                   </Button>
 
                   <div className="flex items-center justify-center gap-2 text-xs text-[#004732] bg-[#00c853]/10 py-2.5 px-4 rounded-xl font-bold uppercase tracking-wider border border-[#00c853]/25 shadow-sm">
