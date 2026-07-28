@@ -48,9 +48,6 @@ export const TrustBadges: React.FC<TrustBadgesProps> = ({ language }) => {
               <p className="text-xs font-bold text-slate-800 uppercase tracking-wide leading-tight min-h-[36px] flex items-center justify-center">
                 {badgeName}
               </p>
-              <span className="text-[9px] font-black text-[#004732] bg-[#00c853]/15 px-2.5 py-1 rounded-full uppercase tracking-wider mt-3">
-                {language === "english" ? "Accredited" : "Acreditado"}
-              </span>
             </div>
           ))}
         </div>
