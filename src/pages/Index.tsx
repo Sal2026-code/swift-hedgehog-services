@@ -5,6 +5,7 @@ import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { TrustBadges } from "@/components/TrustBadges";
 import { Services } from "@/components/Services";
+import { Addons } from "@/components/Addons";
 import { ForumSection } from "@/components/ForumSection";
 import { ContactSection } from "@/components/ContactSection";
 import { LOCALIZATION } from "@/utils/localization";
@@ -102,6 +103,10 @@ export default function Index() {
         <Services 
           language={language} 
           onScrollTo={handleScrollTo} 
+        />
+
+        <Addons 
+          language={language} 
         />
 
         <ForumSection 

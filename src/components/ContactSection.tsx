@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { Mail, Phone, Clock, Send, ShieldCheck, CheckCircle } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, Send, ShieldCheck, CheckCircle, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LOCALIZATION } from "@/utils/localization";
 import { showError, showSuccess } from "@/utils/toast";
-import { getFullEmail, handleMailTo, getDisplayPhone, getRawPhone, sanitizeInput, ContactFormSchema, checkRateLimit, updateRateLimit } from "@/utils/security";
+import { getFullEmail, handleMailTo, CONTACT_INFO, sanitizeInput, ContactFormSchema, checkRateLimit, updateRateLimit } from "@/utils/security";
 
 interface ContactSectionProps {
   language: "english" | "spanish";
@@ -20,6 +20,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
   const [honeypot, setHoneypot] = useState("");
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [showEmail, setShowEmail] = useState(false);
 
   const t = LOCALIZATION[language].contact;
 
@@ -69,6 +70,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
     };
 
     setLoading(true);
+    console.log("Validation passed. Sanity Data:", sanitizedData);
 
     setTimeout(() => {
       setLoading(false);
@@ -107,13 +109,22 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                 <p className="text-xs font-black uppercase text-[#005f43] tracking-wider mb-1.5">
                   {language === "english" ? "Email Address" : "Dirección de Correo"}
                 </p>
-                <a 
-                  href={`mailto:${getFullEmail()}`}
-                  onClick={handleMailTo}
-                  className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block text-left"
-                >
-                  {getFullEmail()}
-                </a>
+                {showEmail ? (
+                  <button 
+                    onClick={handleMailTo}
+                    className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block text-left animate-fade-in"
+                  >
+                    {getFullEmail()}
+                  </button>
+                ) : (
+                  <button 
+                    onClick={() => setShowEmail(true)}
+                    className="bg-[#00c853]/10 hover:bg-[#00c853]/20 text-[#005f43] px-3 py-1.5 rounded-lg text-xs font-black flex items-center gap-2 transition-all"
+                  >
+                    <Eye className="w-3.5 h-3.5" />
+                    {language === "english" ? "Show Business Email" : "Ver Correo de Negocio"}
+                  </button>
+                )}
               </div>
             </div>
 
@@ -125,9 +136,23 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                 <p className="text-xs font-black uppercase text-[#005f43] tracking-wider mb-1.5">
                   {language === "english" ? "Phone Number" : "Número de Teléfono"}
                 </p>
-                <a href={`tel:${getRawPhone()}`} className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block font-mono">
-                  {getDisplayPhone()}
+                <a href={`tel:${CONTACT_INFO.phone.raw}`} className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block font-mono">
+                  {CONTACT_INFO.phone.display}
                 </a>
+              </div>
+            </div>
+
+            <div className="flex gap-4 items-start">
+              <div className="p-3 bg-[#005f43]/10 text-[#005f43] rounded-2xl h-fit border border-[#005f43]/20">
+                <MapPin className="w-5 h-5 text-[#00c853]" />
+              </div>
+              <div>
+                <p className="text-xs font-black uppercase text-[#005f43] tracking-wider mb-1.5">
+                  {language === "english" ? "Corporate Headquarters" : "Sede Corporativa"}
+                </p>
+                <p className="text-slate-800 text-sm font-semibold leading-relaxed">
+                  {t.address}
+                </p>
               </div>
             </div>
 

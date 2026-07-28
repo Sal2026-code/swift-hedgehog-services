@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
-import { Phone, Mail, Globe } from "lucide-react";
+import React, { useState } from "react";
+import { Phone, Mail, Globe, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LOCALIZATION } from "@/utils/localization";
-import { getFullEmail, handleMailTo, getDisplayPhone, getRawPhone } from "@/utils/security";
+import { getFullEmail, handleMailTo, CONTACT_INFO } from "@/utils/security";
 
 interface HeaderProps {
   language: "english" | "spanish";
@@ -13,6 +13,7 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollTo }) => {
+  const [showEmail, setShowEmail] = useState(false);
   const t = LOCALIZATION[language].header;
 
   const handleKeyPress = (e: React.KeyboardEvent, sectionId: string) => {
@@ -30,19 +31,30 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
         aria-label="Contact Information"
       >
         <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 text-emerald-100">
-          <a href={`tel:${getRawPhone()}`} className="flex items-center gap-2 hover:text-white transition-colors duration-200">
+          <a href={`tel:${CONTACT_INFO.phone.raw}`} className="flex items-center gap-2 hover:text-white transition-colors duration-200">
             <Phone className="w-4 h-4 text-[#00c853]" />
-            <span className="font-mono tracking-wide">{getDisplayPhone()}</span>
+            <span className="font-mono tracking-wide">{CONTACT_INFO.phone.display}</span>
           </a>
           <span className="hidden sm:inline text-emerald-800">|</span>
-          <a 
-            href={`mailto:${getFullEmail()}`}
-            onClick={handleMailTo}
-            className="flex items-center gap-2 hover:text-white transition-colors duration-200 focus:outline-none"
-          >
+          <div className="flex items-center gap-2">
             <Mail className="w-4 h-4 text-[#00c853]" />
-            <span>{getFullEmail()}</span>
-          </a>
+            {showEmail ? (
+              <button 
+                onClick={handleMailTo}
+                className="hover:text-white transition-colors duration-200 focus:outline-none animate-fade-in"
+              >
+                {getFullEmail()}
+              </button>
+            ) : (
+              <button 
+                onClick={() => setShowEmail(true)}
+                className="bg-[#00c853]/20 hover:bg-[#00c853]/40 px-2 py-0.5 rounded text-[10px] flex items-center gap-1.5 transition-all"
+              >
+                <Eye className="w-3 h-3" />
+                {language === "english" ? "Show Email" : "Ver Correo"}
+              </button>
+            )}
+          </div>
         </div>
         <div className="text-[10px] uppercase tracking-[0.2em] text-white bg-[#00c853]/20 px-3 py-1 rounded-full font-black border border-[#00c853]/30">
           {language === "english" ? "✨ G & Bros Premium Standard ✨" : "✨ Estándar Premium G & Bros ✨"}
@@ -61,7 +73,7 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
               aria-label="G & Bros Premium Services Logo, scroll to top"
             >
               <img 
-                src="/logo.png" 
+                src="dyad-media://media/swift-hedgehog-bob/.dyad/media/f6bda199d17417b0741439cce5abbbd0188c0c2c41dfd0cf6fb202931d8a941e.png" 
                 alt="G & Bros Services Logo" 
                 className="h-16 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
               />
