@@ -55,7 +55,7 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
         <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 text-emerald-100">
           <a href={`tel:${CONTACT_INFO.phone.raw}`} className="flex items-center gap-2 hover:text-white transition-colors duration-200">
             <Phone className="w-4 h-4 text-[#00c853]" />
-            <span className="font-mono tracking-wide">{CONTACT_INFO.phone.display}</span>
+            <span className="font-mono tracking-wide">+1 727-608-9599</span>
           </a>
           <span className="hidden sm:inline text-emerald-800">|</span>
           <div className="flex items-center gap-2">
