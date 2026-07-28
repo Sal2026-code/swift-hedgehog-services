@@ -36,7 +36,7 @@ export const LOCALIZATION = {
         "Eco-Friendly Products",
         "Satisfaction Guaranteed",
         "Pet Safe Cleaners",
-        "Dedicated Support",
+        "Family Owned and Operated",
         "Fully Insured Service"
       ],
       verifiedTitle: "100% Vetted Cleaners",
@@ -171,7 +171,7 @@ export const LOCALIZATION = {
         "Productos Ecológicos",
         "Garantía de Satisfacción",
         "Seguro para Mascotas",
-        "Soporte Dedicado",
+        "Propiedad y Operación Familiar",
         "Servicio Totalmente Asegurado"
       ],
       verifiedTitle: "Limpiadores 100% Verificados",
