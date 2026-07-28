@@ -1,11 +1,20 @@
 "use client";
 
 import React, { useState } from "react";
-import { Mail, Phone, MapPin, Clock, Send, ShieldCheck, CheckCircle, Eye } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, Send, ShieldCheck, CheckCircle, Eye, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LOCALIZATION } from "@/utils/localization";
 import { showError, showSuccess } from "@/utils/toast";
-import { getFullEmail, handleMailTo, CONTACT_INFO, sanitizeInput, ContactFormSchema, checkRateLimit, updateRateLimit, getDisplayPhone } from "@/utils/security";
+import { 
+  getFullEmail, 
+  handleMailTo, 
+  CONTACT_INFO, 
+  sanitizeInput, 
+  ContactFormSchema, 
+  checkRateLimit, 
+  updateRateLimit, 
+  validateEmailDomain 
+} from "@/utils/security";
 
 interface ContactSectionProps {
   language: "english" | "spanish";
@@ -34,7 +43,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
     setPhone(val);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (honeypot) return;
@@ -50,6 +59,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
       return;
     }
 
+    // Step 1: Validate schema format
     const result = ContactFormSchema.safeParse({
       name,
       email,
@@ -63,6 +73,16 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
       return;
     }
 
+    setLoading(true);
+
+    // Step 2: Perform DNS MX record lookup to check if the email domain actually exists
+    const domainCheck = await validateEmailDomain(result.data.email, language);
+    if (!domainCheck.valid) {
+      setLoading(false);
+      showError(domainCheck.error || (language === "english" ? "Invalid email domain." : "Dominio de correo no válido."));
+      return;
+    }
+
     const sanitizedData = {
       name: sanitizeInput(result.data.name),
       email: sanitizeInput(result.data.email),
@@ -70,15 +90,14 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
       message: sanitizeInput(result.data.message || "")
     };
 
-    setLoading(true);
-    console.log("Validation passed. Sanity Data:", sanitizedData);
+    console.log("Validation & domain check passed. Sanity Data:", sanitizedData);
 
     setTimeout(() => {
       setLoading(false);
       setSubmitted(true);
       updateRateLimit("contact_submission");
       showSuccess(t.successTitle);
-    }, 1200);
+    }, 1000);
   };
 
   return (
@@ -251,8 +270,17 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                     disabled={loading}
                     className="w-full bg-[#005f43] hover:bg-[#004732] text-white font-extrabold py-4.5 rounded-xl text-base tracking-wide flex items-center justify-center gap-2 shadow-md transition-all"
                   >
-                    <Send className="w-5 h-5 text-[#00c853]" />
-                    <span>{loading ? t.submittingBtn : t.submitBtn}</span>
+                    {loading ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin text-[#00c853]" />
+                        <span>{language === "english" ? "Verifying email..." : "Verificando correo..."}</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-5 h-5 text-[#00c853]" />
+                        <span>{t.submitBtn}</span>
+                      </>
+                    )}
                   </Button>
 
                   <div className="flex items-center justify-center gap-2 text-xs text-[#004732] bg-[#00c853]/10 py-2.5 px-4 rounded-xl font-bold uppercase tracking-wider border border-[#00c853]/25 shadow-sm">

@@ -31,7 +31,7 @@ export const ForumQuestionSchema = z.object({
 });
 
 /**
- * FIXED: Proper HTML entity mapping for ampersands and other characters.
+ * HTML entity mapping for input sanitization
  */
 export const sanitizeInput = (str: string): string => {
   if (!str) return "";
@@ -43,6 +43,91 @@ export const sanitizeInput = (str: string): string => {
     "'": '&#39;'
   };
   return str.replace(/[&<>"']/g, (m) => map[m] || m);
+};
+
+/**
+ * Real-time domain & MX record check for emails
+ */
+export const validateEmailDomain = async (email: string, language: "english" | "spanish" = "english"): Promise<{ valid: boolean; error?: string }> => {
+  const parts = email.split('@');
+  if (parts.length !== 2) {
+    return {
+      valid: false,
+      error: language === "english" ? "Invalid email format." : "Formato de correo electrónico no válido."
+    };
+  }
+
+  const domain = parts[1].toLowerCase().trim();
+
+  // Basic check for minimal domain structure
+  if (!domain.includes('.') || domain.startsWith('.') || domain.endsWith('.')) {
+    return {
+      valid: false,
+      error: language === "english" ? "Email domain format is invalid." : "El dominio del correo electrónico no es válido."
+    };
+  }
+
+  // Common domain typo checks
+  const typos: Record<string, string> = {
+    "gamil.com": "gmail.com",
+    "gmial.com": "gmail.com",
+    "gmai.com": "gmail.com",
+    "hotmial.com": "hotmail.com",
+    "yaho.com": "yahoo.com",
+    "outlok.com": "outlook.com"
+  };
+
+  if (typos[domain]) {
+    return {
+      valid: false,
+      error: language === "english"
+        ? `Did you mean @${typos[domain]}? Please check your email address.`
+        : `¿Quiso decir @${typos[domain]}? Por favor verifique su correo electrónico.`
+    };
+  }
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 4000); // 4 second timeout
+
+    // Check MX records via Cloudflare DNS-over-HTTPS
+    const res = await fetch(`https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(domain)}&type=MX`, {
+      headers: { accept: "application/dns-json" },
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+
+    if (res.ok) {
+      const data = await res.json();
+      
+      // Status 0 is NOERROR and Answer containing records means mail servers exist
+      if (data.Status === 0 && data.Answer && data.Answer.length > 0) {
+        return { valid: true };
+      }
+
+      // Fallback check for A record (some domains handle mail directly at root)
+      const aRes = await fetch(`https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(domain)}&type=A`, {
+        headers: { accept: "application/dns-json" }
+      });
+      if (aRes.ok) {
+        const aData = await aRes.json();
+        if (aData.Status === 0 && aData.Answer && aData.Answer.length > 0) {
+          return { valid: true };
+        }
+      }
+
+      return {
+        valid: false,
+        error: language === "english"
+          ? `The domain "@${domain}" does not exist or cannot receive emails. Please enter a real email address.`
+          : `El dominio "@${domain}" no existe o no puede recibir correos. Por favor ingrese un correo existente.`
+      };
+    }
+  } catch (e) {
+    console.warn("DNS domain check skipped or timed out:", e);
+  }
+
+  return { valid: true };
 };
 
 /**
