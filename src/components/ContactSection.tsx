@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Mail, Phone, MapPin, Clock, Send, ShieldCheck, CheckCircle, Eye } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, Send, ShieldCheck, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LOCALIZATION } from "@/utils/localization";
 import { showError, showSuccess } from "@/utils/toast";
@@ -20,7 +20,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
   const [honeypot, setHoneypot] = useState("");
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [showEmail, setShowEmail] = useState(false);
 
   const t = LOCALIZATION[language].contact;
 
@@ -70,7 +69,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
     };
 
     setLoading(true);
-    console.log("Validation passed. Sanity Data:", sanitizedData);
 
     setTimeout(() => {
       setLoading(false);
@@ -109,22 +107,13 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                 <p className="text-xs font-black uppercase text-[#005f43] tracking-wider mb-1.5">
                   {language === "english" ? "Email Address" : "Dirección de Correo"}
                 </p>
-                {showEmail ? (
-                  <button 
-                    onClick={handleMailTo}
-                    className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block text-left animate-fade-in"
-                  >
-                    {getFullEmail()}
-                  </button>
-                ) : (
-                  <button 
-                    onClick={() => setShowEmail(true)}
-                    className="bg-[#00c853]/10 hover:bg-[#00c853]/20 text-[#005f43] px-3 py-1.5 rounded-lg text-xs font-black flex items-center gap-2 transition-all"
-                  >
-                    <Eye className="w-3.5 h-3.5" />
-                    {language === "english" ? "Show Business Email" : "Ver Correo de Negocio"}
-                  </button>
-                )}
+                <a 
+                  href={`mailto:${getFullEmail()}`}
+                  onClick={handleMailTo}
+                  className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block text-left"
+                >
+                  {getFullEmail()}
+                </a>
               </div>
             </div>
 
