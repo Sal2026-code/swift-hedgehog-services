@@ -136,8 +136,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                 <p className="text-xs font-black uppercase text-[#005f43] tracking-wider mb-1.5">
                   {language === "english" ? "Phone Number" : "Número de Teléfono"}
                 </p>
-                <a href={`tel:${CONTACT_INFO.phone.raw}`} className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block font-mono">
-                  {CONTACT_INFO.phone.display}
+                <a href={`tel:+1727-608-9599`} className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block font-mono">
+                  +1 727-608-9599
                 </a>
               </div>
             </div>
