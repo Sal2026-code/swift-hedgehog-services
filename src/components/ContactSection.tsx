@@ -145,7 +145,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                   {t.weekdays}
                 </p>
                 <p className="text-xs text-red-600 font-extrabold mt-1">
-                  {t.sunday}
+                  {language === "english" ? "Closed on weekends" : "Cerrado los fines de semana"}
                 </p>
               </div>
             </div>
