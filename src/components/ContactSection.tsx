@@ -118,9 +118,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
             </div>
 
             <div className="flex gap-4 items-start">
-              <div className="p-3 bg-[#005f43]/10 text-[#005f43] rounded-2xl h-fit border border-[#005f43]/20 flex flex-col items-center">
+              <div className="p-3 bg-[#005f43]/10 text-[#005f43] rounded-2xl h-fit border border-[#005f43]/20">
                 <Phone className="w-5 h-5 text-[#00c853]" />
-                <span className="mt-1 text-xs font-mono text-[#005f43]">{getDisplayPhone()}</span>
               </div>
               <div>
                 <p className="text-xs font-black uppercase text-[#005f43] tracking-wider mb-1.5">
