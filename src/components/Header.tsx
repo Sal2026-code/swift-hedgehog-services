@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Phone, Mail, Globe, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LOCALIZATION } from "@/utils/localization";
-import { getFullEmail, handleMailTo, CONTACT_INFO } from "@/utils/security";
+import { getFullEmail, CONTACT_INFO } from "@/utils/security";
 
 interface HeaderProps {
   language: "english" | "spanish";
@@ -13,7 +13,6 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollTo }) => {
-  const [showEmail, setShowEmail] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const lastScrolled = useRef(false);
 
@@ -61,22 +60,9 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
           <span className="hidden sm:inline text-emerald-800">|</span>
           <div className="flex items-center gap-2">
             <Mail className="w-4 h-4 text-[#00c853]" />
-            {showEmail ? (
-              <button
-                onClick={handleMailTo}
-                className="hover:text-white transition-colors duration-200 focus:outline-none animate-fade-in"
-              >
-                {getFullEmail()}
-              </button>
-            ) : (
-              <button
-                onClick={() => setShowEmail(true)}
-                className="bg-[#00c853]/20 hover:bg-[#00c853]/40 px-2 py-0.5 rounded text-[10px] flex items-center gap-1.5 transition-all"
-              >
-                <Eye className="w-3 h-3" />
-                {language === "english" ? "Show Email" : "Ver Correo"}
-              </button>
-            )}
+            <a href={`mailto:${getFullEmail()}`} className="flex items-center gap-2 hover:text-white transition-colors duration-200">
+              <span className="font-mono tracking-wide">{getFullEmail()}</span>
+            </a>
           </div>
         </div>
         <div className="text-[10px] uppercase tracking-[0.2em] text-white bg-[#00c853]/20 px-3 py-1 rounded-full font-black border border-[#00c853]/30">
