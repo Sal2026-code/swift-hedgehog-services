@@ -73,7 +73,7 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
               aria-label="G & Bros Premium Services Logo, scroll to top"
             >
               <img 
-                src="dyad-media://media/swift-hedgehog-bob/.dyad/media/f6bda199d17417b0741439cce5abbbd0188c0c2c41dfd0cf6fb202931d8a941e.png" 
+                src="/logo.png" 
                 alt="G & Bros Services Logo" 
                 className="h-16 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
               />
