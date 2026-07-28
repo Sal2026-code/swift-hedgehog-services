@@ -69,24 +69,14 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
               tabIndex={0}
               onClick={() => onScrollTo("hero")}
               onKeyDown={(e) => handleKeyPress(e, "hero")}
-              className="flex items-center gap-3 cursor-pointer group focus:outline-none focus:ring-2 focus:ring-[#005f43] rounded-2xl p-1.5 transition-all"
+              className="flex items-center gap-3 cursor-pointer group focus:outline-none focus:ring-2 focus:ring-[#005f43] rounded-2xl p-1 transition-all"
               aria-label="G & Bros Premium Services Logo, scroll to top"
             >
-              <div className="p-2 bg-[#005f43] text-white rounded-xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-md shadow-[#005f43]/10 flex items-center justify-center w-12 h-12">
-                <svg viewBox="0 0 100 100" className="w-8 h-8 fill-none stroke-[#00c853]" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M80 40 C80 20, 20 20, 20 50 C20 80, 80 80, 80 60 L50 60" />
-                  <circle cx="50" cy="50" r="8" className="fill-[#00c853]" />
-                  <path d="M35 20 L45 10 L55 20" strokeWidth="6" />
-                </svg>
-              </div>
-              <div className="text-left">
-                <span className="text-xl font-black tracking-tight text-[#005f43] block font-serif leading-none">
-                  G & Bros
-                </span>
-                <span className="text-[9px] tracking-[0.2em] text-[#00c853] font-black uppercase block mt-1.5">
-                  Services Inc.
-                </span>
-              </div>
+              <img 
+                src="dyad-media://media/swift-hedgehog-bob/.dyad/media/f6bda199d17417b0741439cce5abbbd0188c0c2c41dfd0cf6fb202931d8a941e.png" 
+                alt="G & Bros Services Logo" 
+                className="h-16 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
+              />
             </div>
 
             <nav className="hidden md:flex items-center gap-8 text-sm font-bold text-slate-700" aria-label="Main Navigation">
