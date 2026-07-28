@@ -20,7 +20,13 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 30);
+      const currentScroll = window.scrollY;
+      // Hysteresis threshold to prevent scroll flickering with large header
+      if (currentScroll > 180) {
+        setIsScrolled(true);
+      } else if (currentScroll < 40) {
+        setIsScrolled(false);
+      }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -35,11 +41,11 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full shadow-md bg-white/95 backdrop-blur-md transition-all duration-300">
+    <header className="sticky top-0 z-50 w-full shadow-lg transition-all duration-300">
       {/* Top Banner Bar - Collapses smoothly when scrolled */}
       <div 
         className={`bg-[#004732] text-white px-4 font-bold flex flex-col sm:flex-row justify-between items-center gap-2 border-b border-[#003324] transition-all duration-300 ease-in-out overflow-hidden ${
-          isScrolled ? "max-h-0 py-0 opacity-0 pointer-events-none border-0" : "max-h-16 py-2.5 opacity-100 text-xs"
+          isScrolled ? "max-h-0 py-0 opacity-0 pointer-events-none border-0" : "max-h-24 py-2.5 opacity-100 text-xs"
         }`}
         role="status"
         aria-label="Contact Information"
@@ -76,11 +82,11 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
       </div>
 
       {/* Main Sticky Navigation Bar */}
-      <div className="w-full border-b border-slate-100">
+      <div className="w-full bg-white/95 backdrop-blur-md border-b border-slate-100 transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div 
             className={`flex items-center justify-between transition-all duration-300 ease-in-out ${
-              isScrolled ? "py-1.5 min-h-[4.25rem]" : "py-3 min-h-[6.5rem]"
+              isScrolled ? "py-2 min-h-[4.5rem]" : "py-3 min-h-[14rem]"
             }`}
           >
             <div 
@@ -95,7 +101,7 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
                 src="/logo.png" 
                 alt="G & Bros Services Logo" 
                 className={`w-auto object-contain transition-all duration-300 ease-in-out ${
-                  isScrolled ? "h-12 sm:h-14" : "h-20 sm:h-24"
+                  isScrolled ? "h-14 sm:h-16" : "h-52 sm:h-64"
                 }`}
               />
             </div>
