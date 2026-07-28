@@ -4,7 +4,7 @@ import React from "react";
 import { Phone, Mail, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LOCALIZATION } from "@/utils/localization";
-import { getFullEmail, handleMailTo, CONTACT_INFO } from "@/utils/security";
+import { getFullEmail, handleMailTo, getDisplayPhone, getRawPhone } from "@/utils/security";
 
 interface HeaderProps {
   language: "english" | "spanish";
@@ -30,9 +30,9 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
         aria-label="Contact Information"
       >
         <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 text-emerald-100">
-          <a href={`tel:${CONTACT_INFO.phone.raw}`} className="flex items-center gap-2 hover:text-white transition-colors duration-200">
+          <a href={`tel:${getRawPhone()}`} className="flex items-center gap-2 hover:text-white transition-colors duration-200">
             <Phone className="w-4 h-4 text-[#00c853]" />
-            <span className="font-mono tracking-wide">{CONTACT_INFO.phone.display}</span>
+            <span className="font-mono tracking-wide">{getDisplayPhone()}</span>
           </a>
           <span className="hidden sm:inline text-emerald-800">|</span>
           <a 
