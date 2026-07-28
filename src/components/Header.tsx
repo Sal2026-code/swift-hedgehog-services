@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Phone, Mail, Globe, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LOCALIZATION } from "@/utils/localization";
@@ -14,7 +14,22 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollTo }) => {
   const [showEmail, setShowEmail] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
   const t = LOCALIZATION[language].header;
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 40) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleKeyPress = (e: React.KeyboardEvent, sectionId: string) => {
     if (e.key === "Enter" || e.key === " ") {
@@ -24,9 +39,12 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full shadow-lg transition-all">
+    <header className="sticky top-0 z-50 w-full shadow-lg transition-all duration-300">
+      {/* Top Banner Bar - Collapses smoothly when scrolled */}
       <div 
-        className="bg-[#004732] text-white py-2.5 px-4 text-xs font-bold flex flex-col sm:flex-row justify-between items-center gap-2 border-b border-[#003324]"
+        className={`bg-[#004732] text-white px-4 font-bold flex flex-col sm:flex-row justify-between items-center gap-2 border-b border-[#003324] transition-all duration-300 overflow-hidden ${
+          isScrolled ? "max-h-0 py-0 opacity-0 border-0" : "max-h-24 py-2.5 opacity-100 text-xs"
+        }`}
         role="status"
         aria-label="Contact Information"
       >
@@ -61,9 +79,14 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
         </div>
       </div>
 
-      <div className="w-full bg-white/95 backdrop-blur-md border-b border-slate-100">
+      {/* Main Sticky Navigation Bar - Shrinks height & logo on scroll */}
+      <div className="w-full bg-white/95 backdrop-blur-md border-b border-slate-100 transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between py-3 min-h-[14rem]">
+          <div 
+            className={`flex items-center justify-between transition-all duration-300 ${
+              isScrolled ? "py-2 min-h-[4.5rem]" : "py-3 min-h-[14rem]"
+            }`}
+          >
             <div 
               role="button"
               tabIndex={0}
@@ -75,7 +98,9 @@ export const Header: React.FC<HeaderProps> = ({ language, setLanguage, onScrollT
               <img 
                 src="/logo.png" 
                 alt="G & Bros Services Logo" 
-                className="h-52 sm:h-64 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
+                className={`w-auto object-contain group-hover:scale-105 transition-all duration-300 ${
+                  isScrolled ? "h-14 sm:h-16" : "h-52 sm:h-64"
+                }`}
               />
             </div>
 
