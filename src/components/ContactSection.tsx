@@ -20,7 +20,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
   const [honeypot, setHoneypot] = useState("");
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [showEmail, setShowEmail] = useState(false);
 
   const t = LOCALIZATION[language].contact;
 
@@ -109,22 +108,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                 <p className="text-xs font-black uppercase text-[#005f43] tracking-wider mb-1.5">
                   {language === "english" ? "Email Address" : "Dirección de Correo"}
                 </p>
-                {showEmail ? (
-                  <button 
-                    onClick={handleMailTo}
-                    className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block text-left animate-fade-in"
-                  >
-                    {getFullEmail()}
-                  </button>
-                ) : (
-                  <button 
-                    onClick={() => setShowEmail(true)}
-                    className="bg-[#00c853]/10 hover:bg-[#00c853]/20 text-[#005f43] px-3 py-1.5 rounded-lg text-xs font-black flex items-center gap-2 transition-all"
-                  >
-                    <Eye className="w-3.5 h-3.5" />
-                    {language === "english" ? "Show Business Email" : "Ver Correo de Negocio"}
-                  </button>
-                )}
+                <button 
+                  onClick={handleMailTo}
+                  className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block text-left animate-fade-in"
+                >
+                  {getFullEmail()}
+                </button>
               </div>
             </div>
 
@@ -279,7 +268,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                   </Button>
 
                   <div className="flex items-center justify-center gap-2 text-xs text-[#004732] bg-[#00c853]/10 py-2.5 px-4 rounded-xl font-bold uppercase tracking-wider border border-[#00c853]/25 shadow-sm">
-                    <ShieldCheck className="w-5 h-5 text-[#00c853]" />
+                    <ShieldCheck className="w-5 h-5 text-[#00c853}" />
                     <span>{t.confidentiality}</span>
                   </div>
                 </div>
