@@ -45,7 +45,7 @@ export const ForumQuestionSchema = z.object({
 
 /**
  * HTML entity mapping for input sanitization. 
- * Fixed: Corrected mapping to actual HTML entities to prevent potential XSS.
+ * Fixed: Corrected mapping to proper HTML entities (&, <, >).
  */
 export const sanitizeInput = (str: string): string => {
   if (!str) return "";

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { MessageSquare, ThumbsUp, Send, ChevronDown, ChevronUp } from "lucide-react";
+import { MessageSquare, ThumbsUp, Send, ChevronDown, ChevronUp, AlertCircle } from "lucide-react";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { Button } from "@/components/ui/button";
 import { ForumQuestion } from "@/pages/Index";
@@ -109,6 +109,8 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
 
     onAddQuestion(sanitizedName, result.data.category, sanitizedQuery);
     updateSubmissionDebounce("forum_submission");
+    
+    // Clear state
     setName("");
     setQuery("");
   };
@@ -199,8 +201,8 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
             <div className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-md text-left space-y-6 relative hover:shadow-lg transition-all duration-300">
               <div className="absolute top-0 inset-x-0 h-1 bg-[#005f43]" />
               <div className="flex items-center gap-3">
-                <MessageSquare className="w-5 h-5 text-[#005f43]" />
-                <h3 className="text-xl font-serif font-black text-[#005f43]">
+                <MessageSquare className="w-5 h-5 text-[#004732]" />
+                <h3 className="text-xl font-serif font-black text-[#004732]">
                   {t.askTitle}
                 </h3>
               </div>
@@ -261,6 +263,16 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
                     placeholder={t.phQuery}
                     className="w-full bg-[#FBF9F6] border border-slate-200 rounded-xl px-4 py-3.5 text-xs text-slate-800 focus:outline-none focus:border-[#005f43] resize-none font-semibold"
                   />
+                </div>
+
+                {/* Privacy Warning for Public Questions */}
+                <div className="flex items-start gap-2 text-[10px] text-slate-500 bg-slate-50 p-2 rounded-lg border border-slate-200">
+                  <AlertCircle className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                  <p className="leading-tight">
+                    {language === "english" 
+                      ? "Note: Questions are public. Avoid including private personal data in the question box."
+                      : "Nota: Las preguntas son públicas. Evite incluir datos personales privados en el cuadro de pregunta."}
+                  </p>
                 </div>
 
                 {/* Turnstile Anti-Bot Check */}
