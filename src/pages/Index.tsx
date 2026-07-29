@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
+import { WhyChooseUs } from "@/components/WhyChooseUs";
 import { TrustBadges } from "@/components/TrustBadges";
 import { Services } from "@/components/Services";
 import { ForumSection } from "@/components/ForumSection";
@@ -93,6 +94,10 @@ export default function Index() {
         <Hero 
           language={language} 
           onScrollTo={handleScrollTo} 
+        />
+
+        <WhyChooseUs 
+          language={language} 
         />
 
         <TrustBadges 

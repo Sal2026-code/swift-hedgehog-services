@@ -28,6 +28,29 @@ export const LOCALIZATION = {
       trustMetric2: "Cleaning Jobs Completed",
       trustMetric3: "Vetted & Insured Staff"
     },
+    whyChooseUs: {
+      subHeader: "Proven Excellence",
+      title: "Why Choose Us?",
+      description: "With over 20 years of experience, G and Bros Services LLC provides reliable, detailed, and professional cleaning and property care services. We are fully insured and committed to treating every property with care and respect.",
+      features: [
+        {
+          title: "20+ Years of Experience",
+          desc: "Decades of trusted expertise in residential, commercial, and property care services."
+        },
+        {
+          title: "Fully Insured & Bonded",
+          desc: "Complete protection and peace of mind for your home or commercial space."
+        },
+        {
+          title: "Detailed & Professional Care",
+          desc: "We treat every property with the utmost care, respect, and attention to detail."
+        },
+        {
+          title: "Reliable & Punctual",
+          desc: "Consistent quality and dependable scheduling tailored to your routine."
+        }
+      ]
+    },
     badges: {
       subHeader: "Why Choose G & Bros",
       title: "Our Trust & Quality Standards",
@@ -162,6 +185,29 @@ export const LOCALIZATION = {
       trustMetric1: "Garantía de Satisfacción",
       trustMetric2: "Trabajos de Limpieza Realizados",
       trustMetric3: "Personal Verificado y Asegurado"
+    },
+    whyChooseUs: {
+      subHeader: "Excelencia Comprobada",
+      title: "¿Por Qué Elegirnos?",
+      description: "Con más de 20 años de experiencia, G and Bros Services LLC ofrece servicios de limpieza y cuidado de propiedades confiables, detallados y profesionales. Estamos totalmente asegurados y comprometidos a tratar cada propiedad con cuidado y respeto.",
+      features: [
+        {
+          title: "Más de 20 Años de Experiencia",
+          desc: "Décadas de experiencia comprobada en servicios residenciales, comerciales y de cuidado de propiedades."
+        },
+        {
+          title: "Totalmente Asegurados",
+          desc: "Protección completa y tranquilidad absoluta para su hogar o espacio comercial."
+        },
+        {
+          title: "Cuidado Detallado y Profesional",
+          desc: "Tratamos cada propiedad con el máximo cuidado, respeto y atención a los detalles."
+        },
+        {
+          title: "Confiables y Puntuales",
+          desc: "Calidad constante y programación adaptable a sus necesidades y horarios."
+        }
+      ]
     },
     badges: {
       subHeader: "Por Qué Elegir G & Bros",
