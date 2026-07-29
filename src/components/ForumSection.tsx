@@ -66,14 +66,16 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
     e.stopPropagation();
     
     if (upvotedIds.includes(id)) {
+      // Remove upvote
       const newUpvoted = upvotedIds.filter(vId => vId !== id);
       setUpvotedIds(newUpvoted);
       localStorage.setItem("forum_upvotes", JSON.stringify(newUpvoted));
       setQuestions(prev => prev.map(q => q.id === id ? { ...q, likes: q.likes - 1 } : q));
-      showSuccess(language === "english" ? "Feedback removed." : "Comentario eliminado.");
+      showSuccess(language === "english" ? "Vote removed." : "Voto eliminado.");
       return;
     }
 
+    // Switch from downvote to upvote if necessary
     if (downvotedIds.includes(id)) {
       const newDownvoted = downvotedIds.filter(vId => vId !== id);
       setDownvotedIds(newDownvoted);
@@ -85,13 +87,14 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
     setUpvotedIds(newUpvoted);
     localStorage.setItem("forum_upvotes", JSON.stringify(newUpvoted));
     setQuestions(prev => prev.map(q => q.id === id ? { ...q, likes: q.likes + 1 } : q));
-    showSuccess(language === "english" ? "Marked as helpful." : "Marcado como útil.");
+    showSuccess(language === "english" ? "Vote recorded!" : "¡Voto registrado!");
   };
 
   const handleDislike = (id: number, e: React.MouseEvent) => {
     e.stopPropagation();
     
     if (downvotedIds.includes(id)) {
+      // Remove downvote
       const newDownvoted = downvotedIds.filter(vId => vId !== id);
       setDownvotedIds(newDownvoted);
       localStorage.setItem("forum_downvotes", JSON.stringify(newDownvoted));
@@ -100,6 +103,7 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
       return;
     }
 
+    // Switch from upvote to downvote if necessary
     if (upvotedIds.includes(id)) {
       const newUpvoted = upvotedIds.filter(vId => vId !== id);
       setUpvotedIds(newUpvoted);
@@ -111,7 +115,7 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
     setDownvotedIds(newDownvoted);
     localStorage.setItem("forum_downvotes", JSON.stringify(newDownvoted));
     setQuestions(prev => prev.map(q => q.id === id ? { ...q, dislikes: q.dislikes + 1 } : q));
-    showSuccess(language === "english" ? "Marked as unhelpful." : "Marcado como no útil.");
+    showSuccess(language === "english" ? "Feedback recorded." : "Comentario registrado.");
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -213,7 +217,7 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
                           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-[11px] font-black transition-all hover:scale-[1.03] active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-[#005f43] ${isUpvoted ? "bg-[#005f43] text-white border-[#005f43]" : "bg-[#FBF9F6] text-slate-600 hover:text-[#005f43] border-slate-200"}`}
                         >
                           <ThumbsUp className={`w-3.5 h-3.5 ${isUpvoted ? "fill-white" : ""}`} />
-                          <span>{t.helpfulText}</span>
+                          <span>{t.helpfulText} ({q.likes})</span>
                         </button>
 
                         <button
@@ -222,7 +226,7 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
                           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-[11px] font-black transition-all hover:scale-[1.03] active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-[#005f43] ${isDownvoted ? "bg-red-600 text-white border-red-600" : "bg-[#FBF9F6] text-slate-600 hover:text-red-600 border-slate-200"}`}
                         >
                           <ThumbsDown className={`w-3.5 h-3.5 ${isDownvoted ? "fill-white" : ""}`} />
-                          <span>{t.unhelpfulText}</span>
+                          <span>{t.unhelpfulText} ({q.dislikes})</span>
                         </button>
                         
                         <div className="ml-2">
