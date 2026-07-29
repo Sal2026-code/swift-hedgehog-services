@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /**
- * Security utility to obfuscate contact information, sanitize input, and enforce multi-layer client security.
+ * Security & Utility Helpers
  */
 
 export const CONTACT_INFO = {
@@ -88,9 +88,8 @@ export const validateEmailDomain = async (email: string, language: "english" | "
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 4000); // 4 second timeout
+    const timeoutId = setTimeout(() => controller.abort(), 4000);
 
-    // Check MX records via Cloudflare DNS-over-HTTPS
     const res = await fetch(`https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(domain)}&type=MX`, {
       headers: { accept: "application/dns-json" },
       signal: controller.signal
@@ -129,45 +128,13 @@ export const validateEmailDomain = async (email: string, language: "english" | "
 };
 
 /**
- * Multi-layer Rate Limiting with Session Fingerprinting.
- * Combines memory, sessionStorage, and localStorage to prevent bypasses.
+ * UI Submission Debounce helper to prevent rapid accidental double-clicks in the interface
  */
-const inMemoryRateLimits = new Map<string, number>();
+const inMemoryDebounce = new Map<string, number>();
 
-function getSessionFingerprint(): string {
-  try {
-    let fp = sessionStorage.getItem("app_device_fp");
-    if (!fp) {
-      fp = Math.random().toString(36).substring(2) + Date.now().toString(36);
-      sessionStorage.setItem("app_device_fp", fp);
-    }
-    return fp;
-  } catch {
-    return "default_fp";
-  }
-}
-
-export const checkRateLimit = (actionKey: string, cooldownMs: number = 60000): { allowed: boolean; remaining: number } => {
+export const checkSubmissionDebounce = (actionKey: string, cooldownMs: number = 5000): { allowed: boolean; remaining: number } => {
   const now = Date.now();
-  const fp = getSessionFingerprint();
-  const keyWithFp = `${actionKey}_${fp}`;
-
-  const memoryLastAction = inMemoryRateLimits.get(keyWithFp) || inMemoryRateLimits.get(actionKey) || 0;
-
-  let localLastAction = 0;
-  let sessionLastAction = 0;
-
-  try {
-    const localItem = localStorage.getItem(`rate_limit_${actionKey}`);
-    if (localItem) localLastAction = parseInt(localItem, 10) || 0;
-
-    const sessionItem = sessionStorage.getItem(`rate_limit_${actionKey}`);
-    if (sessionItem) sessionLastAction = parseInt(sessionItem, 10) || 0;
-  } catch (e) {
-    console.warn("Storage rate limit access notice:", e);
-  }
-
-  const lastAction = Math.max(memoryLastAction, localLastAction, sessionLastAction);
+  const lastAction = inMemoryDebounce.get(actionKey) || 0;
 
   if (lastAction > 0) {
     const elapsed = now - lastAction;
@@ -178,36 +145,8 @@ export const checkRateLimit = (actionKey: string, cooldownMs: number = 60000): {
   return { allowed: true, remaining: 0 };
 };
 
-export const updateRateLimit = (actionKey: string) => {
-  const now = Date.now();
-  const fp = getSessionFingerprint();
-  inMemoryRateLimits.set(`${actionKey}_${fp}`, now);
-  inMemoryRateLimits.set(actionKey, now);
-
-  try {
-    localStorage.setItem(`rate_limit_${actionKey}`, now.toString());
-    sessionStorage.setItem(`rate_limit_${actionKey}`, now.toString());
-  } catch (e) {
-    console.warn("Storage rate limit update notice:", e);
-  }
-};
-
-/**
- * Proof-of-Work Challenge Token generator to block simple automated bots
- */
-export const generateSubmissionToken = (): { token: string; timestamp: number } => {
-  const timestamp = Date.now();
-  const fp = getSessionFingerprint();
-  const secret = (timestamp * 31 + fp.length).toString(16);
-  return { token: secret, timestamp };
-};
-
-export const verifySubmissionToken = (token: string, timestamp: number, maxAgeMs: number = 300000): boolean => {
-  const now = Date.now();
-  if (now - timestamp > maxAgeMs) return false;
-  const fp = getSessionFingerprint();
-  const expectedSecret = (timestamp * 31 + fp.length).toString(16);
-  return token === expectedSecret;
+export const updateSubmissionDebounce = (actionKey: string) => {
+  inMemoryDebounce.set(actionKey, Date.now());
 };
 
 export const getFullEmail = () => `${CONTACT_INFO.email.user}@${CONTACT_INFO.email.domain}`;
@@ -218,9 +157,6 @@ export const getDisplayPhone = () =>
 export const getRawPhone = () => 
   `${CONTACT_INFO.phone.country}${CONTACT_INFO.phone.area}${CONTACT_INFO.phone.prefix}${CONTACT_INFO.phone.line}`;
 
-/**
- * Constructs a prefilled mailto URL for direct, user-driven email delivery.
- */
 export const buildMailtoUrl = (data: { name: string; email: string; phone: string; message?: string }) => {
   const subject = encodeURIComponent(`Service Quote Request from ${data.name}`);
   const body = encodeURIComponent(

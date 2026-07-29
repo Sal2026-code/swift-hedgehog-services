@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Mail, Phone, Clock, Send, ShieldCheck, CheckCircle, Loader2, ExternalLink } from "lucide-react";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { Button } from "@/components/ui/button";
 import { LOCALIZATION } from "@/utils/localization";
 import { showError, showSuccess } from "@/utils/toast";
@@ -10,11 +11,9 @@ import {
   handleMailTo, 
   sanitizeInput, 
   ContactFormSchema, 
-  checkRateLimit, 
-  updateRateLimit, 
+  checkSubmissionDebounce, 
+  updateSubmissionDebounce, 
   validateEmailDomain,
-  generateSubmissionToken,
-  verifySubmissionToken,
   buildMailtoUrl,
   getRawPhone
 } from "@/utils/security";
@@ -30,17 +29,11 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
   const [honeypot, setHoneypot] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [submittedData, setSubmittedData] = useState<{ name: string; email: string; phone: string; message: string; mailtoUrl: string } | null>(null);
 
-  // Challenge token state for bot protection
-  const [challenge, setChallenge] = useState<{ token: string; timestamp: number } | null>(null);
-
   const t = LOCALIZATION[language].contact;
-
-  useEffect(() => {
-    setChallenge(generateSubmissionToken());
-  }, []);
 
   useEffect(() => {
     if (prefilledMessage) {
@@ -58,24 +51,21 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
 
     if (honeypot) return;
 
-    // Challenge token validation
-    if (!challenge || !verifySubmissionToken(challenge.token, challenge.timestamp)) {
+    if (!turnstileToken) {
       showError(
         language === "english"
-          ? "Security verification failed. Please refresh the page and try again."
-          : "Falló la verificación de seguridad. Por favor recargue la página e intente de nuevo."
+          ? "Please complete the bot protection check."
+          : "Por favor complete la verificación anti-bot."
       );
-      setChallenge(generateSubmissionToken());
       return;
     }
 
-    // Rate limiting check
-    const rateCheck = checkRateLimit("contact_submission", 30000); // 30s cooldown
-    if (!rateCheck.allowed) {
+    const debounceCheck = checkSubmissionDebounce("contact_submission", 5000);
+    if (!debounceCheck.allowed) {
       showError(
         language === "english"
-          ? `Please wait ${rateCheck.remaining}s before sending another request.`
-          : `Por favor espere ${rateCheck.remaining}s antes de enviar otra solicitud.`
+          ? `Please wait ${debounceCheck.remaining}s before sending another request.`
+          : `Por favor espere ${debounceCheck.remaining}s antes de enviar otra solicitud.`
       );
       return;
     }
@@ -96,7 +86,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
 
     setLoading(true);
 
-    // Step 2: Perform DNS MX record lookup to check if the email domain exists
+    // Step 2: Perform DNS MX record lookup
     const domainCheck = await validateEmailDomain(result.data.email, language);
     if (!domainCheck.valid) {
       setLoading(false);
@@ -114,11 +104,11 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
     const mailtoUrl = buildMailtoUrl(sanitizedData);
 
     setLoading(false);
-    updateRateLimit("contact_submission");
+    updateSubmissionDebounce("contact_submission");
     setSubmittedData({ ...sanitizedData, mailtoUrl });
     showSuccess(t.successTitle);
 
-    // Trigger direct user email client transmission so data is sent directly to G & Bros
+    // Trigger email client
     window.location.href = mailtoUrl;
   };
 
@@ -313,11 +303,21 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                   />
                 </div>
 
-                <div className="pt-4 space-y-4">
+                {/* Cloudflare Turnstile Anti-Bot Verification */}
+                <div className="flex justify-center py-2">
+                  <Turnstile
+                    siteKey="1x00000000000000000000AA"
+                    onSuccess={(token) => setTurnstileToken(token)}
+                    onExpire={() => setTurnstileToken(null)}
+                    onError={() => setTurnstileToken(null)}
+                  />
+                </div>
+
+                <div className="pt-2 space-y-4">
                   <Button
                     type="submit"
-                    disabled={loading}
-                    className="w-full bg-[#005f43] hover:bg-[#004732] text-white font-extrabold py-4.5 rounded-xl text-base tracking-wide flex items-center justify-center gap-2 shadow-md transition-all"
+                    disabled={loading || !turnstileToken}
+                    className="w-full bg-[#005f43] hover:bg-[#004732] text-white font-extrabold py-4.5 rounded-xl text-base tracking-wide flex items-center justify-center gap-2 shadow-md transition-all disabled:opacity-50"
                   >
                     {loading ? (
                       <>

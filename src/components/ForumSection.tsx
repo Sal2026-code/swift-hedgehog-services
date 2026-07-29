@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { MessageSquare, ThumbsUp, Send, ChevronDown, ChevronUp } from "lucide-react";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { Button } from "@/components/ui/button";
 import { ForumQuestion } from "@/pages/Index";
 import { LOCALIZATION } from "@/utils/localization";
@@ -9,10 +10,8 @@ import { showSuccess, showError } from "@/utils/toast";
 import { 
   sanitizeInput, 
   ForumQuestionSchema, 
-  checkRateLimit, 
-  updateRateLimit,
-  generateSubmissionToken,
-  verifySubmissionToken
+  checkSubmissionDebounce, 
+  updateSubmissionDebounce
 } from "@/utils/security";
 
 interface ForumSectionProps {
@@ -35,16 +34,10 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
   const [category, setCategory] = useState("general");
   const [query, setQuery] = useState("");
   const [honeypot, setHoneypot] = useState("");
-
-  const [challenge, setChallenge] = useState<{ token: string; timestamp: number } | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   const t = LOCALIZATION[language].forum;
 
-  useEffect(() => {
-    setChallenge(generateSubmissionToken());
-  }, []);
-
-  // Safely load upvotes from localStorage on mount with strict array validation
   useEffect(() => {
     const saved = localStorage.getItem("forum_upvotes");
     if (saved) {
@@ -81,22 +74,20 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
 
     if (honeypot) return;
 
-    if (!challenge || !verifySubmissionToken(challenge.token, challenge.timestamp)) {
+    if (!turnstileToken) {
       showError(
         language === "english"
-          ? "Security check failed. Please refresh the page and try again."
-          : "Falló el chequeo de seguridad. Por favor recargue la página e intente de nuevo."
+          ? "Please complete the bot protection check."
+          : "Por favor complete la verificación anti-bot."
       );
-      setChallenge(generateSubmissionToken());
       return;
     }
 
-    // Rate limiting check
-    const rateCheck = checkRateLimit("forum_submission", 30000); // 30s cooldown
-    if (!rateCheck.allowed) {
+    const debounceCheck = checkSubmissionDebounce("forum_submission", 5000);
+    if (!debounceCheck.allowed) {
       showError(language === "english" 
-        ? `Please wait ${rateCheck.remaining}s before posting another question.` 
-        : `Por favor espere ${rateCheck.remaining}s antes de publicar otra pregunta.`);
+        ? `Please wait ${debounceCheck.remaining}s before posting another question.` 
+        : `Por favor espere ${debounceCheck.remaining}s antes de publicar otra pregunta.`);
       return;
     }
 
@@ -116,10 +107,9 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
     const sanitizedQuery = sanitizeInput(result.data.query);
 
     onAddQuestion(sanitizedName, result.data.category, sanitizedQuery);
-    updateRateLimit("forum_submission");
+    updateSubmissionDebounce("forum_submission");
     setName("");
     setQuery("");
-    setChallenge(generateSubmissionToken());
   };
 
   const handleAccordionKeyPress = (e: React.KeyboardEvent, id: number) => {
@@ -272,9 +262,20 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
                   />
                 </div>
 
+                {/* Turnstile Anti-Bot Check */}
+                <div className="flex justify-center py-1">
+                  <Turnstile
+                    siteKey="1x00000000000000000000AA"
+                    onSuccess={(token) => setTurnstileToken(token)}
+                    onExpire={() => setTurnstileToken(null)}
+                    onError={() => setTurnstileToken(null)}
+                  />
+                </div>
+
                 <Button
                   type="submit"
-                  className="w-full bg-[#005f43] hover:bg-[#004732] text-white font-extrabold py-4 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all"
+                  disabled={!turnstileToken}
+                  className="w-full bg-[#005f43] hover:bg-[#004732] text-white font-extrabold py-4 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all disabled:opacity-50"
                 >
                   <Send className="w-3.5 h-3.5 text-[#00c853]" />
                   <span>{t.submitBtn}</span>
