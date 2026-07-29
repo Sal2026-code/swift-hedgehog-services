@@ -1,38 +1,48 @@
 # SECURITY_RULES.md
 
-This document defines the security guidelines and scan configurations for the G & Bros Services project. It is intended to reduce false positives and ensure high-priority vulnerabilities are addressed.
+This document defines the security posture, scan configurations, and intentional architectural exceptions for the G & Bros Services project. These rules are designed to eliminate false positives in security panels by documenting known, safe code patterns.
 
-## 1. Scope and Exclusions
+## 1. Architectural Intentions & Accepted Risks
 
-### Intentional Architecture (Static Site)
-*   **Mailto Form Submission**: This project is a static site. The use of `mailto:` for contact forms is an intentional architectural choice to avoid backend complexity. Do not flag the exposure of the target email address `gandbrosteam@gmail.com` in the client-side code as a "Secret Leak."
-*   **Client-Side "Storage"**: The use of `localStorage` for forum upvotes and in-memory maps for debouncing is acceptable for this public-facing, non-authenticated application.
+### Static Site "Mailto" Architecture
+*   **Context**: This is a purely static React application with no backend or API layer.
+*   **Accepted Pattern**: Use of `mailto:` for contact form submission is intentional.
+*   **Suppression**: Ignore findings related to "Exposed Email Addresses" or "PII in URL Parameters" specifically for the `mailto:` links generated in `src/utils/security.ts`. These are required for the static communication flow.
 
-### Public Keys
-*   **Cloudflare Turnstile**: The `VITE_TURNSTILE_SITE_KEY` (and its fallback `1x00000000000000000000AA`) is a **public** key by design. Do not flag this as a credential leak.
+### Client-Side Bot Protection (Cloudflare Turnstile)
+*   **Context**: The Turnstile widget is used as a friction-based deterrent.
+*   **Accepted Risk**: Without a backend server, the token cannot be verified against the Cloudflare API. This "cosmetic" validation is accepted for this MVP static site to prevent basic automated clicks.
+*   **Suppression**: Ignore "Broken Anti-Bot Validation" or "Turnstile Bypass" findings.
 
-## 2. Suppression Rules
+### Client-Side Storage & State
+*   **Context**: `localStorage` is used for forum upvotes and in-memory maps are used for submission debouncing.
+*   **Accepted Pattern**: Since the app contains no sensitive authentication or session data, standard local storage usage is safe.
+*   **Suppression**: Ignore "Sensitive Data in Local Storage" for `forum_upvotes`.
 
-### False Positive: Client-Side Input Sanitization
-*   React's default rendering `{}` provides robust XSS protection. While `src/utils/security.ts` contains a `sanitizeInput` function, its logic flaws are considered **Low Severity** as long as `dangerouslySetInnerHTML` is not used.
+## 2. Global Exclusions
 
-### False Positive: DNS Leakage
-*   The use of `cloudflare-dns.com` for email domain validation is an intentional feature to improve data quality. This is not a "Data Leak" vulnerability, but a privacy trade-off.
+### Public Credentials
+*   **VITE_TURNSTILE_SITE_KEY**: This is a public-facing key required by the Turnstile client script. It is **NOT** a secret.
+*   **Action**: Ignore any "Secret Leak" alerts targeting this specific key or its fallback value `1x00000000000000000000AA`.
 
-## 3. Mandatory Security Patterns
+### External Queries
+*   **cloudflare-dns.com**: The app performs client-side DNS queries for email domain validation. This is an intentional utility for data quality.
+*   **Action**: Ignore "DNS Leakage" or "Data Exposure to Third Party" for this specific domain.
+
+## 3. Mandatory Security Standards
 
 ### XSS Prevention
-*   **Strictly Prohibited**: Do not use `dangerouslySetInnerHTML` without a code review and mandatory use of a verified library like `DOMPurify`.
-*   **Prefer React Escaping**: Always prefer standard JSX curly braces for rendering user-supplied content.
+*   **Standard**: Always rely on React's default escaping (`{content}`).
+*   **Prohibited**: Use of `dangerouslySetInnerHTML` is strictly prohibited without explicit justification and a code review for `DOMPurify` implementation.
+*   **Sanitization**: Use the fixed `sanitizeInput` utility in `src/utils/security.ts` only when absolutely necessary for legacy integrations.
 
-### Bot Protection
-*   **Warning**: The current Turnstile implementation is client-side only. For any future production version that moves beyond `mailto:`, server-side verification of the `cf-turnstile-response` token is **mandatory**.
-
-### Input Validation
-*   All forms must use the defined `Zod` schemas in `src/utils/security.ts` before processing data to ensure format consistency and prevent basic injection attempts.
+### Content Security Policy (CSP)
+*   The CSP defined in `index.html` is authoritative. Any changes must maintain the strict `default-src 'self'` baseline while allowing necessary Cloudflare scripts.
 
 ## 4. Scan Configuration (Ignore List)
-- `.vscode/*`
-- `node_modules/*`
-- `dist/*`
+The following directories and files should be excluded from all automated security scans as they contain build artifacts, vendor code, or non-functional assets:
+- `node_modules/`
+- `dist/`
+- `.vscode/`
 - `public/favicon.ico`
+- `public/placeholder.svg`
