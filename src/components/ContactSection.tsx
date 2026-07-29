@@ -1,19 +1,22 @@
 "use client";
 
-import React, { useState } from "react";
-import { Mail, Phone, MapPin, Clock, Send, ShieldCheck, CheckCircle, Eye, Loader2 } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Mail, Phone, Clock, Send, ShieldCheck, CheckCircle, Loader2, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LOCALIZATION } from "@/utils/localization";
 import { showError, showSuccess } from "@/utils/toast";
 import { 
   getFullEmail, 
   handleMailTo, 
-  CONTACT_INFO, 
   sanitizeInput, 
   ContactFormSchema, 
   checkRateLimit, 
   updateRateLimit, 
-  validateEmailDomain 
+  validateEmailDomain,
+  generateSubmissionToken,
+  verifySubmissionToken,
+  buildMailtoUrl,
+  getRawPhone
 } from "@/utils/security";
 
 interface ContactSectionProps {
@@ -28,11 +31,18 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
   const [message, setMessage] = useState("");
   const [honeypot, setHoneypot] = useState("");
   const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [submittedData, setSubmittedData] = useState<{ name: string; email: string; phone: string; message: string; mailtoUrl: string } | null>(null);
+
+  // Challenge token state for bot protection
+  const [challenge, setChallenge] = useState<{ token: string; timestamp: number } | null>(null);
 
   const t = LOCALIZATION[language].contact;
 
-  React.useEffect(() => {
+  useEffect(() => {
+    setChallenge(generateSubmissionToken());
+  }, []);
+
+  useEffect(() => {
     if (prefilledMessage) {
       setMessage(prefilledMessage);
     }
@@ -48,8 +58,19 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
 
     if (honeypot) return;
 
+    // Challenge token validation
+    if (!challenge || !verifySubmissionToken(challenge.token, challenge.timestamp)) {
+      showError(
+        language === "english"
+          ? "Security verification failed. Please refresh the page and try again."
+          : "Falló la verificación de seguridad. Por favor recargue la página e intente de nuevo."
+      );
+      setChallenge(generateSubmissionToken());
+      return;
+    }
+
     // Rate limiting check
-    const rateCheck = checkRateLimit("contact_submission", 60000); // 1 minute cooldown
+    const rateCheck = checkRateLimit("contact_submission", 30000); // 30s cooldown
     if (!rateCheck.allowed) {
       showError(
         language === "english"
@@ -75,7 +96,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
 
     setLoading(true);
 
-    // Step 2: Perform DNS MX record lookup to check if the email domain actually exists
+    // Step 2: Perform DNS MX record lookup to check if the email domain exists
     const domainCheck = await validateEmailDomain(result.data.email, language);
     if (!domainCheck.valid) {
       setLoading(false);
@@ -90,12 +111,15 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
       message: sanitizeInput(result.data.message || "")
     };
 
-    setTimeout(() => {
-      setLoading(false);
-      setSubmitted(true);
-      updateRateLimit("contact_submission");
-      showSuccess(t.successTitle);
-    }, 1000);
+    const mailtoUrl = buildMailtoUrl(sanitizedData);
+
+    setLoading(false);
+    updateRateLimit("contact_submission");
+    setSubmittedData({ ...sanitizedData, mailtoUrl });
+    showSuccess(t.successTitle);
+
+    // Trigger direct user email client transmission so data is sent directly to G & Bros
+    window.location.href = mailtoUrl;
   };
 
   return (
@@ -144,7 +168,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                 <p className="text-xs font-black uppercase text-[#005f43] tracking-wider mb-1.5">
                   {language === "english" ? "Phone Number" : "Número de Teléfono"}
                 </p>
-                <a href="tel:+17276089599" className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block font-mono">
+                <a href={`tel:${getRawPhone()}`} className="text-base font-extrabold text-[#1e293b] hover:text-[#005f43] transition-colors block font-mono">
                   +1 727-608-9599
                 </a>
               </div>
@@ -169,8 +193,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
           </div>
 
           <div className="lg:col-span-7">
-            {submitted ? (
-              <div className="bg-[#FBF9F6] border-2 border-[#00c853]/30 rounded-3xl p-8 sm:p-12 text-center space-y-6 relative overflow-hidden shadow-lg" role="status">
+            {submittedData ? (
+              <div className="bg-[#FBF9F6] border-2 border-[#00c853]/30 rounded-3xl p-8 sm:p-10 text-center space-y-6 relative overflow-hidden shadow-lg" role="status">
                 <div className="absolute top-0 inset-x-0 h-2 bg-[#00c853]" />
                 <div className="w-16 h-16 bg-[#00c853]/15 text-[#005f43] rounded-full flex items-center justify-center mx-auto border border-[#00c853]/30">
                   <CheckCircle className="w-8 h-8 text-[#00c853]" />
@@ -179,8 +203,35 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                   {t.successTitle}
                 </h3>
                 <p className="text-slate-700 max-w-md mx-auto text-sm leading-relaxed font-semibold">
-                  {t.successDesc}
+                  {language === "english" 
+                    ? "Your inquiry has been formatted for transmission to G & Bros Services. If your email app did not open automatically, click below to send your request."
+                    : "Su consulta ha sido formateada para transmisión a G & Bros Services. Si su aplicación de correo no se abrió automáticamente, haga clic abajo para enviar."}
                 </p>
+
+                <div className="bg-white border border-slate-200 rounded-2xl p-4 text-left space-y-2 text-xs font-medium text-slate-700">
+                  <p><span className="font-bold text-[#005f43]">{language === "english" ? "Name:" : "Nombre:"}</span> {submittedData.name}</p>
+                  <p><span className="font-bold text-[#005f43]">{language === "english" ? "Phone:" : "Teléfono:"}</span> {submittedData.phone}</p>
+                  <p><span className="font-bold text-[#005f43]">{language === "english" ? "Email:" : "Correo:"}</span> {submittedData.email}</p>
+                  {submittedData.message && <p><span className="font-bold text-[#005f43]">{language === "english" ? "Details:" : "Detalles:"}</span> {submittedData.message}</p>}
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+                  <a
+                    href={submittedData.mailtoUrl}
+                    className="bg-[#005f43] hover:bg-[#004732] text-white font-extrabold px-6 py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 shadow-md transition-all"
+                  >
+                    <ExternalLink className="w-4 h-4 text-[#00c853]" />
+                    <span>{language === "english" ? "Open Email Client" : "Abrir Correo"}</span>
+                  </a>
+
+                  <a
+                    href={`tel:${getRawPhone()}`}
+                    className="bg-white border-2 border-[#005f43] text-[#005f43] hover:bg-[#005f43]/5 font-extrabold px-6 py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 transition-all"
+                  >
+                    <Phone className="w-4 h-4 text-[#005f43]" />
+                    <span>{language === "english" ? "Call Us Direct" : "Llamar Directo"}</span>
+                  </a>
+                </div>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-10 space-y-6 shadow-xl relative" aria-label="Callback Inquiry Form">

@@ -6,7 +6,14 @@ import { Button } from "@/components/ui/button";
 import { ForumQuestion } from "@/pages/Index";
 import { LOCALIZATION } from "@/utils/localization";
 import { showSuccess, showError } from "@/utils/toast";
-import { sanitizeInput, ForumQuestionSchema, checkRateLimit, updateRateLimit } from "@/utils/security";
+import { 
+  sanitizeInput, 
+  ForumQuestionSchema, 
+  checkRateLimit, 
+  updateRateLimit,
+  generateSubmissionToken,
+  verifySubmissionToken
+} from "@/utils/security";
 
 interface ForumSectionProps {
   language: "english" | "spanish";
@@ -29,7 +36,13 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
   const [query, setQuery] = useState("");
   const [honeypot, setHoneypot] = useState("");
 
+  const [challenge, setChallenge] = useState<{ token: string; timestamp: number } | null>(null);
+
   const t = LOCALIZATION[language].forum;
+
+  useEffect(() => {
+    setChallenge(generateSubmissionToken());
+  }, []);
 
   // Safely load upvotes from localStorage on mount with strict array validation
   useEffect(() => {
@@ -40,7 +53,6 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
         if (Array.isArray(parsed) && parsed.every((item) => typeof item === "number")) {
           setUpvotedIds(parsed);
         } else {
-          // Reset corrupted or invalid data to avoid state crashes
           localStorage.removeItem("forum_upvotes");
         }
       } catch (e) {
@@ -68,6 +80,16 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
     e.preventDefault();
 
     if (honeypot) return;
+
+    if (!challenge || !verifySubmissionToken(challenge.token, challenge.timestamp)) {
+      showError(
+        language === "english"
+          ? "Security check failed. Please refresh the page and try again."
+          : "Falló el chequeo de seguridad. Por favor recargue la página e intente de nuevo."
+      );
+      setChallenge(generateSubmissionToken());
+      return;
+    }
 
     // Rate limiting check
     const rateCheck = checkRateLimit("forum_submission", 30000); // 30s cooldown
@@ -97,6 +119,7 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
     updateRateLimit("forum_submission");
     setName("");
     setQuery("");
+    setChallenge(generateSubmissionToken());
   };
 
   const handleAccordionKeyPress = (e: React.KeyboardEvent, id: number) => {

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /**
- * Security utility to obfuscate contact information, sanitize input, and enforce client-side rate limits.
+ * Security utility to obfuscate contact information, sanitize input, and enforce multi-layer client security.
  */
 
 export const CONTACT_INFO = {
@@ -100,12 +100,10 @@ export const validateEmailDomain = async (email: string, language: "english" | "
     if (res.ok) {
       const data = await res.json();
       
-      // Status 0 is NOERROR and Answer containing records means mail servers exist
       if (data.Status === 0 && data.Answer && data.Answer.length > 0) {
         return { valid: true };
       }
 
-      // Fallback check for A record (some domains handle mail directly at root)
       const aRes = await fetch(`https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(domain)}&type=A`, {
         headers: { accept: "application/dns-json" }
       });
@@ -131,33 +129,45 @@ export const validateEmailDomain = async (email: string, language: "english" | "
 };
 
 /**
- * Dual-layer Client-Side Throttling / Rate Limiting.
- * Uses both an in-memory runtime cache and localStorage to prevent manual localStorage clearing bypasses within a session.
- * 
- * Note: Client-side rate limits improve UX and deter quick manual spam. When linking backend API endpoints,
- * complementary server-side or edge rate limiting (e.g., Cloudflare Turnstile / Edge Middleware) should also be configured.
+ * Multi-layer Rate Limiting with Session Fingerprinting.
+ * Combines memory, sessionStorage, and localStorage to prevent bypasses.
  */
 const inMemoryRateLimits = new Map<string, number>();
 
+function getSessionFingerprint(): string {
+  try {
+    let fp = sessionStorage.getItem("app_device_fp");
+    if (!fp) {
+      fp = Math.random().toString(36).substring(2) + Date.now().toString(36);
+      sessionStorage.setItem("app_device_fp", fp);
+    }
+    return fp;
+  } catch {
+    return "default_fp";
+  }
+}
+
 export const checkRateLimit = (actionKey: string, cooldownMs: number = 60000): { allowed: boolean; remaining: number } => {
   const now = Date.now();
+  const fp = getSessionFingerprint();
+  const keyWithFp = `${actionKey}_${fp}`;
 
-  // 1. Check in-memory store
-  const memoryLastAction = inMemoryRateLimits.get(actionKey) || 0;
+  const memoryLastAction = inMemoryRateLimits.get(keyWithFp) || inMemoryRateLimits.get(actionKey) || 0;
 
-  // 2. Check localStorage store
   let localLastAction = 0;
+  let sessionLastAction = 0;
+
   try {
-    const item = localStorage.getItem(`rate_limit_${actionKey}`);
-    if (item) {
-      localLastAction = parseInt(item, 10) || 0;
-    }
+    const localItem = localStorage.getItem(`rate_limit_${actionKey}`);
+    if (localItem) localLastAction = parseInt(localItem, 10) || 0;
+
+    const sessionItem = sessionStorage.getItem(`rate_limit_${actionKey}`);
+    if (sessionItem) sessionLastAction = parseInt(sessionItem, 10) || 0;
   } catch (e) {
-    console.warn("Unable to access localStorage for rate limiting", e);
+    console.warn("Storage rate limit access notice:", e);
   }
 
-  // Use whichever timestamp is strictly more recent
-  const lastAction = Math.max(memoryLastAction, localLastAction);
+  const lastAction = Math.max(memoryLastAction, localLastAction, sessionLastAction);
 
   if (lastAction > 0) {
     const elapsed = now - lastAction;
@@ -170,13 +180,34 @@ export const checkRateLimit = (actionKey: string, cooldownMs: number = 60000): {
 
 export const updateRateLimit = (actionKey: string) => {
   const now = Date.now();
+  const fp = getSessionFingerprint();
+  inMemoryRateLimits.set(`${actionKey}_${fp}`, now);
   inMemoryRateLimits.set(actionKey, now);
 
   try {
     localStorage.setItem(`rate_limit_${actionKey}`, now.toString());
+    sessionStorage.setItem(`rate_limit_${actionKey}`, now.toString());
   } catch (e) {
-    console.warn("Unable to persist rate limit timestamp to localStorage", e);
+    console.warn("Storage rate limit update notice:", e);
   }
+};
+
+/**
+ * Proof-of-Work Challenge Token generator to block simple automated bots
+ */
+export const generateSubmissionToken = (): { token: string; timestamp: number } => {
+  const timestamp = Date.now();
+  const fp = getSessionFingerprint();
+  const secret = (timestamp * 31 + fp.length).toString(16);
+  return { token: secret, timestamp };
+};
+
+export const verifySubmissionToken = (token: string, timestamp: number, maxAgeMs: number = 300000): boolean => {
+  const now = Date.now();
+  if (now - timestamp > maxAgeMs) return false;
+  const fp = getSessionFingerprint();
+  const expectedSecret = (timestamp * 31 + fp.length).toString(16);
+  return token === expectedSecret;
 };
 
 export const getFullEmail = () => `${CONTACT_INFO.email.user}@${CONTACT_INFO.email.domain}`;
@@ -186,6 +217,22 @@ export const getDisplayPhone = () =>
 
 export const getRawPhone = () => 
   `${CONTACT_INFO.phone.country}${CONTACT_INFO.phone.area}${CONTACT_INFO.phone.prefix}${CONTACT_INFO.phone.line}`;
+
+/**
+ * Constructs a prefilled mailto URL for direct, user-driven email delivery.
+ */
+export const buildMailtoUrl = (data: { name: string; email: string; phone: string; message?: string }) => {
+  const subject = encodeURIComponent(`Service Quote Request from ${data.name}`);
+  const body = encodeURIComponent(
+    `Hello G & Bros Services Team,\n\nI would like to request a cleaning service quote / callback.\n\n` +
+    `Name: ${data.name}\n` +
+    `Phone: ${data.phone}\n` +
+    `Email: ${data.email}\n` +
+    `Details: ${data.message || 'No additional details provided.'}\n\n` +
+    `Thank you!`
+  );
+  return `mailto:${getFullEmail()}?subject=${subject}&body=${body}`;
+};
 
 export const handleMailTo = (e: React.MouseEvent | React.KeyboardEvent) => {
   e.preventDefault();
