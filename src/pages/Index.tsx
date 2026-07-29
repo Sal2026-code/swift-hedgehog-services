@@ -96,10 +96,6 @@ export default function Index() {
           onScrollTo={handleScrollTo} 
         />
 
-        <WhyChooseUs 
-          language={language} 
-        />
-
         <TrustBadges 
           language={language} 
         />
@@ -107,6 +103,10 @@ export default function Index() {
         <Services 
           language={language} 
           onScrollTo={handleScrollTo} 
+        />
+
+        <WhyChooseUs 
+          language={language} 
         />
 
         <ForumSection 
