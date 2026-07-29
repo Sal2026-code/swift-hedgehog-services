@@ -265,7 +265,7 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
                 {/* Turnstile Anti-Bot Check */}
                 <div className="flex justify-center py-1">
                   <Turnstile
-                    siteKey="1x00000000000000000000AA"
+                    siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"}
                     onSuccess={(token) => setTurnstileToken(token)}
                     onExpire={() => setTurnstileToken(null)}
                     onError={() => setTurnstileToken(null)}
