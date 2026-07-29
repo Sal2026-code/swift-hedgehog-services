@@ -31,14 +31,21 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
 
   const t = LOCALIZATION[language].forum;
 
-  // Load upvotes from localStorage on mount
+  // Safely load upvotes from localStorage on mount with strict array validation
   useEffect(() => {
     const saved = localStorage.getItem("forum_upvotes");
     if (saved) {
       try {
-        setUpvotedIds(JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.every((item) => typeof item === "number")) {
+          setUpvotedIds(parsed);
+        } else {
+          // Reset corrupted or invalid data to avoid state crashes
+          localStorage.removeItem("forum_upvotes");
+        }
       } catch (e) {
-        console.error("Failed to load upvotes", e);
+        console.error("Failed to load upvotes from localStorage", e);
+        localStorage.removeItem("forum_upvotes");
       }
     }
   }, []);

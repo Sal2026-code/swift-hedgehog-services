@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /**
- * Security utility to obfuscate contact information and sanitize input.
+ * Security utility to obfuscate contact information, sanitize input, and enforce client-side rate limits.
  */
 
 export const CONTACT_INFO = {
@@ -131,14 +131,36 @@ export const validateEmailDomain = async (email: string, language: "english" | "
 };
 
 /**
- * Client-side Throttling / Rate Limiting
+ * Dual-layer Client-Side Throttling / Rate Limiting.
+ * Uses both an in-memory runtime cache and localStorage to prevent manual localStorage clearing bypasses within a session.
+ * 
+ * Note: Client-side rate limits improve UX and deter quick manual spam. When linking backend API endpoints,
+ * complementary server-side or edge rate limiting (e.g., Cloudflare Turnstile / Edge Middleware) should also be configured.
  */
+const inMemoryRateLimits = new Map<string, number>();
+
 export const checkRateLimit = (actionKey: string, cooldownMs: number = 60000): { allowed: boolean; remaining: number } => {
-  const lastAction = localStorage.getItem(`rate_limit_${actionKey}`);
   const now = Date.now();
-  
-  if (lastAction) {
-    const elapsed = now - parseInt(lastAction);
+
+  // 1. Check in-memory store
+  const memoryLastAction = inMemoryRateLimits.get(actionKey) || 0;
+
+  // 2. Check localStorage store
+  let localLastAction = 0;
+  try {
+    const item = localStorage.getItem(`rate_limit_${actionKey}`);
+    if (item) {
+      localLastAction = parseInt(item, 10) || 0;
+    }
+  } catch (e) {
+    console.warn("Unable to access localStorage for rate limiting", e);
+  }
+
+  // Use whichever timestamp is strictly more recent
+  const lastAction = Math.max(memoryLastAction, localLastAction);
+
+  if (lastAction > 0) {
+    const elapsed = now - lastAction;
     if (elapsed < cooldownMs) {
       return { allowed: false, remaining: Math.ceil((cooldownMs - elapsed) / 1000) };
     }
@@ -147,7 +169,14 @@ export const checkRateLimit = (actionKey: string, cooldownMs: number = 60000): {
 };
 
 export const updateRateLimit = (actionKey: string) => {
-  localStorage.setItem(`rate_limit_${actionKey}`, Date.now().toString());
+  const now = Date.now();
+  inMemoryRateLimits.set(actionKey, now);
+
+  try {
+    localStorage.setItem(`rate_limit_${actionKey}`, now.toString());
+  } catch (e) {
+    console.warn("Unable to persist rate limit timestamp to localStorage", e);
+  }
 };
 
 export const getFullEmail = () => `${CONTACT_INFO.email.user}@${CONTACT_INFO.email.domain}`;
