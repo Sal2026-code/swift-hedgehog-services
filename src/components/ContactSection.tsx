@@ -90,8 +90,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
       message: sanitizeInput(result.data.message || "")
     };
 
-    console.log("Validation & domain check passed. Sanity Data:", sanitizedData);
-
     setTimeout(() => {
       setLoading(false);
       setSubmitted(true);
