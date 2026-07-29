@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Mail, Phone, Clock, Send, ShieldCheck, CheckCircle, Loader2, ExternalLink } from "lucide-react";
+import { Mail, Phone, Clock, Send, ShieldCheck, CheckCircle, Loader2, ExternalLink, AlertCircle } from "lucide-react";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { Button } from "@/components/ui/button";
 import { LOCALIZATION } from "@/utils/localization";
@@ -71,7 +71,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
       return;
     }
 
-    // Step 1: Validate schema format
     const result = ContactFormSchema.safeParse({
       name,
       email,
@@ -87,7 +86,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
 
     setLoading(true);
 
-    // Step 2: Perform DNS MX record lookup
     const domainCheck = await validateEmailDomain(result.data.email, language);
     if (!domainCheck.valid) {
       setLoading(false);
@@ -106,6 +104,13 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
 
     setLoading(false);
     updateSubmissionDebounce("contact_submission");
+    
+    // Mitigate Issue 3: Clear form state immediately after generating the mailto URL
+    setName("");
+    setEmail("");
+    setPhone("");
+    setMessage("");
+    
     setSubmittedData({ ...sanitizedData, mailtoUrl });
     showSuccess(t.successTitle);
 
@@ -304,7 +309,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                   />
                 </div>
 
-                {/* Cloudflare Turnstile Anti-Bot Verification */}
                 <div className="flex justify-center py-2">
                   <Turnstile
                     siteKey={getTurnstileSiteKey()}
@@ -315,6 +319,16 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                 </div>
 
                 <div className="pt-2 space-y-4">
+                  {/* Issue 3 Privacy Disclaimer */}
+                  <div className="flex items-start gap-2 text-[10px] text-slate-500 bg-slate-50 p-3 rounded-xl border border-slate-200 mb-2">
+                    <AlertCircle className="w-4 h-4 text-slate-400 shrink-0" />
+                    <p className="leading-tight">
+                      {language === "english" 
+                        ? "Privacy Notice: This form uses your device's mail application. Contact details will be stored in your local browser history and mail handler."
+                        : "Aviso de Privacidad: Este formulario utiliza la aplicación de correo de su dispositivo. Los detalles de contacto se guardarán en el historial de su navegador y gestor de correo."}
+                    </p>
+                  </div>
+
                   <Button
                     type="submit"
                     disabled={loading || !turnstileToken}
