@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { MessageSquare, ThumbsUp, Send, ChevronDown, ChevronUp, AlertCircle } from "lucide-react";
+import { MessageSquare, ThumbsUp, ThumbsDown, Send, ChevronDown, ChevronUp, AlertCircle } from "lucide-react";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { Button } from "@/components/ui/button";
 import { ForumQuestion } from "@/pages/Index";
@@ -29,6 +29,7 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
 }) => {
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [upvotedIds, setUpvotedIds] = useState<number[]>([]);
+  const [downvotedIds, setDownvotedIds] = useState<number[]>([]);
 
   const [name, setName] = useState("");
   const [category, setCategory] = useState("general");
@@ -39,25 +40,31 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
   const t = LOCALIZATION[language].forum;
 
   useEffect(() => {
-    const saved = localStorage.getItem("forum_upvotes");
-    if (saved) {
+    const savedLikes = localStorage.getItem("forum_upvotes");
+    const savedDislikes = localStorage.getItem("forum_downvotes");
+    
+    if (savedLikes) {
       try {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.every((item) => typeof item === "number")) {
-          setUpvotedIds(parsed);
-        } else {
-          localStorage.removeItem("forum_upvotes");
-        }
+        const parsed = JSON.parse(savedLikes);
+        if (Array.isArray(parsed)) setUpvotedIds(parsed);
       } catch (e) {
-        console.error("Failed to load upvotes from localStorage", e);
         localStorage.removeItem("forum_upvotes");
+      }
+    }
+
+    if (savedDislikes) {
+      try {
+        const parsed = JSON.parse(savedDislikes);
+        if (Array.isArray(parsed)) setDownvotedIds(parsed);
+      } catch (e) {
+        localStorage.removeItem("forum_downvotes");
       }
     }
   }, []);
 
   const handleLike = (id: number, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (upvotedIds.includes(id)) return;
+    if (upvotedIds.includes(id) || downvotedIds.includes(id)) return;
     
     const newUpvoted = [...upvotedIds, id];
     setUpvotedIds(newUpvoted);
@@ -67,6 +74,20 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
       prev.map((q) => (q.id === id ? { ...q, likes: q.likes + 1 } : q))
     );
     showSuccess(language === "english" ? "Vote recorded!" : "¡Voto registrado!");
+  };
+
+  const handleDislike = (id: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (upvotedIds.includes(id) || downvotedIds.includes(id)) return;
+    
+    const newDownvoted = [...downvotedIds, id];
+    setDownvotedIds(newDownvoted);
+    localStorage.setItem("forum_downvotes", JSON.stringify(newDownvoted));
+
+    setQuestions((prev) =>
+      prev.map((q) => (q.id === id ? { ...q, dislikes: q.dislikes + 1 } : q))
+    );
+    showSuccess(language === "english" ? "Feedback recorded." : "Comentario registrado.");
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -103,11 +124,9 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
       return;
     }
 
-    // Manual sanitization removed as React JSX handles escaping automatically.
     onAddQuestion(result.data.name || "", result.data.category, result.data.query);
     updateSubmissionDebounce("forum_submission");
     
-    // Clear state
     setName("");
     setQuery("");
   };
@@ -139,6 +158,7 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
               {questions.map((q) => {
                 const isExpanded = expandedId === q.id;
                 const isUpvoted = upvotedIds.includes(q.id);
+                const isDownvoted = downvotedIds.includes(q.id);
                 const questionText = language === "english" ? q.questionEn : q.questionEs;
                 const answerText = language === "english" ? q.answerEn : q.answerEs;
 
@@ -162,17 +182,30 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
                         </h4>
                       </div>
                       
-                      <div className="flex items-center gap-3 shrink-0">
+                      <div className="flex items-center gap-2 shrink-0">
                         <button
                           type="button"
                           onClick={(e) => handleLike(q.id, e)}
-                          disabled={isUpvoted}
-                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-[11px] font-black transition-all hover:scale-[1.03] active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-[#005f43] ${isUpvoted ? "bg-[#005f43] text-white border-[#005f43]" : "bg-[#FBF9F6] text-slate-600 hover:text-[#005f43] border-slate-200"}`}
+                          disabled={isUpvoted || isDownvoted}
+                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-[11px] font-black transition-all hover:scale-[1.03] active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-[#005f43] ${isUpvoted ? "bg-[#005f43] text-white border-[#005f43]" : "bg-[#FBF9F6] text-slate-600 hover:text-[#005f43] border-slate-200 disabled:opacity-50"}`}
                         >
                           <ThumbsUp className={`w-3.5 h-3.5 ${isUpvoted ? "fill-white" : ""}`} />
                           <span>{t.helpfulText} ({q.likes})</span>
                         </button>
-                        {isExpanded ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+
+                        <button
+                          type="button"
+                          onClick={(e) => handleDislike(q.id, e)}
+                          disabled={isUpvoted || isDownvoted}
+                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-[11px] font-black transition-all hover:scale-[1.03] active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-[#005f43] ${isDownvoted ? "bg-red-600 text-white border-red-600" : "bg-[#FBF9F6] text-slate-600 hover:text-red-600 border-slate-200 disabled:opacity-50"}`}
+                        >
+                          <ThumbsDown className={`w-3.5 h-3.5 ${isDownvoted ? "fill-white" : ""}`} />
+                          <span>{t.unhelpfulText} ({q.dislikes})</span>
+                        </button>
+                        
+                        <div className="ml-2">
+                          {isExpanded ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+                        </div>
                       </div>
                     </div>
 
