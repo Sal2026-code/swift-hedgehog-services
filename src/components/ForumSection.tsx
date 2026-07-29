@@ -8,7 +8,6 @@ import { ForumQuestion } from "@/pages/Index";
 import { LOCALIZATION } from "@/utils/localization";
 import { showSuccess, showError } from "@/utils/toast";
 import { 
-  sanitizeInput, 
   ForumQuestionSchema, 
   checkSubmissionDebounce, 
   updateSubmissionDebounce,
@@ -104,10 +103,8 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
       return;
     }
 
-    const sanitizedName = sanitizeInput(result.data.name || "");
-    const sanitizedQuery = sanitizeInput(result.data.query);
-
-    onAddQuestion(sanitizedName, result.data.category, sanitizedQuery);
+    // Manual sanitization removed as React JSX handles escaping automatically.
+    onAddQuestion(result.data.name || "", result.data.category, result.data.query);
     updateSubmissionDebounce("forum_submission");
     
     // Clear state
@@ -265,7 +262,6 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
                   />
                 </div>
 
-                {/* Privacy Warning for Public Questions */}
                 <div className="flex items-start gap-2 text-[10px] text-slate-500 bg-slate-50 p-2 rounded-lg border border-slate-200">
                   <AlertCircle className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                   <p className="leading-tight">
@@ -275,7 +271,6 @@ export const ForumSection: React.FC<ForumSectionProps> = ({
                   </p>
                 </div>
 
-                {/* Turnstile Anti-Bot Check */}
                 <div className="flex justify-center py-1">
                   <Turnstile
                     siteKey={getTurnstileSiteKey()}

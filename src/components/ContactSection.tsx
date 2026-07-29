@@ -9,7 +9,6 @@ import { showError, showSuccess } from "@/utils/toast";
 import { 
   getFullEmail, 
   handleMailTo, 
-  sanitizeInput, 
   ContactFormSchema, 
   checkSubmissionDebounce, 
   updateSubmissionDebounce, 
@@ -93,25 +92,26 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
       return;
     }
 
-    const sanitizedData = {
-      name: sanitizeInput(result.data.name),
-      email: sanitizeInput(result.data.email),
-      phone: sanitizeInput(result.data.phone),
-      message: sanitizeInput(result.data.message || "")
+    // Manual sanitization removed here as React handles UI escaping and buildMailtoUrl handles URL encoding.
+    const formData = {
+      name: result.data.name,
+      email: result.data.email,
+      phone: result.data.phone,
+      message: result.data.message || ""
     };
 
-    const mailtoUrl = buildMailtoUrl(sanitizedData);
+    const mailtoUrl = buildMailtoUrl(formData);
 
     setLoading(false);
     updateSubmissionDebounce("contact_submission");
     
-    // Mitigate Issue 3: Clear form state immediately after generating the mailto URL
+    // Clear form state immediately
     setName("");
     setEmail("");
     setPhone("");
     setMessage("");
     
-    setSubmittedData({ ...sanitizedData, mailtoUrl });
+    setSubmittedData({ ...formData, mailtoUrl });
     showSuccess(t.successTitle);
 
     // Trigger email client
@@ -319,7 +319,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                 </div>
 
                 <div className="pt-2 space-y-4">
-                  {/* Issue 3 Privacy Disclaimer */}
                   <div className="flex items-start gap-2 text-[10px] text-slate-500 bg-slate-50 p-3 rounded-xl border border-slate-200 mb-2">
                     <AlertCircle className="w-4 h-4 text-slate-400 shrink-0" />
                     <p className="leading-tight">
