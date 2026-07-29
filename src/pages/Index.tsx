@@ -30,8 +30,8 @@ const INITIAL_QUESTIONS: ForumQuestion[] = [
     questionEs: "¿Sus productos de limpieza son seguros para perros y gatos?",
     answerEn: "Yes! We use eco-friendly, non-toxic products that are completely safe for pets and children.",
     answerEs: "¡Sí! Utilizamos productos ecológicos y no tóxicos que son totalmente seguros para mascotas y niños.",
-    likes: 24,
-    dislikes: 1
+    likes: 0,
+    dislikes: 0
   },
   {
     id: 2,
@@ -40,7 +40,7 @@ const INITIAL_QUESTIONS: ForumQuestion[] = [
     questionEs: "¿Necesito estar en casa durante el servicio de limpieza?",
     answerEn: "No, many of our clients provide key or lockbox access. All our staff members are background-checked and fully insured.",
     answerEs: "No, muchos de nuestros clientes nos proporcionan acceso mediante llave o caja de seguridad. Todo nuestro personal está verificado y asegurado.",
-    likes: 18,
+    likes: 0,
     dislikes: 0
   },
   {
@@ -50,8 +50,8 @@ const INITIAL_QUESTIONS: ForumQuestion[] = [
     questionEs: "¿Traen sus propios insumos y equipos de limpieza?",
     answerEn: "We bring all professional equipment and eco-friendly cleaning supplies required for the job.",
     answerEs: "Traemos todo el equipo profesional y productos ecológicos necesarios para realizar el trabajo.",
-    likes: 31,
-    dislikes: 2
+    likes: 0,
+    dislikes: 0
   }
 ];
 
