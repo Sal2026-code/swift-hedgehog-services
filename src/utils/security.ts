@@ -4,6 +4,19 @@ import { z } from "zod";
  * Security & Utility Helpers
  */
 
+export const getTurnstileSiteKey = (): string => {
+  const key = import.meta.env.VITE_TURNSTILE_SITE_KEY;
+  if (key && typeof key === "string" && key.trim() !== "") {
+    return key;
+  }
+  if (import.meta.env.PROD) {
+    console.warn(
+      "[Security Notice] VITE_TURNSTILE_SITE_KEY environment variable is missing in production. Falling back to Cloudflare test key."
+    );
+  }
+  return "1x00000000000000000000AA";
+};
+
 export const CONTACT_INFO = {
   email: {
     user: "gandbrosteam",

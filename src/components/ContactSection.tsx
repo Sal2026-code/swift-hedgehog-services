@@ -15,7 +15,8 @@ import {
   updateSubmissionDebounce, 
   validateEmailDomain,
   buildMailtoUrl,
-  getRawPhone
+  getRawPhone,
+  getTurnstileSiteKey
 } from "@/utils/security";
 
 interface ContactSectionProps {
@@ -306,7 +307,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ language, prefil
                 {/* Cloudflare Turnstile Anti-Bot Verification */}
                 <div className="flex justify-center py-2">
                   <Turnstile
-                    siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"}
+                    siteKey={getTurnstileSiteKey()}
                     onSuccess={(token) => setTurnstileToken(token)}
                     onExpire={() => setTurnstileToken(null)}
                     onError={() => setTurnstileToken(null)}
