@@ -45,7 +45,7 @@ export const ForumQuestionSchema = z.object({
 
 /**
  * HTML entity mapping for input sanitization. 
- * Fixed: Now correctly maps dangerous characters to their HTML entities (&, <, >, ", ').
+ * Maps dangerous characters to their corresponding HTML entities (&, <, >, &quot;, &#39;).
  * Note: React handles escaping automatically in JSX; use this only for raw HTML contexts 
  * or legacy integrations as per SECURITY_RULES.md.
  */
