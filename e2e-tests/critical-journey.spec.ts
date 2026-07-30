@@ -54,6 +54,21 @@ test.describe("Critical User Journey - Landing Page", () => {
     await expect(page.getByText(testQuestion)).toBeVisible();
   });
 
+  test("should handle special HTML/XSS characters in question input safely", async ({ page }) => {
+    await page.getByRole("button", { name: /Ask Q&A/i }).click();
+    
+    const xssPayload = "<script>alert('xss')</script> How are pet safe products tested?";
+    
+    await page.getByPlaceholder("e.g. Alex M.").fill("Security Tester");
+    await page.getByPlaceholder("Ask about our services, products, or scheduling...").fill(xssPayload);
+    
+    await expect(page.getByRole("button", { name: /Post Question/i })).toBeEnabled({ timeout: 10000 });
+    await page.getByRole("button", { name: /Post Question/i }).click();
+
+    await expect(page.getByText(/Question submitted!/i)).toBeVisible();
+    await expect(page.getByText(xssPayload)).toBeVisible();
+  });
+
   test("should navigate to services section", async ({ page }) => {
     await page.getByRole("button", { name: /Explore Services/i }).click();
     await expect(page.getByRole("heading", { name: "Our Services", exact: true })).toBeInViewport();
